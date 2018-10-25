@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item
+        android:id="@+id/nav_todo"
+        android:icon="@drawable/ic_help_outline_black_24dp"
+        android:title="@string/todo" />
+
+    <item android:title="@string/cat_misc">
+        <menu>
+            <item
+                android:id="@+id/nav_manage"
+                android:icon="@drawable/ic_build_black_24dp"
+                android:title="@string/button_settings" />
+            <item
+                android:id="@+id/nav_bugreport"
+                android:icon="@drawable/ic_bug_report_black_24dp"
+                android:title="@string/button_bugreport" />
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/ic_info_outline_black_24dp"
+                android:title="@string/button_about" />
+        </menu>
+    </item>
+
+</menu>

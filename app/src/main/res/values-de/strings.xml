@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login_activity_name">Stud.IP Uni Passau Login</string>
+    <string name="prompt_username">Benutzername</string>
+    <string name="prompt_password">Passwort</string>
+    <string name="action_sign_in">Einloggen</string>
+    <string name="error_incorrect_password">Falsche Zugangsdaten!</string>
+    <string name="error_random_error">Ein I/O-Fehler ist aufgetreten!</string>
+    <string name="error_field_required">Dieses Feld muss ausgefüllt werden</string>
+    <string name="title_activity_schedule">Stud.IP Uni Passau</string>
+    <string name="navigation_drawer_open">Navigationsleiste öffnen</string>
+    <string name="navigation_drawer_close">Navigationsleiste schließen</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="error_sum_sh">Ein unbekannter Fehler ist aufgetreten!</string>
+    <string name="error_login_again">Bitte nochmals einloggen</string>
+    <string name="studip_user_format">Stud.IP Benutzer</string>
+    <string name="button_settings">Einstellungen</string>
+    <string name="button_about">Über diese App</string>
+    <string name="cat_misc">Verschiedenes</string>
+    <string name="button_bugreport">Einen Fehler melden</string>
+    <string name="title_activity_settings">Stud.IP Uni Passau Einstellungen</string>
+    <string name="today">Heute</string>
+    <string name="monday">Montag</string>
+    <string name="tuesday">Dienstag</string>
+    <string name="wednesday">Mittwoch</string>
+    <string name="thursday">Donnerstag</string>
+    <string name="friday">Freitag</string>
+    <string name="saturday">Samstag</string>
+    <string name="sunday">Sonntag</string>
+</resources>
