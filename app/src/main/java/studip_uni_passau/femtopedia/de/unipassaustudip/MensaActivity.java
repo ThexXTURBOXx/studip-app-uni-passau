@@ -30,11 +30,12 @@ import java.util.List;
 import de.femtopedia.studip.json.Event;
 import de.femtopedia.studip.json.Events;
 import de.femtopedia.studip.json.User;
+import de.femtopedia.studip.shib.ShibbolethClient;
 import de.femtopedia.studip.util.Schedule;
 import de.femtopedia.studip.util.ScheduledCourse;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ScheduleActivity extends AppCompatActivity
+public class MensaActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     ExpandableListAdapter listAdapter;
@@ -48,10 +49,8 @@ public class ScheduleActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.schedule);
-        CacheCurrentUserData data = new CacheCurrentUserData();
+        CacheMensaPlan data = new CacheMensaPlan();
         data.execute();
-        CacheSchedule sched = new CacheSchedule();
-        sched.execute();
 
         expListView = findViewById(R.id.schedulecontent);
         prepareListData();
@@ -62,7 +61,7 @@ public class ScheduleActivity extends AppCompatActivity
 
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.getMenu().getItem(0).setChecked(true);
+        navigationView.getMenu().getItem(1).setChecked(true);
 
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
@@ -128,7 +127,7 @@ public class ScheduleActivity extends AppCompatActivity
         } else if (id == R.id.nav_mensa) {
             item.setChecked(true);
         } else if (id == R.id.nav_manage) {
-            Intent intent = new Intent(ScheduleActivity.this, SettingsActivity.class);
+            Intent intent = new Intent(MensaActivity.this, SettingsActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_bugreport) {
 
@@ -152,56 +151,6 @@ public class ScheduleActivity extends AppCompatActivity
             info.add("Ende: " + String.format("%02d", se.end.getHourOfDay()) + ":" + String.format("%02d", se.end.getMinuteOfHour()));
             addListItem(se.description, info, Color.parseColor("#" + se.color), (0xffffff - Color.parseColor("#" + se.color)) | 0xFF000000);
         }
-    }
-
-    private EventSchedule compareSchedule(Schedule schedule) throws IllegalAccessException, IOException {
-        Events events = ActivityHolder.api.getData("user/" + ActivityHolder.current_user.getUser_id() + "/events?limit=10000", Events.class);
-        EventSchedule sched = new EventSchedule();
-        sched.monday = compareDay(schedule.getMonday(), events.getCollection(), 1);
-        sched.tuesday = compareDay(schedule.getTuesday(), events.getCollection(), 2);
-        sched.wednesday = compareDay(schedule.getWednesday(), events.getCollection(), 3);
-        sched.thursday = compareDay(schedule.getThursday(), events.getCollection(), 4);
-        sched.friday = compareDay(schedule.getFriday(), events.getCollection(), 5);
-        sched.saturday = compareDay(schedule.getSaturday(), events.getCollection(), 6);
-        sched.sunday = compareDay(schedule.getSunday(), events.getCollection(), 7);
-        return sched;
-    }
-
-    private List<ScheduledEvent> compareDay(List<ScheduledCourse> courses, List<Event> events, int day) {
-        List<ScheduledEvent> eventss = new ArrayList<>();
-        if (courses != null) {
-            DateTime now = new DateTime().plusDays(1).withTime(0, 0, 0, 0);
-            for (ScheduledCourse s : courses) {
-                for (Event event : events) {
-                    if (event.getCourse().replaceFirst("/studip/api.php/course/", "").equals(s.getEvent_id())) {
-                        DateTime time = new DateTime(event.getStart() * 1000);
-                        if (Days.daysBetween(now, new DateTime(time).withTime(1, 0, 0, 0)).getDays() >= 6)
-                            continue;
-                        int day1 = time.getDayOfWeek();
-                        if (day == day1) {
-                            String time1 = String.format("%02d", time.getHourOfDay()) + String.format("%02d", time.getMinuteOfHour());
-                            if (Integer.parseInt(time1) == s.getStart()) {
-                                DateTime dd = new DateTime(event.getEnd() * 1000);
-                                String time2 = String.format("%02d", dd.getHourOfDay()) + String.format("%02d", dd.getMinuteOfHour());
-                                if (Integer.parseInt(time2) == s.getEnd()) {
-                                    ScheduledEvent se = new ScheduledEvent();
-                                    se.start = time;
-                                    se.end = dd;
-                                    se.title = event.getTitle();
-                                    se.description = s.getContent();
-                                    se.canceled = event.getCanceled();
-                                    se.room = event.getRoom();
-                                    se.color = s.getColor();
-                                    se.course = event.getCourse();
-                                    eventss.add(se);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return eventss;
     }
 
     private String getDateString(int day, int today) {
@@ -239,79 +188,17 @@ public class ScheduleActivity extends AppCompatActivity
         return sb.append(", ").append(time.getDayOfMonth()).append(".").append(time.getMonthOfYear()).append(".").append(time.getYear()).toString();
     }
 
-    public class CacheCurrentUserData extends AsyncTask<Void, Void, User> {
-        @Override
-        protected User doInBackground(Void... voids) {
-            try {
-                return ActivityHolder.api.getCurrentUserData();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-                Intent intent = new Intent(ScheduleActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
+    public static String mensaUrl = "https://www.stwno.de/infomax/daten-extern/csv/UNI-P/";
 
-        @Override
-        protected void onPostExecute(User user) {
-            if (user == null) {
-                CacheCurrentUserData data = new CacheCurrentUserData();
-                data.execute();
-            } else {
-                ActivityHolder.current_user = user;
-                ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(user.getName().getFormatted());
-                ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(user.getUsername());
-                CacheCurrentUserPic pic = new CacheCurrentUserPic();
-                pic.execute(user.getAvatar_original());
-            }
-            super.onPostExecute(user);
-        }
-    }
+    public class CacheMensaPlan extends AsyncTask<Void, Void, Void> {
 
-    public class CacheCurrentUserPic extends AsyncTask<String, Void, Bitmap> {
-        @Override
-        protected Bitmap doInBackground(String... url) {
-            try {
-                HttpResponse response = ActivityHolder.api.getShibbolethClient().getIfValid(url[0]);
-                HttpEntity entity = response.getEntity();
-                BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
-                InputStream instream = bufHttpEntity.getContent();
-                return BitmapFactory.decodeStream(instream);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-                Intent intent = new Intent(ScheduleActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (bitmap == null) {
-                CacheCurrentUserPic data = new CacheCurrentUserPic();
-                data.execute(ActivityHolder.current_user.getAvatar_original());
-            } else {
-                ActivityHolder.profile_pic = bitmap;
-                ((CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView)).setImageBitmap(bitmap);
-            }
-            super.onPostExecute(bitmap);
-        }
-    }
-
-    public class CacheSchedule extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... url) {
             try {
-                ActivityHolder.schedule = compareSchedule(ActivityHolder.api.getSchedule());
+                ActivityHolder.mensaPlan = parseMensaPlan(ActivityHolder.api.getShibbolethClient().getIfValid(mensaUrl + "43.csv"));
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
-                Intent intent = new Intent(ScheduleActivity.this, LoginActivity.class);
+                Intent intent = new Intent(MensaActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish();
             } catch (IOException e) {
@@ -391,6 +278,18 @@ public class ScheduleActivity extends AppCompatActivity
             }
             super.onPostExecute(aVoid);
         }
+    }
+
+    public MensaPlan parseMensaPlan(HttpResponse csv) {
+        try {
+            InputStream content = csv.getEntity().getContent();
+            for (String s : ShibbolethClient.readLines(content)) {
+                System.out.println(s);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

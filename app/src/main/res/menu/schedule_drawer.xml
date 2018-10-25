@@ -4,9 +4,14 @@
     tools:showIn="navigation_view">
 
     <item
-        android:id="@+id/nav_todo"
-        android:icon="@drawable/ic_help_outline_black_24dp"
-        android:title="@string/todo" />
+        android:id="@+id/nav_schedule"
+        android:icon="@drawable/ic_event_note_black_24dp"
+        android:title="@string/schedule" />
+
+    <item
+        android:id="@+id/nav_mensa"
+        android:icon="@drawable/ic_restaurant_black_24dp"
+        android:title="@string/mensa_plan" />
 
     <item android:title="@string/cat_misc">
         <menu>

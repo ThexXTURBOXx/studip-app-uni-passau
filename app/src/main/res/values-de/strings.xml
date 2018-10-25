@@ -27,4 +27,6 @@
     <string name="friday">Freitag</string>
     <string name="saturday">Samstag</string>
     <string name="sunday">Sonntag</string>
+    <string name="schedule">Stundenplan</string>
+    <string name="mensa_plan">Mensaplan</string>
 </resources>

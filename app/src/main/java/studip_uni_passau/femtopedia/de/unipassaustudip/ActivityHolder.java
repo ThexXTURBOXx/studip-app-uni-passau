@@ -16,5 +16,6 @@ public class ActivityHolder {
     public static User current_user;
     public static Bitmap profile_pic;
     public static EventSchedule schedule;
+    public static MensaPlan mensaPlan;
 
 }
