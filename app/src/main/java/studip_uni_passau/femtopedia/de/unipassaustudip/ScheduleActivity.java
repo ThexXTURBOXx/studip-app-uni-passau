@@ -123,17 +123,15 @@ public class ScheduleActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_schedule) {
-            item.setChecked(true);
-        } else if (id == R.id.nav_mensa) {
-            item.setChecked(true);
+        if (id == R.id.nav_mensa) {
+            Intent intent = new Intent(ScheduleActivity.this, MensaActivity.class);
+            startActivity(intent);
+            finish();
         } else if (id == R.id.nav_manage) {
             Intent intent = new Intent(ScheduleActivity.this, SettingsActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_bugreport) {
-
         } else if (id == R.id.nav_about) {
-
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -143,14 +141,16 @@ public class ScheduleActivity extends AppCompatActivity
 
     private void addToView(String day, List<ScheduledEvent> list) {
         if (list != null && !list.isEmpty())
-            addListItem(day, new ArrayList<>(), 0x00000000, 0xffffffff);
+            addListItem(day, new ArrayList<>(), Color.BLACK, Color.WHITE);
         for (ScheduledEvent se : list) {
             List<String> info = new ArrayList<>();
             info.add(se.title);
             info.add(se.room);
-            info.add("Start: " + String.format("%02d", se.start.getHourOfDay()) + ":" + String.format("%02d", se.start.getMinuteOfHour()));
-            info.add("Ende: " + String.format("%02d", se.end.getHourOfDay()) + ":" + String.format("%02d", se.end.getMinuteOfHour()));
-            addListItem(se.description, info, Color.parseColor("#" + se.color), (0xffffff - Color.parseColor("#" + se.color)) | 0xFF000000);
+            info.add(getString(R.string.start) + ": " + String.format("%02d", se.start.getHourOfDay()) + ":" + String.format("%02d", se.start.getMinuteOfHour()));
+            info.add(getString(R.string.end) + ": " + String.format("%02d", se.end.getHourOfDay()) + ":" + String.format("%02d", se.end.getMinuteOfHour()));
+            int color = Color.parseColor("#" + se.color);
+            double lum = 0.299d * (double) Color.red(color) + 0.587d * (double) Color.green(color) + 0.114d * (double) Color.blue(color);
+            addListItem(se.description, info, color, lum < 128 ? Color.BLACK : Color.WHITE);
         }
     }
 

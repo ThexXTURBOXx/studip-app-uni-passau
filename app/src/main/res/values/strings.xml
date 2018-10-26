@@ -104,5 +104,30 @@
     <string name="sunday">Sunday</string>
     <string name="schedule">Schedule</string>
     <string name="mensa_plan">Mensa menu</string>
+    <string name="title_activity_mensa">Mensa menu Uni Passau</string>
+    <string name="chicken">Poultry</string>
+    <string name="pig">Pig</string>
+    <string name="cow">Cow</string>
+    <string name="wild">Wild</string>
+    <string name="lamb">Lamb</string>
+    <string name="fish">Fish</string>
+    <string name="alcohol">Alcohol</string>
+    <string name="vegetarian">Vegetarian</string>
+    <string name="vegan">Vegan</string>
+    <string name="vital">Mensa Vital</string>
+    <string name="oeko">DE-ÖKO-006</string>
+    <string name="juradistl">Juradistl</string>
+    <string name="bioland">Bioland</string>
+    <string name="start">Start</string>
+    <string name="end">End</string>
+    <string name="soup">Soup</string>
+    <string name="mains">Main Dishes</string>
+    <string name="garnishes">Garnishes</string>
+    <string name="desserts">Desserts</string>
+    <string name="students">Students</string>
+    <string name="guests">Guests</string>
+    <string name="servants">Servants</string>
+    <string name="action_pickdate">Pick date</string>
+    <string name="tomorrow">Tomorrow</string>
 
 </resources>

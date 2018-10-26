@@ -1,8 +1,8 @@
 package studip_uni_passau.femtopedia.de.unipassaustudip;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,48 +11,52 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.DatePicker;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.entity.BufferedHttpEntity;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import de.femtopedia.studip.json.Event;
-import de.femtopedia.studip.json.Events;
-import de.femtopedia.studip.json.User;
 import de.femtopedia.studip.shib.ShibbolethClient;
-import de.femtopedia.studip.util.Schedule;
-import de.femtopedia.studip.util.ScheduledCourse;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MensaActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static String mensaUrl = "https://www.stwno.de/infomax/daten-extern/csv/UNI-P/";
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
     List<String> listDataHeader;
     List<List<String>> listDataChild;
     List<Integer> listDataColorsBg, listDataColorsText;
+    DateTime dateTime;
+    private TextView dateView;
     private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.schedule);
+        setContentView(R.layout.mense);
         CacheMensaPlan data = new CacheMensaPlan();
         data.execute();
 
-        expListView = findViewById(R.id.schedulecontent);
+        expListView = findViewById(R.id.mensacontent);
         prepareListData();
         listAdapter = new ExpandableListAdapter(this,
                 listDataHeader, listDataChild, listDataColorsBg, listDataColorsText);
@@ -67,6 +71,15 @@ public class MensaActivity extends AppCompatActivity
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
 
+        dateView = findViewById(R.id.dateView);
+        setDate(new DateTime().withTime(0, 0, 0, 0));
+    }
+
+    private void setDate(DateTime dt) {
+        this.dateTime = dt;
+        dateView.setText(getDateString(dt));
+        clearListItems();
+        setToView(dateTime);
     }
 
     private void prepareListData() {
@@ -74,6 +87,15 @@ public class MensaActivity extends AppCompatActivity
         listDataColorsBg = new ArrayList<>();
         listDataColorsText = new ArrayList<>();
         listDataChild = new ArrayList<>();
+    }
+
+    private void clearListItems() {
+        listDataHeader.clear();
+        listDataColorsBg.clear();
+        listDataColorsText.clear();
+        listDataChild.clear();
+
+        listAdapter.notifyDataSetChanged();
     }
 
     private void addListItem(String title, List<String> info, int colorBg, int colorText) {
@@ -87,12 +109,20 @@ public class MensaActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
+    }
+
+    public void onClickButtonDatePrev(View v) {
+        setDate(dateTime.minusDays(1));
+    }
+
+    public void onClickButtonDateNext(View v) {
+        setDate(dateTime.plusDays(1));
     }
 
     @Override
@@ -102,9 +132,6 @@ public class MensaActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == android.R.id.home) {
             DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -123,16 +150,14 @@ public class MensaActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_schedule) {
-            item.setChecked(true);
-        } else if (id == R.id.nav_mensa) {
-            item.setChecked(true);
+            Intent intent = new Intent(MensaActivity.this, ScheduleActivity.class);
+            startActivity(intent);
+            finish();
         } else if (id == R.id.nav_manage) {
             Intent intent = new Intent(MensaActivity.this, SettingsActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_bugreport) {
-
         } else if (id == R.id.nav_about) {
-
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -140,28 +165,47 @@ public class MensaActivity extends AppCompatActivity
         return true;
     }
 
-    private void addToView(String day, List<ScheduledEvent> list) {
-        if (list != null && !list.isEmpty())
-            addListItem(day, new ArrayList<>(), 0x00000000, 0xffffffff);
-        for (ScheduledEvent se : list) {
-            List<String> info = new ArrayList<>();
-            info.add(se.title);
-            info.add(se.room);
-            info.add("Start: " + String.format("%02d", se.start.getHourOfDay()) + ":" + String.format("%02d", se.start.getMinuteOfHour()));
-            info.add("Ende: " + String.format("%02d", se.end.getHourOfDay()) + ":" + String.format("%02d", se.end.getMinuteOfHour()));
-            addListItem(se.description, info, Color.parseColor("#" + se.color), (0xffffff - Color.parseColor("#" + se.color)) | 0xFF000000);
+    private void setToView(DateTime dt) {
+        MensaPlan.DayMenu menu = ActivityHolder.mensaPlan.menu.get(dt.getMillis());
+        if (menu != null) {
+            addListItem(getString(R.string.soup), new ArrayList<>(), Color.BLACK, Color.WHITE);
+            for (MensaPlan.Food f : menu.soups) {
+                addFood(f, "7bad41");
+            }
+            addListItem(getString(R.string.mains), new ArrayList<>(), Color.BLACK, Color.WHITE);
+            for (MensaPlan.Food f : menu.mains) {
+                addFood(f, "ea3838");
+            }
+            addListItem(getString(R.string.garnishes), new ArrayList<>(), Color.BLACK, Color.WHITE);
+            for (MensaPlan.Food f : menu.garnishes) {
+                addFood(f, "61dfed");
+            }
+            addListItem(getString(R.string.desserts), new ArrayList<>(), Color.BLACK, Color.WHITE);
+            for (MensaPlan.Food f : menu.desserts) {
+                addFood(f, "baac18");
+            }
         }
     }
 
-    private String getDateString(int day, int today) {
-        return getDateString(day, today, false);
+    public void addFood(MensaPlan.Food f, String colorBg) {
+        List<String> info = new ArrayList<>();
+        info.add ("" + f.properties.size());
+        info.add(getString(R.string.students) + ": " + f.price_stud);
+        info.add(getString(R.string.servants) + ": " + f.price_bed);
+        info.add(getString(R.string.guests) + ": " + f.price_guest);
+        int color = Color.parseColor("#" + colorBg);
+        double lum = 0.299d * (double) Color.red(color) + 0.587d * (double) Color.green(color) + 0.114d * (double) Color.blue(color);
+        addListItem(f.name, info, color, lum < 128 ? Color.BLACK : Color.WHITE);
     }
 
-    private String getDateString(int day, int today, boolean isToday) {
-        DateTime time = new DateTime().plusDays((day < today ? day + 7 : day) - today);
+    private String getDateString(DateTime time) {
+        int day = time.getDayOfWeek();
+        int rr = Days.daysBetween(new DateTime().toLocalDate(), time.toLocalDate()).getDays();
         StringBuilder sb = new StringBuilder();
-        if (isToday)
+        if (rr == 0)
             sb = sb.append(getString(R.string.today)).append(", ");
+        else if (rr == 1)
+            sb = sb.append(getString(R.string.tomorrow)).append(", ");
         switch (day) {
             case 1:
                 sb = sb.append(getString(R.string.monday));
@@ -188,14 +232,65 @@ public class MensaActivity extends AppCompatActivity
         return sb.append(", ").append(time.getDayOfMonth()).append(".").append(time.getMonthOfYear()).append(".").append(time.getYear()).toString();
     }
 
-    public static String mensaUrl = "https://www.stwno.de/infomax/daten-extern/csv/UNI-P/";
+    public Map<Long, MensaPlan.DayMenu> parseMensaPlan(HttpResponse csv) {
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd.MM.yyyy");
+        Map<Long, MensaPlan.DayMenu> dayMenus = new HashMap<>();
+        try {
+            InputStream content = csv.getEntity().getContent();
+            MensaPlan.Food food = null;
+            MensaPlan.DayMenu menu = new MensaPlan.DayMenu();
+            String time = "";
+            DateTime dt;
+            for (String s : ShibbolethClient.readLines(content, "Cp1252")) {
+                if (food == null) {
+                    food = new MensaPlan.Food();
+                    continue;
+                }
+                food = new MensaPlan.Food();
+                String[] cols = s.split(";");
+                food.name = cols[3];
+                food.properties = new ArrayList<>();
+                for (String c : cols[4].split(","))
+                    food.properties.add(MensaPlan.FoodProperty.getProperty(c));
+                food.price_stud = Double.parseDouble(cols[6].replace(",", "."));
+                food.price_bed = Double.parseDouble(cols[7].replace(",", "."));
+                food.price_guest = Double.parseDouble(cols[8].replace(",", "."));
+                if (!cols[0].equals(time)) {
+                    if (!time.equals("")) {
+                        dt = formatter.parseDateTime(time);
+                        dayMenus.put(dt.withTime(0, 0, 0, 0).getMillis(), menu);
+                        menu = new MensaPlan.DayMenu();
+                    }
+                    time = cols[0];
+                }
+                if (cols[2].startsWith("Suppe"))
+                    menu.soups.add(food);
+                else if (cols[2].startsWith("HG"))
+                    menu.mains.add(food);
+                else if (cols[2].startsWith("B"))
+                    menu.garnishes.add(food);
+                else if (cols[2].startsWith("N"))
+                    menu.desserts.add(food);
+            }
+            if (!time.equals("")) {
+                dt = formatter.parseDateTime(time);
+                dayMenus.put(dt.withTime(0, 0, 0, 0).getMillis(), menu);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return dayMenus;
+    }
 
     public class CacheMensaPlan extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... url) {
             try {
-                ActivityHolder.mensaPlan = parseMensaPlan(ActivityHolder.api.getShibbolethClient().getIfValid(mensaUrl + "43.csv"));
+                int week = new DateTime().getWeekOfWeekyear();
+                int next_week = new DateTime().plusDays(7).getWeekOfWeekyear();
+                ActivityHolder.mensaPlan.menu.putAll(parseMensaPlan(ActivityHolder.api.getShibbolethClient().getIfValid(mensaUrl + week + ".csv")));
+                ActivityHolder.mensaPlan.menu.putAll(parseMensaPlan(ActivityHolder.api.getShibbolethClient().getIfValid(mensaUrl + (next_week) + ".csv")));
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
                 Intent intent = new Intent(MensaActivity.this, LoginActivity.class);
@@ -210,86 +305,9 @@ public class MensaActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Void aVoid) {
             DateTime dt = new DateTime();
-            int dow = dt.getDayOfWeek();
-            switch (dow) {
-                case 1:
-                    addToView(getDateString(1, dow, true), ActivityHolder.schedule.monday);
-                    addToView(getDateString(2, dow), ActivityHolder.schedule.tuesday);
-                    addToView(getDateString(3, dow), ActivityHolder.schedule.wednesday);
-                    addToView(getDateString(4, dow), ActivityHolder.schedule.thursday);
-                    addToView(getDateString(5, dow), ActivityHolder.schedule.friday);
-                    addToView(getDateString(6, dow), ActivityHolder.schedule.saturday);
-                    addToView(getDateString(7, dow), ActivityHolder.schedule.sunday);
-                    break;
-                case 2:
-                    addToView(getDateString(2, dow, true), ActivityHolder.schedule.tuesday);
-                    addToView(getDateString(3, dow), ActivityHolder.schedule.wednesday);
-                    addToView(getDateString(4, dow), ActivityHolder.schedule.thursday);
-                    addToView(getDateString(5, dow), ActivityHolder.schedule.friday);
-                    addToView(getDateString(6, dow), ActivityHolder.schedule.saturday);
-                    addToView(getDateString(7, dow), ActivityHolder.schedule.sunday);
-                    addToView(getDateString(1, dow), ActivityHolder.schedule.monday);
-                    break;
-                case 3:
-                    addToView(getDateString(3, dow, true), ActivityHolder.schedule.wednesday);
-                    addToView(getDateString(4, dow), ActivityHolder.schedule.thursday);
-                    addToView(getDateString(5, dow), ActivityHolder.schedule.friday);
-                    addToView(getDateString(6, dow), ActivityHolder.schedule.saturday);
-                    addToView(getDateString(7, dow), ActivityHolder.schedule.sunday);
-                    addToView(getDateString(1, dow), ActivityHolder.schedule.monday);
-                    addToView(getDateString(2, dow), ActivityHolder.schedule.tuesday);
-                    break;
-                case 4:
-                    addToView(getDateString(4, dow, true), ActivityHolder.schedule.thursday);
-                    addToView(getDateString(5, dow), ActivityHolder.schedule.friday);
-                    addToView(getDateString(6, dow), ActivityHolder.schedule.saturday);
-                    addToView(getDateString(7, dow), ActivityHolder.schedule.sunday);
-                    addToView(getDateString(1, dow), ActivityHolder.schedule.monday);
-                    addToView(getDateString(2, dow), ActivityHolder.schedule.tuesday);
-                    addToView(getDateString(3, dow), ActivityHolder.schedule.wednesday);
-                    break;
-                case 5:
-                    addToView(getDateString(5, dow, true), ActivityHolder.schedule.friday);
-                    addToView(getDateString(6, dow), ActivityHolder.schedule.saturday);
-                    addToView(getDateString(7, dow), ActivityHolder.schedule.sunday);
-                    addToView(getDateString(1, dow), ActivityHolder.schedule.monday);
-                    addToView(getDateString(2, dow), ActivityHolder.schedule.tuesday);
-                    addToView(getDateString(3, dow), ActivityHolder.schedule.wednesday);
-                    addToView(getDateString(4, dow), ActivityHolder.schedule.thursday);
-                    break;
-                case 6:
-                    addToView(getDateString(6, dow, true), ActivityHolder.schedule.saturday);
-                    addToView(getDateString(7, dow), ActivityHolder.schedule.sunday);
-                    addToView(getDateString(1, dow), ActivityHolder.schedule.monday);
-                    addToView(getDateString(2, dow), ActivityHolder.schedule.tuesday);
-                    addToView(getDateString(3, dow), ActivityHolder.schedule.wednesday);
-                    addToView(getDateString(4, dow), ActivityHolder.schedule.thursday);
-                    addToView(getDateString(5, dow), ActivityHolder.schedule.friday);
-                    break;
-                case 7:
-                    addToView(getDateString(7, dow, true), ActivityHolder.schedule.sunday);
-                    addToView(getDateString(1, dow), ActivityHolder.schedule.monday);
-                    addToView(getDateString(2, dow), ActivityHolder.schedule.tuesday);
-                    addToView(getDateString(3, dow), ActivityHolder.schedule.wednesday);
-                    addToView(getDateString(4, dow), ActivityHolder.schedule.thursday);
-                    addToView(getDateString(5, dow), ActivityHolder.schedule.friday);
-                    addToView(getDateString(6, dow), ActivityHolder.schedule.saturday);
-                    break;
-            }
+            setToView(dt.withTime(0, 0, 0, 0));
             super.onPostExecute(aVoid);
         }
-    }
-
-    public MensaPlan parseMensaPlan(HttpResponse csv) {
-        try {
-            InputStream content = csv.getEntity().getContent();
-            for (String s : ShibbolethClient.readLines(content)) {
-                System.out.println(s);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
 }

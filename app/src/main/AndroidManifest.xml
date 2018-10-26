@@ -24,7 +24,7 @@
         </activity>
         <activity
             android:name=".ScheduleActivity"
-            android:label="@string/title_activity_schedule"></activity>
+            android:label="@string/title_activity_schedule" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -33,6 +33,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="studip_uni_passau.femtopedia.de.unipassaustudip.ScheduleActivity" />
         </activity>
+        <activity
+            android:name=".MensaActivity"
+            android:label="@string/title_activity_mensa" />
     </application>
 
 </manifest>
