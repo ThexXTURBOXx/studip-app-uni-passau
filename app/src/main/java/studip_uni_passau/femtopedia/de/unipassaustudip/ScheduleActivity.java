@@ -199,14 +199,16 @@ public class ScheduleActivity extends AppCompatActivity
     }
 
     private String getDateString(int day, int today) {
-        return getDateString(day, today, false);
+        return getDateString(day, today, -1);
     }
 
-    private String getDateString(int day, int today, boolean isToday) {
+    private String getDateString(int day, int today, int isToday) {
         DateTime time = new DateTime().plusDays((day < today ? day + 7 : day) - today);
         StringBuilder sb = new StringBuilder();
-        if (isToday)
+        if (isToday == 0)
             sb = sb.append(getString(R.string.today)).append(", ");
+        else if (isToday == 1)
+            sb = sb.append(getString(R.string.tomorrow)).append(", ");
         switch (day) {
             case 1:
                 sb = sb.append(getString(R.string.monday));
@@ -255,8 +257,8 @@ public class ScheduleActivity extends AppCompatActivity
             int dow = dt.getDayOfWeek();
             switch (dow) {
                 case 1:
-                    addToView(getDateString(1, dow, true), ActivityHolder.schedule.monday);
-                    addToView(getDateString(2, dow), ActivityHolder.schedule.tuesday);
+                    addToView(getDateString(1, dow, 0), ActivityHolder.schedule.monday);
+                    addToView(getDateString(2, dow, 1), ActivityHolder.schedule.tuesday);
                     addToView(getDateString(3, dow), ActivityHolder.schedule.wednesday);
                     addToView(getDateString(4, dow), ActivityHolder.schedule.thursday);
                     addToView(getDateString(5, dow), ActivityHolder.schedule.friday);
@@ -264,8 +266,8 @@ public class ScheduleActivity extends AppCompatActivity
                     addToView(getDateString(7, dow), ActivityHolder.schedule.sunday);
                     break;
                 case 2:
-                    addToView(getDateString(2, dow, true), ActivityHolder.schedule.tuesday);
-                    addToView(getDateString(3, dow), ActivityHolder.schedule.wednesday);
+                    addToView(getDateString(2, dow, 0), ActivityHolder.schedule.tuesday);
+                    addToView(getDateString(3, dow, 1), ActivityHolder.schedule.wednesday);
                     addToView(getDateString(4, dow), ActivityHolder.schedule.thursday);
                     addToView(getDateString(5, dow), ActivityHolder.schedule.friday);
                     addToView(getDateString(6, dow), ActivityHolder.schedule.saturday);
@@ -273,8 +275,8 @@ public class ScheduleActivity extends AppCompatActivity
                     addToView(getDateString(1, dow), ActivityHolder.schedule.monday);
                     break;
                 case 3:
-                    addToView(getDateString(3, dow, true), ActivityHolder.schedule.wednesday);
-                    addToView(getDateString(4, dow), ActivityHolder.schedule.thursday);
+                    addToView(getDateString(3, dow, 0), ActivityHolder.schedule.wednesday);
+                    addToView(getDateString(4, dow, 1), ActivityHolder.schedule.thursday);
                     addToView(getDateString(5, dow), ActivityHolder.schedule.friday);
                     addToView(getDateString(6, dow), ActivityHolder.schedule.saturday);
                     addToView(getDateString(7, dow), ActivityHolder.schedule.sunday);
@@ -282,8 +284,8 @@ public class ScheduleActivity extends AppCompatActivity
                     addToView(getDateString(2, dow), ActivityHolder.schedule.tuesday);
                     break;
                 case 4:
-                    addToView(getDateString(4, dow, true), ActivityHolder.schedule.thursday);
-                    addToView(getDateString(5, dow), ActivityHolder.schedule.friday);
+                    addToView(getDateString(4, dow, 0), ActivityHolder.schedule.thursday);
+                    addToView(getDateString(5, dow, 1), ActivityHolder.schedule.friday);
                     addToView(getDateString(6, dow), ActivityHolder.schedule.saturday);
                     addToView(getDateString(7, dow), ActivityHolder.schedule.sunday);
                     addToView(getDateString(1, dow), ActivityHolder.schedule.monday);
@@ -291,8 +293,8 @@ public class ScheduleActivity extends AppCompatActivity
                     addToView(getDateString(3, dow), ActivityHolder.schedule.wednesday);
                     break;
                 case 5:
-                    addToView(getDateString(5, dow, true), ActivityHolder.schedule.friday);
-                    addToView(getDateString(6, dow), ActivityHolder.schedule.saturday);
+                    addToView(getDateString(5, dow, 0), ActivityHolder.schedule.friday);
+                    addToView(getDateString(6, dow, 1), ActivityHolder.schedule.saturday);
                     addToView(getDateString(7, dow), ActivityHolder.schedule.sunday);
                     addToView(getDateString(1, dow), ActivityHolder.schedule.monday);
                     addToView(getDateString(2, dow), ActivityHolder.schedule.tuesday);
@@ -300,8 +302,8 @@ public class ScheduleActivity extends AppCompatActivity
                     addToView(getDateString(4, dow), ActivityHolder.schedule.thursday);
                     break;
                 case 6:
-                    addToView(getDateString(6, dow, true), ActivityHolder.schedule.saturday);
-                    addToView(getDateString(7, dow), ActivityHolder.schedule.sunday);
+                    addToView(getDateString(6, dow, 0), ActivityHolder.schedule.saturday);
+                    addToView(getDateString(7, dow, 1), ActivityHolder.schedule.sunday);
                     addToView(getDateString(1, dow), ActivityHolder.schedule.monday);
                     addToView(getDateString(2, dow), ActivityHolder.schedule.tuesday);
                     addToView(getDateString(3, dow), ActivityHolder.schedule.wednesday);
@@ -309,8 +311,8 @@ public class ScheduleActivity extends AppCompatActivity
                     addToView(getDateString(5, dow), ActivityHolder.schedule.friday);
                     break;
                 case 7:
-                    addToView(getDateString(7, dow, true), ActivityHolder.schedule.sunday);
-                    addToView(getDateString(1, dow), ActivityHolder.schedule.monday);
+                    addToView(getDateString(7, dow, 0), ActivityHolder.schedule.sunday);
+                    addToView(getDateString(1, dow, 1), ActivityHolder.schedule.monday);
                     addToView(getDateString(2, dow), ActivityHolder.schedule.tuesday);
                     addToView(getDateString(3, dow), ActivityHolder.schedule.wednesday);
                     addToView(getDateString(4, dow), ActivityHolder.schedule.thursday);
