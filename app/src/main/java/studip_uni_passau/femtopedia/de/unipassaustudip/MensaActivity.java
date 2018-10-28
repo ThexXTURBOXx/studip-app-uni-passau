@@ -1,7 +1,5 @@
 package studip_uni_passau.femtopedia.de.unipassaustudip;
 
-import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -11,19 +9,15 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
-import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -35,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.femtopedia.studip.shib.ShibbolethClient;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MensaActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -66,6 +61,9 @@ public class MensaActivity extends AppCompatActivity
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(1).setChecked(true);
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(ActivityHolder.current_user.getName().getFormatted());
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(ActivityHolder.current_user.getUsername());
+        ((CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView)).setImageBitmap(ActivityHolder.profile_pic);
 
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
@@ -189,7 +187,7 @@ public class MensaActivity extends AppCompatActivity
 
     public void addFood(MensaPlan.Food f, String colorBg) {
         List<String> info = new ArrayList<>();
-        info.add ("" + f.properties.size());
+        info.add("" + f.properties.size());
         info.add(getString(R.string.students) + ": " + f.price_stud);
         info.add(getString(R.string.servants) + ": " + f.price_bed);
         info.add(getString(R.string.guests) + ": " + f.price_guest);

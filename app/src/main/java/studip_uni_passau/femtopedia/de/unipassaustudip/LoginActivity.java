@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -29,7 +31,10 @@ import com.github.javiersantos.appupdater.AppUpdater;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.google.gson.Gson;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.cookie.Cookie;
+import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.impl.cookie.BasicClientCookie;
 
 import java.io.BufferedReader;
@@ -37,11 +42,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.femtopedia.studip.StudIPAPI;
+import de.femtopedia.studip.json.User;
 
 /**
  * A login screen that offers login via username/password.
@@ -331,7 +338,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 e.putString("username", mUsername);
                 e.apply();
                 loggedIn = true;
-                tryIntentChange();
+                CacheCurrentUserData data = new CacheCurrentUserData();
+                data.execute();
             } else if (success == 1) {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
@@ -357,5 +365,59 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
     }
+
+    public class CacheCurrentUserData extends AsyncTask<Void, Void, User> {
+        @Override
+        protected User doInBackground(Void... voids) {
+            try {
+                return ActivityHolder.api.getCurrentUserData();
+            } catch (IllegalAccessException | IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(User user) {
+            if (user == null) {
+                CacheCurrentUserData data = new CacheCurrentUserData();
+                data.execute();
+            } else {
+                ActivityHolder.current_user = user;
+                CacheCurrentUserPic pic = new CacheCurrentUserPic();
+                pic.execute(user.getAvatar_original());
+            }
+            super.onPostExecute(user);
+        }
+    }
+
+    public class CacheCurrentUserPic extends AsyncTask<String, Void, Bitmap> {
+        @Override
+        protected Bitmap doInBackground(String... url) {
+            try {
+                HttpResponse response = ActivityHolder.api.getShibbolethClient().getIfValid(url[0]);
+                HttpEntity entity = response.getEntity();
+                BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
+                InputStream instream = bufHttpEntity.getContent();
+                return BitmapFactory.decodeStream(instream);
+            } catch (IllegalAccessException | IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (bitmap == null) {
+                CacheCurrentUserPic data = new CacheCurrentUserPic();
+                data.execute(ActivityHolder.current_user.getAvatar_original());
+            } else {
+                ActivityHolder.profile_pic = bitmap;
+                tryIntentChange();
+            }
+            super.onPostExecute(bitmap);
+        }
+    }
+
 }
 

@@ -1,8 +1,6 @@
 package studip_uni_passau.femtopedia.de.unipassaustudip;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,20 +14,15 @@ import android.view.MenuItem;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.entity.BufferedHttpEntity;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.femtopedia.studip.json.Event;
 import de.femtopedia.studip.json.Events;
-import de.femtopedia.studip.json.User;
 import de.femtopedia.studip.util.Schedule;
 import de.femtopedia.studip.util.ScheduledCourse;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -48,8 +41,6 @@ public class ScheduleActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.schedule);
-        CacheCurrentUserData data = new CacheCurrentUserData();
-        data.execute();
         CacheSchedule sched = new CacheSchedule();
         sched.execute();
 
@@ -63,6 +54,9 @@ public class ScheduleActivity extends AppCompatActivity
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(ActivityHolder.current_user.getName().getFormatted());
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(ActivityHolder.current_user.getUsername());
+        ((CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView)).setImageBitmap(ActivityHolder.profile_pic);
 
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
@@ -237,71 +231,6 @@ public class ScheduleActivity extends AppCompatActivity
                 break;
         }
         return sb.append(", ").append(time.getDayOfMonth()).append(".").append(time.getMonthOfYear()).append(".").append(time.getYear()).toString();
-    }
-
-    public class CacheCurrentUserData extends AsyncTask<Void, Void, User> {
-        @Override
-        protected User doInBackground(Void... voids) {
-            try {
-                return ActivityHolder.api.getCurrentUserData();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-                Intent intent = new Intent(ScheduleActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(User user) {
-            if (user == null) {
-                CacheCurrentUserData data = new CacheCurrentUserData();
-                data.execute();
-            } else {
-                ActivityHolder.current_user = user;
-                ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(user.getName().getFormatted());
-                ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(user.getUsername());
-                CacheCurrentUserPic pic = new CacheCurrentUserPic();
-                pic.execute(user.getAvatar_original());
-            }
-            super.onPostExecute(user);
-        }
-    }
-
-    public class CacheCurrentUserPic extends AsyncTask<String, Void, Bitmap> {
-        @Override
-        protected Bitmap doInBackground(String... url) {
-            try {
-                HttpResponse response = ActivityHolder.api.getShibbolethClient().getIfValid(url[0]);
-                HttpEntity entity = response.getEntity();
-                BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
-                InputStream instream = bufHttpEntity.getContent();
-                return BitmapFactory.decodeStream(instream);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-                Intent intent = new Intent(ScheduleActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (bitmap == null) {
-                CacheCurrentUserPic data = new CacheCurrentUserPic();
-                data.execute(ActivityHolder.current_user.getAvatar_original());
-            } else {
-                ActivityHolder.profile_pic = bitmap;
-                ((CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView)).setImageBitmap(bitmap);
-            }
-            super.onPostExecute(bitmap);
-        }
     }
 
     public class CacheSchedule extends AsyncTask<Void, Void, Void> {
