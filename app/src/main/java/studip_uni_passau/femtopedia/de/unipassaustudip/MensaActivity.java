@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -43,13 +44,17 @@ public class MensaActivity extends AppCompatActivity
     DateTime dateTime;
     private TextView dateView;
     private NavigationView navigationView;
+    private SwipeRefreshLayout swiperefresher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mense);
-        CacheMensaPlan data = new CacheMensaPlan();
-        data.execute();
+
+        swiperefresher = findViewById(R.id.swiperefresh_mensa);
+        swiperefresher.setOnRefreshListener(this::updateData);
+        updateData();
+        swiperefresher.setRefreshing(true);
 
         expListView = findViewById(R.id.mensacontent);
         prepareListData();
@@ -71,6 +76,11 @@ public class MensaActivity extends AppCompatActivity
 
         dateView = findViewById(R.id.dateView);
         setDate(new DateTime().withTime(0, 0, 0, 0));
+    }
+
+    private void updateData() {
+        CacheMensaPlan data = new CacheMensaPlan();
+        data.execute();
     }
 
     private void setDate(DateTime dt) {
@@ -302,8 +312,9 @@ public class MensaActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            DateTime dt = new DateTime();
-            setToView(dt.withTime(0, 0, 0, 0));
+            clearListItems();
+            setToView(dateTime.withTime(0, 0, 0, 0));
+            swiperefresher.setRefreshing(false);
             super.onPostExecute(aVoid);
         }
     }

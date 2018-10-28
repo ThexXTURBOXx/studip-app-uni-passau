@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -36,13 +37,17 @@ public class ScheduleActivity extends AppCompatActivity
     List<List<String>> listDataChild;
     List<Integer> listDataColorsBg, listDataColorsText;
     private NavigationView navigationView;
+    private SwipeRefreshLayout swiperefresher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.schedule);
-        CacheSchedule sched = new CacheSchedule();
-        sched.execute();
+
+        swiperefresher = findViewById(R.id.swiperefresh_schedule);
+        swiperefresher.setOnRefreshListener(this::updateData);
+        updateData();
+        swiperefresher.setRefreshing(true);
 
         expListView = findViewById(R.id.schedulecontent);
         prepareListData();
@@ -64,6 +69,20 @@ public class ScheduleActivity extends AppCompatActivity
 
     }
 
+    private void updateData() {
+        CacheSchedule sched = new CacheSchedule();
+        sched.execute();
+    }
+
+    private void clearListItems() {
+        listDataHeader.clear();
+        listDataColorsBg.clear();
+        listDataColorsText.clear();
+        listDataChild.clear();
+
+        listAdapter.notifyDataSetChanged();
+    }
+
     private void prepareListData() {
         listDataHeader = new ArrayList<>();
         listDataColorsBg = new ArrayList<>();
@@ -82,7 +101,7 @@ public class ScheduleActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -253,6 +272,7 @@ public class ScheduleActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            clearListItems();
             DateTime dt = new DateTime();
             int dow = dt.getDayOfWeek();
             switch (dow) {
@@ -320,6 +340,7 @@ public class ScheduleActivity extends AppCompatActivity
                     addToView(getDateString(6, dow), ActivityHolder.schedule.saturday);
                     break;
             }
+            swiperefresher.setRefreshing(false);
             super.onPostExecute(aVoid);
         }
     }

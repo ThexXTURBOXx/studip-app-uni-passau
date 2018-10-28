@@ -19,13 +19,17 @@
         app:layout_constraintEnd_toStartOf="@+id/next_date"
         app:layout_constraintStart_toEndOf="@+id/previous_date" />
 
-    <ExpandableListView
-        android:id="@+id/mensacontent"
+    <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swiperefresh_mensa"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/dateView" >
-
-    </ExpandableListView>
+        app:layout_constraintTop_toBottomOf="@+id/dateView">
+        <ExpandableListView
+            android:id="@+id/mensacontent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <Button
         android:id="@+id/previous_date"
