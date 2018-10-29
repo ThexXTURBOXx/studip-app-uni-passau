@@ -9,7 +9,9 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,7 +19,6 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NoHttpResponseException;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.format.DateTimeFormat;
@@ -72,9 +73,13 @@ public class MensaActivity extends AppCompatActivity
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(ActivityHolder.current_user.getUsername());
         ((CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView)).setImageBitmap(ActivityHolder.profile_pic);
 
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBar actionbar = getSupportActionBar();
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawer, (Toolbar) actionbar.getCustomView(), R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(drawerToggle);
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
+        drawerToggle.syncState();
 
         dateView = findViewById(R.id.dateView);
         setDate(new DateTime().withTime(0, 0, 0, 0));
@@ -147,6 +152,8 @@ public class MensaActivity extends AppCompatActivity
             DrawerLayout drawer = findViewById(R.id.drawer_layout);
             if (!drawer.isDrawerOpen(GravityCompat.START))
                 drawer.openDrawer(GravityCompat.START);
+            else
+                drawer.closeDrawer(GravityCompat.START);
             return true;
         }
 
