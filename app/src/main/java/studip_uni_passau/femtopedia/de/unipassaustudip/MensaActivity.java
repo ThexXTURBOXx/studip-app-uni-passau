@@ -17,6 +17,7 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.NoHttpResponseException;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.format.DateTimeFormat;
@@ -53,8 +54,6 @@ public class MensaActivity extends AppCompatActivity
 
         swiperefresher = findViewById(R.id.swiperefresh_mensa);
         swiperefresher.setOnRefreshListener(this::updateData);
-        updateData();
-        swiperefresher.setRefreshing(true);
 
         expListView = findViewById(R.id.mensacontent);
         prepareListData();
@@ -62,6 +61,9 @@ public class MensaActivity extends AppCompatActivity
                 listDataHeader, listDataChild, listDataColorsBg, listDataColorsText);
         expListView.setAdapter(listAdapter);
         expListView.setGroupIndicator(null);
+
+        swiperefresher.setRefreshing(true);
+        updateData();
 
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -290,32 +292,37 @@ public class MensaActivity extends AppCompatActivity
         return dayMenus;
     }
 
-    public class CacheMensaPlan extends AsyncTask<Void, Void, Void> {
+    public class CacheMensaPlan extends AsyncTask<Void, Void, Integer> {
 
         @Override
-        protected Void doInBackground(Void... url) {
+        protected Integer doInBackground(Void... url) {
             try {
                 int week = new DateTime().getWeekOfWeekyear();
                 int next_week = new DateTime().plusDays(7).getWeekOfWeekyear();
                 ActivityHolder.mensaPlan.menu.putAll(parseMensaPlan(ActivityHolder.api.getShibbolethClient().getIfValid(mensaUrl + week + ".csv")));
                 ActivityHolder.mensaPlan.menu.putAll(parseMensaPlan(ActivityHolder.api.getShibbolethClient().getIfValid(mensaUrl + (next_week) + ".csv")));
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
                 Intent intent = new Intent(MensaActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish();
+                return 2;
             } catch (IOException e) {
                 e.printStackTrace();
+                return 1;
             }
-            return null;
+            return 0;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            clearListItems();
-            setToView(dateTime.withTime(0, 0, 0, 0));
-            swiperefresher.setRefreshing(false);
-            super.onPostExecute(aVoid);
+        protected void onPostExecute(Integer success) {
+            if (success == 0) {
+                clearListItems();
+                setToView(dateTime.withTime(0, 0, 0, 0));
+                swiperefresher.setRefreshing(false);
+            } else if (success == 1) {
+                updateData();
+            }
+            super.onPostExecute(success);
         }
     }
 

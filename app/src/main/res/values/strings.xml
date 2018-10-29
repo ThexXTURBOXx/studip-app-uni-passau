@@ -129,5 +129,8 @@
     <string name="servants">Servants</string>
     <string name="action_pickdate">Pick date</string>
     <string name="tomorrow">Tomorrow</string>
+    <string name="authenticating">Authenticating...</string>
+    <string name="loading_user_data">Loading user data...</string>
+    <string name="loading_user_pic">Loading profile picture...</string>
 
 </resources>

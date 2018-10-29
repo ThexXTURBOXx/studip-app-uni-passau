@@ -46,8 +46,6 @@ public class ScheduleActivity extends AppCompatActivity
 
         swiperefresher = findViewById(R.id.swiperefresh_schedule);
         swiperefresher.setOnRefreshListener(this::updateData);
-        updateData();
-        swiperefresher.setRefreshing(true);
 
         expListView = findViewById(R.id.schedulecontent);
         prepareListData();
@@ -55,6 +53,9 @@ public class ScheduleActivity extends AppCompatActivity
                 listDataHeader, listDataChild, listDataColorsBg, listDataColorsText);
         expListView.setAdapter(listAdapter);
         expListView.setGroupIndicator(null);
+
+        swiperefresher.setRefreshing(true);
+        updateData();
 
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -66,7 +67,6 @@ public class ScheduleActivity extends AppCompatActivity
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
-
     }
 
     private void updateData() {

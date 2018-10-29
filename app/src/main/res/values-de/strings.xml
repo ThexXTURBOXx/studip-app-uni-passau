@@ -54,4 +54,7 @@
     <string name="soup">Suppen</string>
     <string name="action_pickdate">Datum auswählen</string>
     <string name="tomorrow">Morgen</string>
+    <string name="authenticating">Authentifiziere...</string>
+    <string name="loading_user_data">Lade Benutzerdaten...</string>
+    <string name="loading_user_pic">Lade Profilbild...</string>
 </resources>

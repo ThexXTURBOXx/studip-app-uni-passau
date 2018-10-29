@@ -65,6 +65,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private TextView authenticationStatus;
     private List<Cookie> cookies;
     private AppUpdater updater;
     private boolean loggedIn = false, checkedForUpdates = false;
@@ -108,27 +109,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mUsernameView.setText(pref.getString("username", ""));
 
         mPasswordView = findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                    attemptLogin(false);
-                    return true;
-                }
-                return false;
+        mPasswordView.setOnEditorActionListener((textView, id, keyEvent) -> {
+            if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
+                attemptLogin(false);
+                return true;
             }
+            return false;
         });
 
         Button mEmailSignInButton = findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin(false);
-            }
-        });
+        mEmailSignInButton.setOnClickListener((view) -> attemptLogin(false));
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+        authenticationStatus = findViewById(R.id.login_progress_status);
 
         attemptLogin(true);
     }
@@ -197,35 +191,34 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
+        mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+        mLoginFormView.animate().setDuration(shortAnimTime).alpha(
+                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
 
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
+        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+        mProgressView.animate().setDuration(shortAnimTime).alpha(
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
+
+        authenticationStatus.setVisibility(show ? View.VISIBLE : View.GONE);
+        authenticationStatus.animate().setDuration(shortAnimTime).alpha(
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
     }
 
     @Override
@@ -276,7 +269,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         };
 
         int ADDRESS = 0;
-        int IS_PRIMARY = 1;
     }
 
     /**
@@ -293,6 +285,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mUsername = username;
             mPassword = password;
             mCookies = cookies;
+            authenticationStatus.setText(getString(R.string.authenticating));
         }
 
         @Override
@@ -367,6 +360,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     public class CacheCurrentUserData extends AsyncTask<Void, Void, User> {
+
+        CacheCurrentUserData() {
+            authenticationStatus.setText(getString(R.string.loading_user_data));
+        }
+
         @Override
         protected User doInBackground(Void... voids) {
             try {
@@ -392,6 +390,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     public class CacheCurrentUserPic extends AsyncTask<String, Void, Bitmap> {
+
+        CacheCurrentUserPic() {
+            authenticationStatus.setText(getString(R.string.loading_user_pic));
+        }
+
         @Override
         protected Bitmap doInBackground(String... url) {
             try {

@@ -19,6 +19,14 @@
         android:layout_marginBottom="8dp"
         android:visibility="gone" />
 
+    <TextView
+        android:id="@+id/login_progress_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
