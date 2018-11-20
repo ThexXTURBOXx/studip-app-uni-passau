@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -14,11 +16,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     private Context _context;
     private List<String> _listDataHeader;
-    private List<List<String>> _listDataChild;
+    private List<List<Object>> _listDataChild;
     private List<Integer> _listDataColorsBg, _listDataColorsText;
 
     public ExpandableListAdapter(Context context, List<String> listDataHeader,
-                                 List<List<String>> listChildData,
+                                 List<List<Object>> listChildData,
                                  List<Integer> listDataColorsBg,
                                  List<Integer> listDataColorsText) {
         this._context = context;
@@ -42,18 +44,32 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     public View getChildView(int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
 
-        if (convertView == null) {
-            LayoutInflater infalInflater = (LayoutInflater) this._context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        Object data = _listDataChild.get(groupPosition).get(childPosition);
+        LayoutInflater infalInflater = (LayoutInflater) this._context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        if (data instanceof String) {
             convertView = infalInflater.inflate(R.layout.list_item, null);
+            TextView txtListChild = convertView
+                    .findViewById(R.id.lblListItem);
+            txtListChild.setTextColor(_listDataColorsText.get(groupPosition));
+            convertView.setBackgroundColor(_listDataColorsBg.get(groupPosition));
+            txtListChild.setText((String) getChild(groupPosition, childPosition));
+        } else if (data instanceof List) {
+            convertView = infalInflater.inflate(R.layout.list_image_item, null);
+            convertView.setBackgroundColor(_listDataColorsBg.get(groupPosition));
+            LinearLayout ll = convertView.findViewById(R.id.imageViewFoodPp);
+            int c = 0;
+            for (int i : (List<Integer>) data) {
+                ImageView iv = new ImageView(StudIPApp.app.getCurrentActivity());
+                if (c == 0)
+                    iv.setPadding(125, 20, 0, 20);
+                iv.setImageResource(i);
+                ll.addView(iv);
+                c++;
+            }
         }
 
-        TextView txtListChild = convertView
-                .findViewById(R.id.lblListItem);
-        txtListChild.setTextColor(_listDataColorsText.get(groupPosition));
-        convertView.setBackgroundColor(_listDataColorsBg.get(groupPosition));
-
-        txtListChild.setText((String) getChild(groupPosition, childPosition));
         return convertView;
     }
 

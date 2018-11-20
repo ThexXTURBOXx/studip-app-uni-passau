@@ -37,7 +37,7 @@ public class ScheduleActivity extends AppCompatActivity
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
     List<String> listDataHeader;
-    List<List<String>> listDataChild;
+    List<List<Object>> listDataChild;
     List<Integer> listDataColorsBg, listDataColorsText;
     private NavigationView navigationView;
     private SwipeRefreshLayout swiperefresher;
@@ -103,7 +103,7 @@ public class ScheduleActivity extends AppCompatActivity
         listDataChild = new ArrayList<>();
     }
 
-    private void addListItem(String title, List<String> info, int colorBg, int colorText) {
+    private void addListItem(String title, List<Object> info, int colorBg, int colorText) {
         listDataHeader.add(title);
         listDataColorsBg.add(colorBg);
         listDataColorsText.add(colorText);
@@ -171,7 +171,7 @@ public class ScheduleActivity extends AppCompatActivity
         if (list != null && !list.isEmpty())
             addListItem(day, new ArrayList<>(), Color.BLACK, Color.WHITE);
         for (ScheduledEvent se : list) {
-            List<String> info = new ArrayList<>();
+            List<Object> info = new ArrayList<>();
             info.add(se.title);
             info.add(se.room);
             info.add(getString(R.string.start) + ": " + String.format("%02d", se.start.getHourOfDay()) + ":" + String.format("%02d", se.start.getMinuteOfHour()));

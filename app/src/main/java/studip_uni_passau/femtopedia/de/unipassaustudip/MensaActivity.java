@@ -43,7 +43,7 @@ public class MensaActivity extends AppCompatActivity
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
     List<String> listDataHeader;
-    List<List<String>> listDataChild;
+    List<List<Object>> listDataChild;
     List<Integer> listDataColorsBg, listDataColorsText;
     DateTime dateTime;
     private TextView dateView;
@@ -121,7 +121,7 @@ public class MensaActivity extends AppCompatActivity
         listAdapter.notifyDataSetChanged();
     }
 
-    private void addListItem(String title, List<String> info, int colorBg, int colorText) {
+    private void addListItem(String title, List<Object> info, int colorBg, int colorText) {
         listDataHeader.add(title);
         listDataColorsBg.add(colorBg);
         listDataColorsText.add(colorText);
@@ -213,8 +213,11 @@ public class MensaActivity extends AppCompatActivity
     }
 
     public void addFood(MensaPlan.Food f, String colorBg) {
-        List<String> info = new ArrayList<>();
-        info.add("" + f.properties.size());
+        List<Object> info = new ArrayList<>();
+        List<Integer> images = new ArrayList<>();
+        for (MensaPlan.FoodProperty fp : f.properties)
+            images.add(fp.drawable);
+        info.add(images);
         NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.GERMANY);
         info.add(getString(R.string.students) + ": " + formatter.format(f.price_stud));
         info.add(getString(R.string.servants) + ": " + formatter.format(f.price_bed));
