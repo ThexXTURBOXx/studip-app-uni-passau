@@ -212,7 +212,7 @@ public class MensaActivity extends AppCompatActivity
         info.add(getString(R.string.guests) + ": " + f.price_guest);
         int color = Color.parseColor("#" + colorBg);
         double lum = 0.299d * (double) Color.red(color) + 0.587d * (double) Color.green(color) + 0.114d * (double) Color.blue(color);
-        addListItem(f.name, info, color, lum < 128 ? Color.BLACK : Color.WHITE);
+        addListItem(f.name, info, color, lum > 128 ? Color.BLACK : Color.WHITE);
     }
 
     private String getDateString(DateTime time) {

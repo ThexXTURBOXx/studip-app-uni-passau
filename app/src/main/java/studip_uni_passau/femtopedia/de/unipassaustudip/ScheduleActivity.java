@@ -171,7 +171,7 @@ public class ScheduleActivity extends AppCompatActivity
             info.add(getString(R.string.end) + ": " + String.format("%02d", se.end.getHourOfDay()) + ":" + String.format("%02d", se.end.getMinuteOfHour()));
             int color = Color.parseColor("#" + se.color);
             double lum = 0.299d * (double) Color.red(color) + 0.587d * (double) Color.green(color) + 0.114d * (double) Color.blue(color);
-            addListItem(se.description, info, color, lum < 128 ? Color.BLACK : Color.WHITE);
+            addListItem(se.description, info, color, lum > 128 ? Color.BLACK : Color.WHITE);
         }
     }
 
