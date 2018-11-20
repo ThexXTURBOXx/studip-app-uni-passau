@@ -1,6 +1,5 @@
 package studip_uni_passau.femtopedia.de.unipassaustudip;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -25,7 +24,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.femtopedia.studip.StudIPAPI;
 import de.femtopedia.studip.json.Course;
 import de.femtopedia.studip.json.Event;
 import de.femtopedia.studip.json.Events;
@@ -201,34 +199,42 @@ public class ScheduleActivity extends AppCompatActivity
         List<ScheduledEvent> eventss = new ArrayList<>();
         if (courses != null) {
             DateTime now = new DateTime().plusDays(1).withTime(0, 0, 0, 0);
-            for (ScheduledCourse s : courses) {
-                for (Event event : events) {
+            for (Event event : events) {
+                boolean flag = false;
+                DateTime time = new DateTime(event.getStart() * 1000);
+                if (time.getDayOfWeek() != day || Days.daysBetween(now, new DateTime(time).withTime(1, 0, 0, 0)).getDays() >= 6)
+                    continue;
+                DateTime dd = new DateTime(event.getEnd() * 1000);
+                ScheduledEvent se = new ScheduledEvent();
+                se.start = time;
+                se.end = dd;
+                se.title = event.getTitle();
+                se.canceled = event.getCanceled();
+                se.room = event.getRoom();
+                se.course = event.getCourse();
+                for (ScheduledCourse s : courses) {
                     if (event.getCourse().replaceFirst("/studip/api.php/course/", "").equals(s.getEvent_id())) {
-                        DateTime time = new DateTime(event.getStart() * 1000);
-                        if (Days.daysBetween(now, new DateTime(time).withTime(1, 0, 0, 0)).getDays() >= 6)
-                            continue;
-                        int day1 = time.getDayOfWeek();
-                        if (day == day1) {
-                            String time1 = String.format("%02d", time.getHourOfDay()) + String.format("%02d", time.getMinuteOfHour());
-                            if (Integer.parseInt(time1) == s.getStart()) {
-                                DateTime dd = new DateTime(event.getEnd() * 1000);
-                                String time2 = String.format("%02d", dd.getHourOfDay()) + String.format("%02d", dd.getMinuteOfHour());
-                                if (Integer.parseInt(time2) == s.getEnd()) {
-                                    ScheduledEvent se = new ScheduledEvent();
-                                    se.start = time;
-                                    se.end = dd;
-                                    se.title = event.getTitle();
-                                    se.description = s.getContent();
-                                    se.canceled = event.getCanceled();
-                                    se.room = event.getRoom();
-                                    se.color = s.getColor();
-                                    se.course = event.getCourse();
-                                    eventss.add(se);
-                                }
+                        String time1 = String.format("%02d", time.getHourOfDay()) + String.format("%02d", time.getMinuteOfHour());
+                        if (Integer.parseInt(time1) == s.getStart()) {
+                            String time2 = String.format("%02d", dd.getHourOfDay()) + String.format("%02d", dd.getMinuteOfHour());
+                            if (Integer.parseInt(time2) == s.getEnd()) {
+                                flag = true;
+                                se.description = s.getContent();
+                                se.color = s.getColor();
                             }
                         }
                     }
                 }
+                if (!flag) {
+                    try {
+                        Course c = ActivityHolder.api.getCourse(event.getCourse().replaceFirst("/studip/api.php/course/", ""));
+                        se.description = c.getNumber() + " " + c.getTitle();
+                    } catch (IOException | IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                    se.color = "ea3838";
+                }
+                eventss.add(se);
             }
         }
         return eventss;
