@@ -1,5 +1,6 @@
 package studip_uni_passau.femtopedia.de.unipassaustudip;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -24,6 +25,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.femtopedia.studip.StudIPAPI;
+import de.femtopedia.studip.json.Course;
 import de.femtopedia.studip.json.Event;
 import de.femtopedia.studip.json.Events;
 import de.femtopedia.studip.util.Schedule;
@@ -45,6 +48,7 @@ public class ScheduleActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.schedule);
+        ((StudIPApp) getApplicationContext()).setCurrentActivity(this);
 
         swiperefresher = findViewById(R.id.swiperefresh_schedule);
         swiperefresher.setOnRefreshListener(this::updateData);
@@ -64,7 +68,8 @@ public class ScheduleActivity extends AppCompatActivity
         navigationView.getMenu().getItem(0).setChecked(true);
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(ActivityHolder.current_user.getName().getFormatted());
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(ActivityHolder.current_user.getUsername());
-        ((CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView)).setImageBitmap(ActivityHolder.profile_pic);
+        if (ActivityHolder.profile_pic != null)
+            setProfilePic();
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBar actionbar = getSupportActionBar();
@@ -73,6 +78,10 @@ public class ScheduleActivity extends AppCompatActivity
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
         drawerToggle.syncState();
+    }
+
+    public void setProfilePic() {
+        ((CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView)).setImageBitmap(ActivityHolder.profile_pic);
     }
 
     private void updateData() {

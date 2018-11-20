@@ -72,6 +72,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        ((StudIPApp) getApplicationContext()).setCurrentActivity(this);
 
         updater = new AppUpdater(this)
                 .setUpdateFrom(UpdateFrom.JSON)
@@ -382,6 +383,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 ActivityHolder.current_user = user;
                 CacheCurrentUserPic pic = new CacheCurrentUserPic();
                 pic.execute(user.getAvatar_original());
+                tryIntentChange();
             }
             super.onPostExecute(user);
         }
@@ -402,8 +404,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 InputStream instream = bufHttpEntity.getContent();
                 return BitmapFactory.decodeStream(instream);
             } catch (IllegalAccessException | IOException e) {
-                e.printStackTrace();
             }
+            CacheCurrentUserPic pic = new CacheCurrentUserPic();
+            pic.execute(url);
             return null;
         }
 
@@ -413,8 +416,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 CacheCurrentUserPic data = new CacheCurrentUserPic();
                 data.execute(ActivityHolder.current_user.getAvatar_original());
             } else {
-                ActivityHolder.profile_pic = bitmap;
-                tryIntentChange();
+                ActivityHolder.updatePic(bitmap);
             }
             super.onPostExecute(bitmap);
         }

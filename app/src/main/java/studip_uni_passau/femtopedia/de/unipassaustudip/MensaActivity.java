@@ -52,6 +52,7 @@ public class MensaActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mense);
+        ((StudIPApp) getApplicationContext()).setCurrentActivity(this);
 
         swiperefresher = findViewById(R.id.swiperefresh_mensa);
         swiperefresher.setOnRefreshListener(this::updateData);
@@ -71,7 +72,8 @@ public class MensaActivity extends AppCompatActivity
         navigationView.getMenu().getItem(1).setChecked(true);
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(ActivityHolder.current_user.getName().getFormatted());
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(ActivityHolder.current_user.getUsername());
-        ((CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView)).setImageBitmap(ActivityHolder.profile_pic);
+        if (ActivityHolder.profile_pic != null)
+            setProfilePic();
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBar actionbar = getSupportActionBar();
@@ -83,6 +85,10 @@ public class MensaActivity extends AppCompatActivity
 
         dateView = findViewById(R.id.dateView);
         setDate(new DateTime().withTime(0, 0, 0, 0));
+    }
+
+    public void setProfilePic() {
+        ((CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView)).setImageBitmap(ActivityHolder.profile_pic);
     }
 
     private void updateData() {
