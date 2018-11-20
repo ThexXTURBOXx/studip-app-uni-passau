@@ -26,9 +26,11 @@ import org.joda.time.format.DateTimeFormatter;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import de.femtopedia.studip.shib.ShibbolethClient;
@@ -213,9 +215,10 @@ public class MensaActivity extends AppCompatActivity
     public void addFood(MensaPlan.Food f, String colorBg) {
         List<String> info = new ArrayList<>();
         info.add("" + f.properties.size());
-        info.add(getString(R.string.students) + ": " + f.price_stud);
-        info.add(getString(R.string.servants) + ": " + f.price_bed);
-        info.add(getString(R.string.guests) + ": " + f.price_guest);
+        NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.GERMANY);
+        info.add(getString(R.string.students) + ": " + formatter.format(f.price_stud));
+        info.add(getString(R.string.servants) + ": " + formatter.format(f.price_bed));
+        info.add(getString(R.string.guests) + ": " + formatter.format(f.price_guest));
         int color = Color.parseColor("#" + colorBg);
         double lum = 0.299d * (double) Color.red(color) + 0.587d * (double) Color.green(color) + 0.114d * (double) Color.blue(color);
         addListItem(f.name, info, color, lum > 128 ? Color.BLACK : Color.WHITE);
