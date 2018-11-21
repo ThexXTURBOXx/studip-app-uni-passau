@@ -279,8 +279,11 @@ public class MensaActivity extends AppCompatActivity
                 String[] cols = s.split(";");
                 food.name = cols[3];
                 food.properties = new ArrayList<>();
-                for (String c : cols[4].split(","))
-                    food.properties.add(MensaPlan.FoodProperty.getProperty(c));
+                for (String c : cols[4].split(",")) {
+                    MensaPlan.FoodProperty fp = MensaPlan.FoodProperty.getProperty(c);
+                    if (fp != null)
+                        food.properties.add(fp);
+                }
                 food.price_stud = Double.parseDouble(cols[6].replace(",", "."));
                 food.price_bed = Double.parseDouble(cols[7].replace(",", "."));
                 food.price_guest = Double.parseDouble(cols[8].replace(",", "."));

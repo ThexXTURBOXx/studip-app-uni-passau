@@ -62,9 +62,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             int c = 0;
             for (int i : (List<Integer>) data) {
                 ImageView iv = new ImageView(StudIPApp.app.getCurrentActivity());
-                if (c == 0)
-                    iv.setPadding(125, 20, 0, 20);
+                iv.setPadding(c == 0 ? 125 : 0, 20, 0, 20);
                 iv.setImageResource(i);
+                iv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 100));
+                iv.setScaleType(ImageView.ScaleType.FIT_XY);
+                iv.setAdjustViewBounds(true);
                 ll.addView(iv);
                 c++;
             }
