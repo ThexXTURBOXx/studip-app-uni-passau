@@ -77,9 +77,9 @@ public class ScheduleActivity extends AppCompatActivity
         if (actionbar != null) {
             ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawer, (Toolbar) actionbar.getCustomView(), R.string.navigation_drawer_open, R.string.navigation_drawer_close);
             drawer.addDrawerListener(drawerToggle);
-            drawerToggle.syncState();
             actionbar.setDisplayHomeAsUpEnabled(true);
             actionbar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
+            drawerToggle.syncState();
         }
     }
 
@@ -167,6 +167,8 @@ public class ScheduleActivity extends AppCompatActivity
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/ThexXTURBOXx/studip-app-uni-passau/issues/new"));
             startActivity(intent);
         } else if (id == R.id.nav_about) {
+            Intent intent = new Intent(ScheduleActivity.this, AboutActivity.class);
+            startActivity(intent);
         } else if (id == R.id.open_in_browser) {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://studip.uni-passau.de/studip/index.php"));
             startActivity(intent);

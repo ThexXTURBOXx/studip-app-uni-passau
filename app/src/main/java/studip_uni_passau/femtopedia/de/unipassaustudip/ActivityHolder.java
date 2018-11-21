@@ -26,6 +26,8 @@ class ActivityHolder {
             ((ScheduleActivity) a).setProfilePic();
         else if (a instanceof MensaActivity)
             ((MensaActivity) a).setProfilePic();
+        else if (a instanceof AboutActivity)
+            ((AboutActivity) a).setProfilePic();
     }
 
 }

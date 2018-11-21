@@ -193,6 +193,8 @@ public class MensaActivity extends AppCompatActivity
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/ThexXTURBOXx/studip-app-uni-passau/issues/new"));
             startActivity(intent);
         } else if (id == R.id.nav_about) {
+            Intent intent = new Intent(MensaActivity.this, AboutActivity.class);
+            startActivity(intent);
         } else if (id == R.id.open_in_browser) {
             Intent intent = new Intent("android.intent.action.VIEW", Uri.parse("https://studip.uni-passau.de/studip/index.php"));
             startActivity(intent);

@@ -37,6 +37,9 @@
         <activity
             android:name=".MensaActivity"
             android:label="@string/title_activity_mensa" />
+        <activity
+            android:name=".AboutActivity"
+            android:label="@string/title_activity_about" />
     </application>
 
 </manifest>
