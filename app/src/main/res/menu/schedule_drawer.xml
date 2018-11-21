@@ -16,6 +16,10 @@
     <item android:title="@string/cat_misc">
         <menu>
             <item
+                android:id="@+id/open_in_browser"
+                android:icon="@drawable/ic_insert_link_white_24dp"
+                android:title="@string/open_in_browser" />
+            <item
                 android:id="@+id/nav_manage"
                 android:icon="@drawable/ic_build_black_24dp"
                 android:title="@string/button_settings" />

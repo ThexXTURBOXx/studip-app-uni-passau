@@ -132,5 +132,6 @@
     <string name="authenticating">Authenticating...</string>
     <string name="loading_user_data">Loading user data...</string>
     <string name="loading_user_pic">Loading profile picture...</string>
+    <string name="open_in_browser">Open in Browser</string>
 
 </resources>

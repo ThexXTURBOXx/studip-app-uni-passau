@@ -2,6 +2,7 @@ package studip_uni_passau.femtopedia.de.unipassaustudip;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -183,6 +184,9 @@ public class MensaActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_bugreport) {
         } else if (id == R.id.nav_about) {
+        } else if (id == R.id.open_in_browser) {
+            Intent intent = new Intent("android.intent.action.VIEW", Uri.parse("https://studip.uni-passau.de/studip/index.php"));
+            startActivity(intent);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
