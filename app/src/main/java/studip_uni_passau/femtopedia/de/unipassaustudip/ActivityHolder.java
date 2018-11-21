@@ -10,18 +10,18 @@ import de.femtopedia.studip.json.User;
  * Created by Nico Mexis on 22.10.2018.
  */
 
-public class ActivityHolder {
+class ActivityHolder {
 
-    public static StudIPAPI api;
+    static StudIPAPI api;
 
-    public static User current_user;
-    public static Bitmap profile_pic = null;
-    public static EventSchedule schedule;
-    public static MensaPlan mensaPlan = new MensaPlan();
+    static User current_user;
+    static Bitmap profile_pic = null;
+    static EventSchedule schedule;
+    static MensaPlan mensaPlan = new MensaPlan();
 
-    public static void updatePic(Bitmap profile_pic) {
+    static void updatePic(Bitmap profile_pic, StudIPApp application) {
         ActivityHolder.profile_pic = profile_pic;
-        Activity a = StudIPApp.app.getCurrentActivity();
+        Activity a = application.getCurrentActivity();
         if (a instanceof ScheduleActivity)
             ((ScheduleActivity) a).setProfilePic();
         else if (a instanceof MensaActivity)

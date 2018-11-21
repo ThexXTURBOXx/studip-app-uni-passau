@@ -4,14 +4,14 @@ import org.joda.time.DateTime;
 
 public class ScheduledEvent {
 
-    public DateTime start;
-    public DateTime end;
-    public String color;
-    public String course;
-    public String title;
-    public String description;
-    public String room;
-    public String canceled;
+    DateTime start;
+    DateTime end;
+    String color;
+    String course;
+    String title;
+    String description;
+    String room;
+    String canceled;
 
     @Override
     public String toString() {

@@ -65,16 +65,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mLoginFormView;
     private TextView authenticationStatus;
     private List<Cookie> cookies;
-    private AppUpdater updater;
     private boolean loggedIn = false, checkedForUpdates = false;
 
     @Override
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ((StudIPApp) getApplicationContext()).setCurrentActivity(this);
 
-        updater = new AppUpdater(this)
+        AppUpdater updater = new AppUpdater(this)
                 .setUpdateFrom(UpdateFrom.JSON)
                 .setUpdateJSON("http://femtopedia.de/studip/version.json")
                 .setOnFinish((v, i) -> {
@@ -239,17 +239,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        List<String> usernames = new ArrayList<>();
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            usernames.add(cursor.getString(ProfileQuery.ADDRESS));
-            cursor.moveToNext();
-        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
-
     }
 
     private void tryIntentChange() {
@@ -266,14 +259,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 ContactsContract.CommonDataKinds.Nickname.DISPLAY_NAME,
                 ContactsContract.CommonDataKinds.Nickname.IS_PRIMARY,
         };
-
-        int ADDRESS = 0;
     }
 
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
+    @SuppressWarnings("StaticFieldLeak")
     public class UserLoginTask extends AsyncTask<Boolean, Void, Integer> {
 
         private final String mUsername;
@@ -358,6 +350,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     }
 
+    @SuppressWarnings("StaticFieldLeak")
     public class CacheCurrentUserData extends AsyncTask<Void, Void, User> {
 
         CacheCurrentUserData() {
@@ -389,6 +382,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
+    @SuppressWarnings("StaticFieldLeak")
     public class CacheCurrentUserPic extends AsyncTask<String, Void, Bitmap> {
 
         CacheCurrentUserPic() {
@@ -404,6 +398,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 InputStream instream = bufHttpEntity.getContent();
                 return BitmapFactory.decodeStream(instream);
             } catch (IllegalAccessException | IOException e) {
+                e.printStackTrace();
             }
             CacheCurrentUserPic pic = new CacheCurrentUserPic();
             pic.execute(url);
@@ -416,7 +411,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 CacheCurrentUserPic data = new CacheCurrentUserPic();
                 data.execute(ActivityHolder.current_user.getAvatar_original());
             } else {
-                ActivityHolder.updatePic(bitmap);
+                ActivityHolder.updatePic(bitmap, (StudIPApp) getApplication());
             }
             super.onPostExecute(bitmap);
         }

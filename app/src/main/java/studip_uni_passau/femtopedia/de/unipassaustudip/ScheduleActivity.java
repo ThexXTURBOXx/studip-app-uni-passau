@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -24,6 +25,7 @@ import org.joda.time.Days;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import de.femtopedia.studip.json.Course;
 import de.femtopedia.studip.json.Event;
@@ -72,11 +74,13 @@ public class ScheduleActivity extends AppCompatActivity
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBar actionbar = getSupportActionBar();
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawer, (Toolbar) actionbar.getCustomView(), R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(drawerToggle);
-        actionbar.setDisplayHomeAsUpEnabled(true);
-        actionbar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
-        drawerToggle.syncState();
+        if (actionbar != null) {
+            ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawer, (Toolbar) actionbar.getCustomView(), R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.addDrawerListener(drawerToggle);
+            drawerToggle.syncState();
+            actionbar.setDisplayHomeAsUpEnabled(true);
+            actionbar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
+        }
     }
 
     public void setProfilePic() {
@@ -148,7 +152,7 @@ public class ScheduleActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -162,7 +166,7 @@ public class ScheduleActivity extends AppCompatActivity
         } else if (id == R.id.nav_bugreport) {
         } else if (id == R.id.nav_about) {
         } else if (id == R.id.open_in_browser) {
-            Intent intent = new Intent("android.intent.action.VIEW", Uri.parse("https://studip.uni-passau.de/studip/index.php"));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://studip.uni-passau.de/studip/index.php"));
             startActivity(intent);
         }
 
@@ -171,15 +175,15 @@ public class ScheduleActivity extends AppCompatActivity
         return true;
     }
 
-    private void addToView(String day, List<ScheduledEvent> list) {
-        if (list != null && !list.isEmpty())
+    private void addToView(String day, @NonNull List<ScheduledEvent> list) {
+        if (!list.isEmpty())
             addListItem(day, new ArrayList<>(), Color.BLACK, Color.WHITE);
         for (ScheduledEvent se : list) {
             List<Object> info = new ArrayList<>();
             info.add(se.title);
             info.add(se.room);
-            info.add(getString(R.string.start) + ": " + String.format("%02d", se.start.getHourOfDay()) + ":" + String.format("%02d", se.start.getMinuteOfHour()));
-            info.add(getString(R.string.end) + ": " + String.format("%02d", se.end.getHourOfDay()) + ":" + String.format("%02d", se.end.getMinuteOfHour()));
+            info.add(getString(R.string.start) + ": " + String.format(Locale.GERMANY, "%02d", se.start.getHourOfDay()) + ":" + String.format(Locale.GERMANY, "%02d", se.start.getMinuteOfHour()));
+            info.add(getString(R.string.end) + ": " + String.format(Locale.GERMANY, "%02d", se.end.getHourOfDay()) + ":" + String.format(Locale.GERMANY, "%02d", se.end.getMinuteOfHour()));
             int color = Color.parseColor("#" + se.color);
             double lum = 0.299d * (double) Color.red(color) + 0.587d * (double) Color.green(color) + 0.114d * (double) Color.blue(color);
             addListItem(se.description, info, color, lum > 128 ? Color.BLACK : Color.WHITE);
@@ -218,9 +222,9 @@ public class ScheduleActivity extends AppCompatActivity
                 se.course = event.getCourse();
                 for (ScheduledCourse s : courses) {
                     if (event.getCourse().replaceFirst("/studip/api.php/course/", "").equals(s.getEvent_id())) {
-                        String time1 = String.format("%02d", time.getHourOfDay()) + String.format("%02d", time.getMinuteOfHour());
+                        String time1 = String.format(Locale.GERMANY, "%02d", time.getHourOfDay()) + String.format(Locale.GERMANY, "%02d", time.getMinuteOfHour());
                         if (Integer.parseInt(time1) == s.getStart()) {
-                            String time2 = String.format("%02d", dd.getHourOfDay()) + String.format("%02d", dd.getMinuteOfHour());
+                            String time2 = String.format(Locale.GERMANY, "%02d", dd.getHourOfDay()) + String.format(Locale.GERMANY, "%02d", dd.getMinuteOfHour());
                             if (Integer.parseInt(time2) == s.getEnd()) {
                                 flag = true;
                                 se.description = s.getContent();
@@ -281,6 +285,7 @@ public class ScheduleActivity extends AppCompatActivity
         return sb.append(", ").append(time.getDayOfMonth()).append(".").append(time.getMonthOfYear()).append(".").append(time.getYear()).toString();
     }
 
+    @SuppressWarnings("staticFieldLeak")
     public class CacheSchedule extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... url) {

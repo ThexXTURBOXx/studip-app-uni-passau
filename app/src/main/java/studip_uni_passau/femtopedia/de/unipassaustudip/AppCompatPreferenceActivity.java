@@ -20,6 +20,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
@@ -53,15 +54,18 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
         getDelegate().onPostCreate(savedInstanceState);
     }
 
+    @SuppressWarnings("unused")
     public ActionBar getSupportActionBar() {
         return getDelegate().getSupportActionBar();
     }
 
+    @SuppressWarnings("unused")
     public void setSupportActionBar(@Nullable Toolbar toolbar) {
         getDelegate().setSupportActionBar(toolbar);
     }
 
     @Override
+    @NonNull
     public MenuInflater getMenuInflater() {
         return getDelegate().getMenuInflater();
     }

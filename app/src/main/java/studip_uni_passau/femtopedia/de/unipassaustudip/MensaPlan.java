@@ -7,6 +7,7 @@ import java.util.Map;
 
 public class MensaPlan {
 
+    @SuppressWarnings("useSparseArrays")
     public Map<Long, DayMenu> menu = new HashMap<>();
 
     public enum FoodProperty {
@@ -44,20 +45,20 @@ public class MensaPlan {
 
     }
 
-    public static class DayMenu {
+    static class DayMenu {
 
-        public List<Food> soups = new ArrayList<>();
-        public List<Food> mains = new ArrayList<>();
-        public List<Food> garnishes = new ArrayList<>();
-        public List<Food> desserts = new ArrayList<>();
+        List<Food> soups = new ArrayList<>();
+        List<Food> mains = new ArrayList<>();
+        List<Food> garnishes = new ArrayList<>();
+        List<Food> desserts = new ArrayList<>();
 
     }
 
     public static class Food {
 
-        public String name;
-        public List<FoodProperty> properties;
-        public double price_stud, price_bed, price_guest;
+        String name;
+        List<FoodProperty> properties;
+        double price_stud, price_bed, price_guest;
 
         @Override
         public String toString() {

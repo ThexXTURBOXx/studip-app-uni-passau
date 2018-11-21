@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -80,11 +81,13 @@ public class MensaActivity extends AppCompatActivity
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBar actionbar = getSupportActionBar();
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawer, (Toolbar) actionbar.getCustomView(), R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(drawerToggle);
-        actionbar.setDisplayHomeAsUpEnabled(true);
-        actionbar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
-        drawerToggle.syncState();
+        if (actionbar != null) {
+            ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawer, (Toolbar) actionbar.getCustomView(), R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.addDrawerListener(drawerToggle);
+            actionbar.setDisplayHomeAsUpEnabled(true);
+            actionbar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
+            drawerToggle.syncState();
+        }
 
         dateView = findViewById(R.id.dateView);
         setDate(new DateTime().withTime(0, 0, 0, 0));
@@ -171,7 +174,7 @@ public class MensaActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -265,6 +268,7 @@ public class MensaActivity extends AppCompatActivity
         return sb.append(", ").append(time.getDayOfMonth()).append(".").append(time.getMonthOfYear()).append(".").append(time.getYear()).toString();
     }
 
+    @SuppressWarnings("useSparseArrays")
     public Map<Long, MensaPlan.DayMenu> parseMensaPlan(HttpResponse csv) {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("dd.MM.yyyy");
         Map<Long, MensaPlan.DayMenu> dayMenus = new HashMap<>();
@@ -318,6 +322,7 @@ public class MensaActivity extends AppCompatActivity
         return dayMenus;
     }
 
+    @SuppressWarnings("StaticFieldLeak")
     public class CacheMensaPlan extends AsyncTask<Void, Void, Integer> {
 
         @Override
