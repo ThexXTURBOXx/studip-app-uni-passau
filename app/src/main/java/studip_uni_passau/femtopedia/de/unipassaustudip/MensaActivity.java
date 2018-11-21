@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import org.apache.http.HttpResponse;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
 import org.joda.time.Days;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -103,10 +104,13 @@ public class MensaActivity extends AppCompatActivity
     }
 
     private void setDate(DateTime dt) {
-        this.dateTime = dt;
-        dateView.setText(getDateString(dt));
-        clearListItems();
-        setToView(dateTime);
+        int days = Days.daysBetween(new DateTime().withDayOfWeek(DateTimeConstants.MONDAY).toLocalDate(), dt.toLocalDate()).getDays();
+        if (days < 14 && days >= 0) {
+            this.dateTime = dt;
+            dateView.setText(getDateString(dt));
+            clearListItems();
+            setToView(dateTime);
+        }
     }
 
     private void prepareListData() {
