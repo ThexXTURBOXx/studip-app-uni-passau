@@ -42,9 +42,14 @@ public class AboutActivity extends AppCompatActivity
         ((TextView) findViewById(R.id.about_text)).setText(getString(R.string.about_string));
 
         findViewById(R.id.button_email_me).setOnClickListener((v) -> {
-            final Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto","nico.mexis@kabelmail.de", null));
+            final Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "nico.mexis@kabelmail.de", null));
             emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Stud.IP App Bug");
             getApplicationContext().startActivity(Intent.createChooser(emailIntent, getString(R.string.send_mail)));
+        });
+
+        findViewById(R.id.button_source).setOnClickListener((v) -> {
+            Intent intent = new Intent("android.intent.action.VIEW", Uri.parse("https://github.com/ThexXTURBOXx/studip-app-uni-passau"));
+            startActivity(intent);
         });
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

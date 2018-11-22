@@ -137,5 +137,6 @@
     <string name="about_string">Hello, Student!\n\nI\'m Nico Mexis, a - at the beginning of coding - freshman at the University of Passau, and I am developing this app.\nIf you encounter any bugs, feel free to contact me via email or click the \"Report a bug\" option in the drawer menu.\n\nHave a great day and see you soon,\nNico Mexis</string>
     <string name="email">Email: nico.mexis@kabelmail.de</string>
     <string name="send_mail">Send Email...</string>
+    <string name="source">View Source on GitHub</string>
 
 </resources>
