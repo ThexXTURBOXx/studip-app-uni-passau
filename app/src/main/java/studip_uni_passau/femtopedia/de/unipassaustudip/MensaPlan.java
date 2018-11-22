@@ -24,7 +24,8 @@ public class MensaPlan {
         VITAL("MV", R.string.vital, R.drawable.vital),
         OEKO("B", R.string.oeko, R.drawable.oeko),
         JURADISTL("J", R.string.juradistl, R.drawable.juradistl),
-        BIOLAND("BL", R.string.bioland, R.drawable.bioland);
+        BIOLAND("BL", R.string.bioland, R.drawable.bioland),
+        UNKNOWN("", R.string.unknown, R.drawable.unknown);
 
         public String abbrev;
         public int meaning, drawable;
@@ -40,7 +41,7 @@ public class MensaPlan {
                 if (prop.abbrev.equals(key))
                     return prop;
             }
-            return null;
+            return UNKNOWN;
         }
 
     }

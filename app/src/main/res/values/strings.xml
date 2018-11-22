@@ -138,5 +138,6 @@
     <string name="email">Email: nico.mexis@kabelmail.de</string>
     <string name="send_mail">Send Email...</string>
     <string name="source">View Source on GitHub</string>
+    <string name="unknown">Unknown</string>
 
 </resources>
