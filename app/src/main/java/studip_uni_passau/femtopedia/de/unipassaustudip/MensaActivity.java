@@ -276,7 +276,7 @@ public class MensaActivity extends AppCompatActivity
         return sb.append(", ").append(time.getDayOfMonth()).append(".").append(time.getMonthOfYear()).append(".").append(time.getYear()).toString();
     }
 
-    @SuppressWarnings("useSparseArrays")
+    @SuppressWarnings({"useSparseArrays", "StringContatenationInLoop"})
     public Map<Long, MensaPlan.DayMenu> parseMensaPlan(HttpResponse csv) {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("dd.MM.yyyy");
         Map<Long, MensaPlan.DayMenu> dayMenus = new HashMap<>();
@@ -295,14 +295,26 @@ public class MensaActivity extends AppCompatActivity
                 String[] cols = s.split(";");
                 food.name = cols[3];
                 food.properties = new ArrayList<>();
-                for (String c : cols[4].split(",")) {
-                    MensaPlan.FoodProperty fp = MensaPlan.FoodProperty.getProperty(c);
-                    if (fp != null)
-                        food.properties.add(fp);
+                parseProperties(food, cols[4]);
+                try {
+                    food.price_stud = Double.parseDouble(cols[6].replace(",", "."));
+                    food.price_bed = Double.parseDouble(cols[7].replace(",", "."));
+                    food.price_guest = Double.parseDouble(cols[8].replace(",", "."));
+                } catch (NumberFormatException e) {
+                    food.name = food.name + "," + cols[4];
+                    food.properties.clear();
+                    parseProperties(food, cols[5]);
+                    try {
+                        food.price_stud = Double.parseDouble(cols[7].replace(",", "."));
+                        food.price_bed = Double.parseDouble(cols[8].replace(",", "."));
+                        food.price_guest = Double.parseDouble(cols[9].replace(",", "."));
+                    } catch (NumberFormatException e1) {
+                        e1.printStackTrace();
+                        food.price_stud = 0;
+                        food.price_bed = 0;
+                        food.price_guest = 0;
+                    }
                 }
-                food.price_stud = Double.parseDouble(cols[6].replace(",", "."));
-                food.price_bed = Double.parseDouble(cols[7].replace(",", "."));
-                food.price_guest = Double.parseDouble(cols[8].replace(",", "."));
                 if (!cols[0].equals(time)) {
                     if (!time.equals("")) {
                         dt = formatter.parseDateTime(time);
@@ -328,6 +340,14 @@ public class MensaActivity extends AppCompatActivity
             e.printStackTrace();
         }
         return dayMenus;
+    }
+
+    private void parseProperties(MensaPlan.Food food, String col) {
+        for (String c : col.split(",")) {
+            MensaPlan.FoodProperty fp = MensaPlan.FoodProperty.getProperty(c);
+            if (fp != null)
+                food.properties.add(fp);
+        }
     }
 
     @SuppressWarnings("StaticFieldLeak")
