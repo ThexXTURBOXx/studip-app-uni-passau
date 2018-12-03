@@ -345,7 +345,7 @@ public class MensaActivity extends AppCompatActivity
     private void parseProperties(MensaPlan.Food food, String col) {
         for (String c : col.split(",")) {
             MensaPlan.FoodProperty fp = MensaPlan.FoodProperty.getProperty(c);
-            if (fp != null)
+            if (fp != null && fp != MensaPlan.FoodProperty.NONE)
                 food.properties.add(fp);
         }
     }

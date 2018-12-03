@@ -246,6 +246,8 @@ public class ScheduleActivity extends AppCompatActivity
                     }
                     se.color = "ea3838";
                 }
+                if (se.title.endsWith(": Entfällt"))
+                    se.color = "aaaaaa";
                 eventss.add(se);
             }
         }

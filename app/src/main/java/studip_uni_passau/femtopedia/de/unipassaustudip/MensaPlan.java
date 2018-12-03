@@ -25,7 +25,8 @@ public class MensaPlan {
         OEKO("B", R.string.oeko, R.drawable.oeko),
         JURADISTL("J", R.string.juradistl, R.drawable.juradistl),
         BIOLAND("BL", R.string.bioland, R.drawable.bioland),
-        UNKNOWN("", R.string.unknown, R.drawable.unknown);
+        UNKNOWN("", R.string.unknown, R.drawable.unknown),
+        NONE("noneunknownkey", 0, 0);
 
         public String abbrev;
         public int meaning, drawable;
@@ -37,6 +38,8 @@ public class MensaPlan {
         }
 
         public static FoodProperty getProperty(String key) {
+            if (key.equals(""))
+                return NONE;
             for (FoodProperty prop : values()) {
                 if (prop.abbrev.equals(key))
                     return prop;
