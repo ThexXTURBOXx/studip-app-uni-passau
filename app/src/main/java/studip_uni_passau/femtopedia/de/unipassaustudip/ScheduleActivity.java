@@ -159,7 +159,6 @@ public class ScheduleActivity extends AppCompatActivity
         if (id == R.id.nav_mensa) {
             Intent intent = new Intent(ScheduleActivity.this, MensaActivity.class);
             startActivity(intent);
-            finish();
         } else if (id == R.id.nav_manage) {
             Intent intent = new Intent(ScheduleActivity.this, SettingsActivity.class);
             startActivity(intent);

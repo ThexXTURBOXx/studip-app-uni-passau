@@ -249,7 +249,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if (loggedIn && checkedForUpdates) {
             Intent intent = new Intent(LoginActivity.this, ScheduleActivity.class);
             startActivity(intent);
-            finish();
         }
     }
 

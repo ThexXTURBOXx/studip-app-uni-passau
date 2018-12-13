@@ -26,7 +26,7 @@ public class AboutActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about);
-        ((StudIPApp) getApplicationContext()).setCurrentActivity(this);
+        ((StudIPApp) getApplicationContext()).setCurrentTopActivity(this);
 
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -106,11 +106,9 @@ public class AboutActivity extends AppCompatActivity
         if (id == R.id.nav_schedule) {
             Intent intent = new Intent(AboutActivity.this, ScheduleActivity.class);
             startActivity(intent);
-            finish();
         } else if (id == R.id.nav_mensa) {
             Intent intent = new Intent(AboutActivity.this, MensaActivity.class);
             startActivity(intent);
-            finish();
         } else if (id == R.id.nav_manage) {
             Intent intent = new Intent(AboutActivity.this, SettingsActivity.class);
             startActivity(intent);
