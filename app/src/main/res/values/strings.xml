@@ -70,5 +70,7 @@
     <string name="pref_description_auto_sync">Automatically synchronizes, when you open the schedule and mensa plan.</string>
     <string name="pref_title_cookie_saving">Save Cookies</string>
     <string name="pref_description_cookie_saving">Saves the sessions, so you don\'t have to login every time, you open the app.</string>
+    <string name="credits">View Credits</string>
+    <string name="version">Version: %1$s (%2$d)</string>
 
 </resources>

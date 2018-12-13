@@ -61,6 +61,7 @@ class StudIPHelper {
         StudIPHelper.saveToFile(new File(context.getFilesDir(), "schedule.json"), StudIPHelper.schedule);
     }
 
+    @SuppressWarnings("EmptyCatchBlock")
     static <T> T loadFromFile(File file, Class<T> clazz) {
         try {
             Gson gson = new GsonBuilder().disableHtmlEscaping().create();
@@ -85,7 +86,7 @@ class StudIPHelper {
         }
     }
 
-    public static boolean isNetworkAvailable(Activity activity) {
+    static boolean isNetworkAvailable(Activity activity) {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager != null) {

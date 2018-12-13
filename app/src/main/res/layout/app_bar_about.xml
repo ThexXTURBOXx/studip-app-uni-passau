@@ -5,6 +5,13 @@
     android:layout_height="match_parent"
     tools:context="studip_uni_passau.femtopedia.de.unipassaustudip.AboutActivity">
 
-    <include layout="@layout/content_about" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <include layout="@layout/content_about" />
+    </ScrollView>
 
 </android.support.design.widget.CoordinatorLayout>

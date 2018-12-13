@@ -292,7 +292,7 @@ public class MensaActivity extends AppCompatActivity
         return sb.append(", ").append(time.getDayOfMonth()).append(".").append(time.getMonthOfYear()).append(".").append(time.getYear()).toString();
     }
 
-    @SuppressWarnings({"useSparseArrays", "StringContatenationInLoop"})
+    @SuppressWarnings({"useSparseArrays", "StringContatenationInLoop", "EmptyCatchBlock"})
     public Map<Long, MensaPlan.DayMenu> parseMensaPlan(HttpResponse csv) {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("dd.MM.yyyy");
         Map<Long, MensaPlan.DayMenu> dayMenus = new HashMap<>();
@@ -388,7 +388,6 @@ public class MensaActivity extends AppCompatActivity
             } catch (IllegalAccessException e) {
                 Intent intent = new Intent(MensaActivity.this, LoginActivity.class);
                 startActivity(intent);
-                finish();
                 return 2;
             } catch (IOException e) {
                 return 1;

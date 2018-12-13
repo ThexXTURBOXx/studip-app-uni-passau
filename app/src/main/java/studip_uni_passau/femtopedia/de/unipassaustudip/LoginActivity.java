@@ -259,7 +259,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    @SuppressWarnings("StaticFieldLeak")
+    @SuppressWarnings({"StaticFieldLeak", "EmptyCatchBlock"})
     public class UserLoginTask extends AsyncTask<Boolean, Void, Integer> {
 
         private final String mUsername;
@@ -350,7 +350,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     }
 
-    @SuppressWarnings("StaticFieldLeak")
+    @SuppressWarnings({"StaticFieldLeak", "EmptyCatchBlock"})
     public class CacheCurrentUserData extends AsyncTask<Void, Void, User> {
 
         CacheCurrentUserData() {
@@ -387,7 +387,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-    @SuppressWarnings("StaticFieldLeak")
+    @SuppressWarnings({"StaticFieldLeak", "EmptyCatchBlock"})
     public class CacheCurrentUserPic extends AsyncTask<String, Void, Bitmap> {
 
         CacheCurrentUserPic() {

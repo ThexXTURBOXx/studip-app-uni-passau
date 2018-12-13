@@ -68,4 +68,6 @@
     <string name="pref_description_cookie_saving">Speichert die Sitzung, damit du dich nicht jedes Mal neu einloggen musst.</string>
     <string name="pref_title_cookie_saving">Speichere Cookies</string>
     <string name="pref_title_auto_sync">Auto Sync</string>
+    <string name="credits">Quellen ansehen</string>
+    <string name="version">Version: %1$s (%2$d)</string>
 </resources>

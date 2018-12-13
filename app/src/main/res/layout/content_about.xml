@@ -21,26 +21,28 @@
         android:id="@+id/about_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/nico_image"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="16dp"
+        android:textSize="16sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:textSize="16sp"/>
+        app:layout_constraintTop_toBottomOf="@+id/nico_image" />
 
     <Button
         android:id="@+id/button_email_me"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAllCaps="false"
+        android:layout_gravity="start"
         android:layout_marginStart="8dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="8dp"
-        android:drawablePadding="10dp"
         android:drawableStart="@drawable/ic_mail_outline_white_24dp"
-        android:textAlignment="textStart"
+        android:drawableLeft="@drawable/ic_mail_outline_white_24dp"
+        android:drawablePadding="10dp"
         android:text="@string/email"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/about_text" />
@@ -49,30 +51,64 @@
         android:id="@+id/button_source"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAllCaps="false"
+        android:layout_gravity="start"
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
-        android:drawablePadding="10dp"
         android:drawableStart="@drawable/ic_github"
-        android:textAlignment="textStart"
+        android:drawableLeft="@drawable/ic_github"
+        android:drawablePadding="10dp"
         android:text="@string/source"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/button_email_me" />
 
-    <android.support.constraint.Guideline
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/button_credits"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/guideline"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5"/>
+        android:layout_gravity="start"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:drawableStart="@drawable/ic_library_books_black_24dp"
+        android:drawableLeft="@drawable/ic_library_books_black_24dp"
+        android:drawablePadding="10dp"
+        android:text="@string/credits"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/button_source" />
+
+    <TextView
+        android:id="@+id/version_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:paddingBottom="20dp"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_credits" />
 
     <android.support.constraint.Guideline
+        android:id="@+id/guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <android.support.constraint.Guideline
         android:id="@+id/guidelineHor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.01"/>
+        app:layout_constraintGuide_percent="0.01" />
 
 </android.support.constraint.ConstraintLayout>

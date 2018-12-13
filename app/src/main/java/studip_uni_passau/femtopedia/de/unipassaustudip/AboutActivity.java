@@ -39,6 +39,7 @@ public class AboutActivity extends AppCompatActivity
         civ.setImageResource(R.drawable.nico);
         civ.setBorderColor(0xffffffff);
         civ.setBorderWidth(15);
+        ((TextView) findViewById(R.id.version_text)).setText(getString(R.string.version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
         ((TextView) findViewById(R.id.about_text)).setText(getString(R.string.about_string));
 
         findViewById(R.id.button_email_me).setOnClickListener((v) -> {
@@ -49,6 +50,11 @@ public class AboutActivity extends AppCompatActivity
 
         findViewById(R.id.button_source).setOnClickListener((v) -> {
             Intent intent = new Intent("android.intent.action.VIEW", Uri.parse("https://github.com/ThexXTURBOXx/studip-app-uni-passau"));
+            startActivity(intent);
+        });
+
+        findViewById(R.id.button_credits).setOnClickListener((v) -> {
+            Intent intent = new Intent("android.intent.action.VIEW", Uri.parse("https://github.com/ThexXTURBOXx/studip-app-uni-passau/blob/master/README.md#credits"));
             startActivity(intent);
         });
 

@@ -223,6 +223,7 @@ public class ScheduleActivity extends AppCompatActivity
         return sched;
     }
 
+    @SuppressWarnings("EmptyCatchBlock")
     private List<ScheduledEvent> compareDay(List<ScheduledCourse> courses, List<Event> events, int day) {
         List<ScheduledEvent> eventss = new ArrayList<>();
         if (courses != null) {
@@ -379,7 +380,7 @@ public class ScheduleActivity extends AppCompatActivity
         }
     }
 
-    @SuppressWarnings("staticFieldLeak")
+    @SuppressWarnings({"staticFieldLeak", "EmptyCatchBlock"})
     public class CacheSchedule extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -389,7 +390,6 @@ public class ScheduleActivity extends AppCompatActivity
             } catch (IllegalAccessException e) {
                 Intent intent = new Intent(ScheduleActivity.this, LoginActivity.class);
                 startActivity(intent);
-                finish();
             } catch (IOException e) {
             }
             return null;

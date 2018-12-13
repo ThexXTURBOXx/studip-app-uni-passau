@@ -15,7 +15,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".LoginActivity"
-            android:label="@string/login_activity_name">
+            android:label="@string/login_activity_name"
+            android:screenOrientation="sensorPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,21 +27,25 @@
         </activity>
         <activity
             android:name=".ScheduleActivity"
-            android:label="@string/title_activity_schedule" />
+            android:label="@string/title_activity_schedule"
+            android:screenOrientation="sensorPortrait"/>
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".ScheduleActivity">
+            android:screenOrientation="sensorPortrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="studip_uni_passau.femtopedia.de.unipassaustudip.ScheduleActivity" />
         </activity>
+
         <activity
             android:name=".MensaActivity"
-            android:label="@string/title_activity_mensa" />
+            android:label="@string/title_activity_mensa"
+            android:screenOrientation="sensorPortrait"/>
         <activity
             android:name=".AboutActivity"
-            android:label="@string/title_activity_about" />
+            android:label="@string/title_activity_about"
+            android:screenOrientation="sensorPortrait"/>
     </application>
 
 </manifest>
