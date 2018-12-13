@@ -2,11 +2,9 @@
 <layer-list
     xmlns:android="http://schemas.android.com/apk/res/android" >
     <item
-        android:drawable="@drawable/side_nav_bar_gradient"
-        android:id="@+id/gradient_sidenav"/>
+        android:drawable="@drawable/side_nav_bar_gradient" />
     <item>
         <inset android:drawable="@drawable/ic_logo_unipassau"
-        android:id="@+id/uni_passau_logo"
-        android:insetTop="140dp"/>
+            android:insetTop="140dp"/>
     </item>
 </layer-list>

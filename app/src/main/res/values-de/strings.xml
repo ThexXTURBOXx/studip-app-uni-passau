@@ -10,7 +10,6 @@
     <string name="title_activity_schedule">Stud.IP Uni Passau</string>
     <string name="navigation_drawer_open">Navigationsleiste öffnen</string>
     <string name="navigation_drawer_close">Navigationsleiste schließen</string>
-    <string name="action_settings">Einstellungen</string>
     <string name="error_sum_sh">Ein unbekannter Fehler ist aufgetreten!</string>
     <string name="error_login_again">Bitte nochmals einloggen</string>
     <string name="studip_user_format">Stud.IP Benutzer</string>
@@ -52,7 +51,6 @@
     <string name="garnishes">Beilagen</string>
     <string name="mains">Hauptgerichte</string>
     <string name="soup">Suppen</string>
-    <string name="action_pickdate">Datum auswählen</string>
     <string name="tomorrow">Morgen</string>
     <string name="authenticating">Authentifiziere&#8230;</string>
     <string name="loading_user_data">Lade Benutzerdaten&#8230;</string>
