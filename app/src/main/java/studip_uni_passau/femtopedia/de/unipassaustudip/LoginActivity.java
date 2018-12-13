@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -87,19 +88,24 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 });
         updater.start();
 
-        //Load cookies from file
         cookies = new ArrayList<>();
-        File dir = new File(getApplicationContext().getFilesDir(), "/cookies");
-        if (!dir.exists())
-            dir.mkdirs();
-        for (File f : dir.listFiles()) {
-            try {
-                BufferedReader in = new BufferedReader(new FileReader(f));
-                Gson gson = new Gson();
-                cookies.add(gson.fromJson(in, BasicClientCookie.class));
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).getBoolean("cookie_saving", true)) {
+            //Load cookies from file
+            File dir = new File(getApplicationContext().getFilesDir(), "/cookies");
+            if (!dir.exists())
+                dir.mkdirs();
+            for (File f : dir.listFiles()) {
+                try {
+                    BufferedReader in = new BufferedReader(new FileReader(f));
+                    Gson gson = new Gson();
+                    cookies.add(gson.fromJson(in, BasicClientCookie.class));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+        } else {
+            File dir = new File(getApplicationContext().getFilesDir(), "/cookies");
+            dir.deleteOnExit();
         }
 
         // Set up the login form.
@@ -287,18 +293,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 if (!ActivityHolder.api.getShibbolethClient().isSessionValid()) {
                     return 3;
                 }
-                int i = 0;
-                for (Cookie c : ActivityHolder.api.getShibbolethClient().getCookieStore().getCookies()) {
-                    Gson gson = new Gson();
-                    String ser = gson.toJson(c);
-                    try {
-                        FileOutputStream fileOut = new FileOutputStream(new File(getApplicationContext().getFilesDir(), "cookies/cookie_" + i + ".ser"));
-                        PrintWriter out = new PrintWriter(fileOut);
-                        out.write(ser);
-                        out.close();
-                        fileOut.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("cookie_saving", true)) {
+                    int i = 0;
+                    for (Cookie c : ActivityHolder.api.getShibbolethClient().getCookieStore().getCookies()) {
+                        Gson gson = new Gson();
+                        String ser = gson.toJson(c);
+                        try {
+                            FileOutputStream fileOut = new FileOutputStream(new File(getApplicationContext().getFilesDir(), "cookies/cookie_" + i + ".ser"));
+                            PrintWriter out = new PrintWriter(fileOut);
+                            out.write(ser);
+                            out.close();
+                            fileOut.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             } catch (IllegalAccessException e) {

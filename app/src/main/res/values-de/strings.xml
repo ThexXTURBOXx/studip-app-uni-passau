@@ -62,4 +62,10 @@
     <string name="send_mail">Sende E-Mail&#8230;</string>
     <string name="source">Quellcode auf GitHub</string>
     <string name="unknown">Unbekannt</string>
+    <string name="pref_header_general">Allgemein</string>
+    <string name="pref_header_data_sync">Synchronisation</string>
+    <string name="pref_description_auto_sync">Synchronisiert automatisch, wenn du den Stundenplan oder den Mensaplan aufrufst.</string>
+    <string name="pref_description_cookie_saving">Speichert die Sitzung, damit du dich nicht jedes Mal neu einloggen musst.</string>
+    <string name="pref_title_cookie_saving">Speichere Cookies</string>
+    <string name="pref_title_auto_sync">Auto Sync</string>
 </resources>
