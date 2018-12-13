@@ -31,9 +31,9 @@ public class AboutActivity extends AppCompatActivity
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(2).getSubMenu().getItem(3).setChecked(true);
-        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(ActivityHolder.current_user.getName().getFormatted());
-        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(ActivityHolder.current_user.getUsername());
-        if (ActivityHolder.profile_pic != null)
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(StudIPHelper.current_user.getName().getFormatted());
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(StudIPHelper.current_user.getUsername());
+        if (StudIPHelper.profile_pic != null)
             setProfilePic();
         CircleImageView civ = findViewById(R.id.nico_image);
         civ.setImageResource(R.drawable.nico);
@@ -64,7 +64,7 @@ public class AboutActivity extends AppCompatActivity
     }
 
     public void setProfilePic() {
-        ((CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView)).setImageBitmap(ActivityHolder.profile_pic);
+        ((CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView)).setImageBitmap(StudIPHelper.profile_pic);
     }
 
     @Override

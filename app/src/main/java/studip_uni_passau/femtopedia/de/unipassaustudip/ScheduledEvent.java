@@ -1,11 +1,9 @@
 package studip_uni_passau.femtopedia.de.unipassaustudip;
 
-import org.joda.time.DateTime;
-
 public class ScheduledEvent {
 
-    DateTime start;
-    DateTime end;
+    long start;
+    long end;
     String color;
     String course;
     String title;

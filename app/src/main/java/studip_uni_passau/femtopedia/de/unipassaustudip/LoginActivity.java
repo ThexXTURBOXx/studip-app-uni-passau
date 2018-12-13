@@ -28,7 +28,6 @@ import android.widget.TextView;
 
 import com.github.javiersantos.appupdater.AppUpdater;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
-import com.google.gson.Gson;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -36,13 +35,9 @@ import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.impl.cookie.BasicClientCookie;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,13 +90,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             if (!dir.exists())
                 dir.mkdirs();
             for (File f : dir.listFiles()) {
-                try {
-                    BufferedReader in = new BufferedReader(new FileReader(f));
-                    Gson gson = new Gson();
-                    cookies.add(gson.fromJson(in, BasicClientCookie.class));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                cookies.add(StudIPHelper.loadFromFile(f, BasicClientCookie.class));
             }
         } else {
             File dir = new File(getApplicationContext().getFilesDir(), "/cookies");
@@ -187,7 +176,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // perform the user login attempt.
             showProgress(true);
             mAuthTask = new UserLoginTask(username, password, cookies);
-            mAuthTask.execute(ignoreEmpty);
+            mAuthTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, ignoreEmpty);
         }
     }
 
@@ -286,34 +275,27 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Integer doInBackground(Boolean... params) {
+            if (!StudIPHelper.isNetworkAvailable(LoginActivity.this)) {
+                StudIPHelper.api = new StudIPAPI(mCookies);
+                return 4;
+            }
             try {
-                ActivityHolder.api = new StudIPAPI(mCookies);
+                StudIPHelper.api = new StudIPAPI(mCookies);
                 if (!params[0])
-                    ActivityHolder.api.authenticate(mUsername, mPassword);
-                if (!ActivityHolder.api.getShibbolethClient().isSessionValid()) {
+                    StudIPHelper.api.authenticate(mUsername, mPassword);
+                if (!StudIPHelper.api.getShibbolethClient().isSessionValid()) {
                     return 3;
                 }
                 if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("cookie_saving", true)) {
                     int i = 0;
-                    for (Cookie c : ActivityHolder.api.getShibbolethClient().getCookieStore().getCookies()) {
-                        Gson gson = new Gson();
-                        String ser = gson.toJson(c);
-                        try {
-                            FileOutputStream fileOut = new FileOutputStream(new File(getApplicationContext().getFilesDir(), "cookies/cookie_" + i + ".ser"));
-                            PrintWriter out = new PrintWriter(fileOut);
-                            out.write(ser);
-                            out.close();
-                            fileOut.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                    for (Cookie c : StudIPHelper.api.getShibbolethClient().getCookieStore().getCookies()) {
+                        StudIPHelper.saveToFile(new File(getApplicationContext().getFilesDir(), "cookies/cookie_" + i + ".ser"), c);
                     }
                 }
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
                 return 1;
-            } catch (IOException | IllegalStateException | IllegalArgumentException e) {
-                e.printStackTrace();
+            } catch (IOException e) {
+            } catch (IllegalStateException | IllegalArgumentException e) {
                 return 2;
             }
             return 0;
@@ -323,29 +305,40 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected void onPostExecute(final Integer success) {
             mAuthTask = null;
 
-            if (success == 0) {
-                SharedPreferences pref = getApplicationContext().getSharedPreferences("credentials", MODE_PRIVATE);
-                SharedPreferences.Editor e = pref.edit();
-                e.putString("username", mUsername);
-                e.apply();
-                loggedIn = true;
-                CacheCurrentUserData data = new CacheCurrentUserData();
-                data.execute();
-            } else if (success == 1) {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            } else if (success == 2) {
-                mPasswordView.setError(getString(R.string.error_random_error));
-                mPasswordView.requestFocus();
-            } else if (success == 3) {
-                mPasswordView.setError(getString(R.string.error_login_again));
-                mPasswordView.requestFocus();
-            } else {
-                mPasswordView.setError(getString(R.string.error_sum_sh));
-                mPasswordView.requestFocus();
+            switch (success) {
+                case 0:
+                    SharedPreferences pref = getApplicationContext().getSharedPreferences("credentials", MODE_PRIVATE);
+                    SharedPreferences.Editor e = pref.edit();
+                    e.putString("username", mUsername);
+                    e.apply();
+                    loggedIn = true;
+                    CacheCurrentUserData data = new CacheCurrentUserData();
+                    data.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    break;
+                case 1:
+                    mPasswordView.setError(getString(R.string.error_incorrect_password));
+                    mPasswordView.requestFocus();
+                    break;
+                case 2:
+                    mPasswordView.setError(getString(R.string.error_random_error));
+                    mPasswordView.requestFocus();
+                    break;
+                case 3:
+                    mPasswordView.setError(getString(R.string.error_login_again));
+                    mPasswordView.requestFocus();
+                    break;
+                case 4:
+                    loggedIn = true;
+                    CacheCurrentUserData data1 = new CacheCurrentUserData();
+                    data1.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    break;
+                default:
+                    mPasswordView.setError(getString(R.string.error_sum_sh));
+                    mPasswordView.requestFocus();
+                    break;
             }
 
-            if (success != 0)
+            if (success != 0 && success != 4)
                 showProgress(false);
         }
 
@@ -362,27 +355,32 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         CacheCurrentUserData() {
             authenticationStatus.setText(getString(R.string.loading_user_data));
+            StudIPHelper.current_user = StudIPHelper.loadFromFile(new File(getApplicationContext().getFilesDir(), "user.json"), User.class);
         }
 
         @Override
         protected User doInBackground(Void... voids) {
+            if (!StudIPHelper.isNetworkAvailable(LoginActivity.this))
+                return null;
             try {
-                return ActivityHolder.api.getCurrentUserData();
-            } catch (IllegalAccessException | IOException e) {
-                e.printStackTrace();
+                return StudIPHelper.api.getCurrentUserData();
+            } catch (IOException | IllegalAccessException e) {
             }
             return null;
         }
 
         @Override
         protected void onPostExecute(User user) {
-            if (user == null) {
+            if (user == null && StudIPHelper.current_user == null) {
                 CacheCurrentUserData data = new CacheCurrentUserData();
-                data.execute();
+                data.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else {
-                ActivityHolder.current_user = user;
+                if (user != null) {
+                    StudIPHelper.current_user = user;
+                    StudIPHelper.saveToFile(new File(getApplicationContext().getFilesDir(), "user.json"), StudIPHelper.current_user);
+                }
                 CacheCurrentUserPic pic = new CacheCurrentUserPic();
-                pic.execute(user.getAvatar_original());
+                pic.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, StudIPHelper.current_user.getAvatar_original());
                 tryIntentChange();
             }
             super.onPostExecute(user);
@@ -393,32 +391,34 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public class CacheCurrentUserPic extends AsyncTask<String, Void, Bitmap> {
 
         CacheCurrentUserPic() {
-            authenticationStatus.setText(getString(R.string.loading_user_pic));
+            this(false);
+        }
+
+        CacheCurrentUserPic(boolean innerCall) {
+            if (!innerCall)
+                authenticationStatus.setText(getString(R.string.loading_user_pic));
         }
 
         @Override
         protected Bitmap doInBackground(String... url) {
             try {
-                HttpResponse response = ActivityHolder.api.getShibbolethClient().getIfValid(url[0]);
+                HttpResponse response = StudIPHelper.api.getShibbolethClient().getIfValid(url[0]);
                 HttpEntity entity = response.getEntity();
                 BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
                 InputStream instream = bufHttpEntity.getContent();
                 return BitmapFactory.decodeStream(instream);
-            } catch (IllegalAccessException | IOException e) {
-                e.printStackTrace();
+            } catch (IOException | IllegalAccessException e) {
             }
-            CacheCurrentUserPic pic = new CacheCurrentUserPic();
-            pic.execute(url);
             return null;
         }
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap == null) {
-                CacheCurrentUserPic data = new CacheCurrentUserPic();
-                data.execute(ActivityHolder.current_user.getAvatar_original());
+                CacheCurrentUserPic data = new CacheCurrentUserPic(true);
+                data.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, StudIPHelper.current_user.getAvatar_original());
             } else {
-                ActivityHolder.updatePic(bitmap, (StudIPApp) getApplication());
+                StudIPHelper.updatePic(bitmap, (StudIPApp) getApplication());
             }
             super.onPostExecute(bitmap);
         }

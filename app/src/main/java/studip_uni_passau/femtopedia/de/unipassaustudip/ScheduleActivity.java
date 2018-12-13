@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -61,15 +62,14 @@ public class ScheduleActivity extends AppCompatActivity
         expListView.setAdapter(listAdapter);
         expListView.setGroupIndicator(null);
 
-        swiperefresher.setRefreshing(true);
-        updateData();
+        updateDataFirst();
 
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
-        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(ActivityHolder.current_user.getName().getFormatted());
-        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(ActivityHolder.current_user.getUsername());
-        if (ActivityHolder.profile_pic != null)
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(StudIPHelper.current_user.getName().getFormatted());
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(StudIPHelper.current_user.getUsername());
+        if (StudIPHelper.profile_pic != null)
             setProfilePic();
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -84,12 +84,27 @@ public class ScheduleActivity extends AppCompatActivity
     }
 
     public void setProfilePic() {
-        ((CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView)).setImageBitmap(ActivityHolder.profile_pic);
+        ((CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView)).setImageBitmap(StudIPHelper.profile_pic);
+    }
+
+    private void updateDataFirst() {
+        StudIPHelper.loadSchedule(this.getApplicationContext());
+        updateSchedule();
+        if (StudIPHelper.isNetworkAvailable(this) && PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("auto_sync", true)) {
+            swiperefresher.setRefreshing(true);
+            CacheSchedule sched = new CacheSchedule();
+            sched.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
     }
 
     private void updateData() {
-        CacheSchedule sched = new CacheSchedule();
-        sched.execute();
+        if (StudIPHelper.isNetworkAvailable(this)) {
+            swiperefresher.setRefreshing(true);
+            CacheSchedule sched = new CacheSchedule();
+            sched.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            swiperefresher.setRefreshing(false);
+        }
     }
 
     private void clearListItems() {
@@ -185,8 +200,10 @@ public class ScheduleActivity extends AppCompatActivity
             List<Object> info = new ArrayList<>();
             info.add(se.title);
             info.add(se.room);
-            info.add(getString(R.string.start) + ": " + String.format(Locale.GERMANY, "%02d", se.start.getHourOfDay()) + ":" + String.format(Locale.GERMANY, "%02d", se.start.getMinuteOfHour()));
-            info.add(getString(R.string.end) + ": " + String.format(Locale.GERMANY, "%02d", se.end.getHourOfDay()) + ":" + String.format(Locale.GERMANY, "%02d", se.end.getMinuteOfHour()));
+            DateTime start = new DateTime(se.start);
+            DateTime end = new DateTime(se.end);
+            info.add(getString(R.string.start) + ": " + String.format(Locale.GERMANY, "%02d", start.getHourOfDay()) + ":" + String.format(Locale.GERMANY, "%02d", start.getMinuteOfHour()));
+            info.add(getString(R.string.end) + ": " + String.format(Locale.GERMANY, "%02d", end.getHourOfDay()) + ":" + String.format(Locale.GERMANY, "%02d", end.getMinuteOfHour()));
             int color = Color.parseColor("#" + se.color);
             double lum = 0.299d * (double) Color.red(color) + 0.587d * (double) Color.green(color) + 0.114d * (double) Color.blue(color);
             addListItem(se.description, info, color, lum > 128 ? Color.BLACK : Color.WHITE);
@@ -194,7 +211,7 @@ public class ScheduleActivity extends AppCompatActivity
     }
 
     private EventSchedule compareSchedule(Schedule schedule) throws IllegalAccessException, IOException {
-        Events events = ActivityHolder.api.getData("user/" + ActivityHolder.current_user.getUser_id() + "/events?limit=10000", Events.class);
+        Events events = StudIPHelper.api.getData("user/" + StudIPHelper.current_user.getUser_id() + "/events?limit=10000", Events.class);
         EventSchedule sched = new EventSchedule();
         sched.monday = compareDay(schedule.getMonday(), events.getCollection(), 1);
         sched.tuesday = compareDay(schedule.getTuesday(), events.getCollection(), 2);
@@ -217,8 +234,8 @@ public class ScheduleActivity extends AppCompatActivity
                     continue;
                 DateTime dd = new DateTime(event.getEnd() * 1000);
                 ScheduledEvent se = new ScheduledEvent();
-                se.start = time;
-                se.end = dd;
+                se.start = time.getMillis();
+                se.end = dd.getMillis();
                 se.title = event.getTitle();
                 se.canceled = event.getCanceled();
                 se.room = event.getRoom();
@@ -238,10 +255,9 @@ public class ScheduleActivity extends AppCompatActivity
                 }
                 if (!flag) {
                     try {
-                        Course c = ActivityHolder.api.getCourse(event.getCourse().replaceFirst("/studip/api.php/course/", ""));
+                        Course c = StudIPHelper.api.getCourse(event.getCourse().replaceFirst("/studip/api.php/course/", ""));
                         se.description = c.getNumber() + " " + c.getTitle();
                     } catch (IOException | IllegalAccessException e) {
-                        e.printStackTrace();
                     }
                     se.color = "ea3838";
                 }
@@ -290,93 +306,98 @@ public class ScheduleActivity extends AppCompatActivity
         return sb.append(", ").append(time.getDayOfMonth()).append(".").append(time.getMonthOfYear()).append(".").append(time.getYear()).toString();
     }
 
+    void updateSchedule() {
+        if (StudIPHelper.schedule == null)
+            return;
+        clearListItems();
+        DateTime dt = new DateTime();
+        int dow = dt.getDayOfWeek();
+        switch (dow) {
+            case 1:
+                addToView(getDateString(1, dow, 0), StudIPHelper.schedule.monday);
+                addToView(getDateString(2, dow, 1), StudIPHelper.schedule.tuesday);
+                addToView(getDateString(3, dow), StudIPHelper.schedule.wednesday);
+                addToView(getDateString(4, dow), StudIPHelper.schedule.thursday);
+                addToView(getDateString(5, dow), StudIPHelper.schedule.friday);
+                addToView(getDateString(6, dow), StudIPHelper.schedule.saturday);
+                addToView(getDateString(7, dow), StudIPHelper.schedule.sunday);
+                break;
+            case 2:
+                addToView(getDateString(2, dow, 0), StudIPHelper.schedule.tuesday);
+                addToView(getDateString(3, dow, 1), StudIPHelper.schedule.wednesday);
+                addToView(getDateString(4, dow), StudIPHelper.schedule.thursday);
+                addToView(getDateString(5, dow), StudIPHelper.schedule.friday);
+                addToView(getDateString(6, dow), StudIPHelper.schedule.saturday);
+                addToView(getDateString(7, dow), StudIPHelper.schedule.sunday);
+                addToView(getDateString(1, dow), StudIPHelper.schedule.monday);
+                break;
+            case 3:
+                addToView(getDateString(3, dow, 0), StudIPHelper.schedule.wednesday);
+                addToView(getDateString(4, dow, 1), StudIPHelper.schedule.thursday);
+                addToView(getDateString(5, dow), StudIPHelper.schedule.friday);
+                addToView(getDateString(6, dow), StudIPHelper.schedule.saturday);
+                addToView(getDateString(7, dow), StudIPHelper.schedule.sunday);
+                addToView(getDateString(1, dow), StudIPHelper.schedule.monday);
+                addToView(getDateString(2, dow), StudIPHelper.schedule.tuesday);
+                break;
+            case 4:
+                addToView(getDateString(4, dow, 0), StudIPHelper.schedule.thursday);
+                addToView(getDateString(5, dow, 1), StudIPHelper.schedule.friday);
+                addToView(getDateString(6, dow), StudIPHelper.schedule.saturday);
+                addToView(getDateString(7, dow), StudIPHelper.schedule.sunday);
+                addToView(getDateString(1, dow), StudIPHelper.schedule.monday);
+                addToView(getDateString(2, dow), StudIPHelper.schedule.tuesday);
+                addToView(getDateString(3, dow), StudIPHelper.schedule.wednesday);
+                break;
+            case 5:
+                addToView(getDateString(5, dow, 0), StudIPHelper.schedule.friday);
+                addToView(getDateString(6, dow, 1), StudIPHelper.schedule.saturday);
+                addToView(getDateString(7, dow), StudIPHelper.schedule.sunday);
+                addToView(getDateString(1, dow), StudIPHelper.schedule.monday);
+                addToView(getDateString(2, dow), StudIPHelper.schedule.tuesday);
+                addToView(getDateString(3, dow), StudIPHelper.schedule.wednesday);
+                addToView(getDateString(4, dow), StudIPHelper.schedule.thursday);
+                break;
+            case 6:
+                addToView(getDateString(6, dow, 0), StudIPHelper.schedule.saturday);
+                addToView(getDateString(7, dow, 1), StudIPHelper.schedule.sunday);
+                addToView(getDateString(1, dow), StudIPHelper.schedule.monday);
+                addToView(getDateString(2, dow), StudIPHelper.schedule.tuesday);
+                addToView(getDateString(3, dow), StudIPHelper.schedule.wednesday);
+                addToView(getDateString(4, dow), StudIPHelper.schedule.thursday);
+                addToView(getDateString(5, dow), StudIPHelper.schedule.friday);
+                break;
+            case 7:
+                addToView(getDateString(7, dow, 0), StudIPHelper.schedule.sunday);
+                addToView(getDateString(1, dow, 1), StudIPHelper.schedule.monday);
+                addToView(getDateString(2, dow), StudIPHelper.schedule.tuesday);
+                addToView(getDateString(3, dow), StudIPHelper.schedule.wednesday);
+                addToView(getDateString(4, dow), StudIPHelper.schedule.thursday);
+                addToView(getDateString(5, dow), StudIPHelper.schedule.friday);
+                addToView(getDateString(6, dow), StudIPHelper.schedule.saturday);
+                break;
+        }
+    }
+
     @SuppressWarnings("staticFieldLeak")
     public class CacheSchedule extends AsyncTask<Void, Void, Void> {
+
         @Override
         protected Void doInBackground(Void... url) {
             try {
-                ActivityHolder.schedule = compareSchedule(ActivityHolder.api.getSchedule());
+                StudIPHelper.updateSchedule(getApplicationContext(), compareSchedule(StudIPHelper.api.getSchedule()));
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
                 Intent intent = new Intent(ScheduleActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish();
             } catch (IOException e) {
-                e.printStackTrace();
             }
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            clearListItems();
-            DateTime dt = new DateTime();
-            int dow = dt.getDayOfWeek();
-            switch (dow) {
-                case 1:
-                    addToView(getDateString(1, dow, 0), ActivityHolder.schedule.monday);
-                    addToView(getDateString(2, dow, 1), ActivityHolder.schedule.tuesday);
-                    addToView(getDateString(3, dow), ActivityHolder.schedule.wednesday);
-                    addToView(getDateString(4, dow), ActivityHolder.schedule.thursday);
-                    addToView(getDateString(5, dow), ActivityHolder.schedule.friday);
-                    addToView(getDateString(6, dow), ActivityHolder.schedule.saturday);
-                    addToView(getDateString(7, dow), ActivityHolder.schedule.sunday);
-                    break;
-                case 2:
-                    addToView(getDateString(2, dow, 0), ActivityHolder.schedule.tuesday);
-                    addToView(getDateString(3, dow, 1), ActivityHolder.schedule.wednesday);
-                    addToView(getDateString(4, dow), ActivityHolder.schedule.thursday);
-                    addToView(getDateString(5, dow), ActivityHolder.schedule.friday);
-                    addToView(getDateString(6, dow), ActivityHolder.schedule.saturday);
-                    addToView(getDateString(7, dow), ActivityHolder.schedule.sunday);
-                    addToView(getDateString(1, dow), ActivityHolder.schedule.monday);
-                    break;
-                case 3:
-                    addToView(getDateString(3, dow, 0), ActivityHolder.schedule.wednesday);
-                    addToView(getDateString(4, dow, 1), ActivityHolder.schedule.thursday);
-                    addToView(getDateString(5, dow), ActivityHolder.schedule.friday);
-                    addToView(getDateString(6, dow), ActivityHolder.schedule.saturday);
-                    addToView(getDateString(7, dow), ActivityHolder.schedule.sunday);
-                    addToView(getDateString(1, dow), ActivityHolder.schedule.monday);
-                    addToView(getDateString(2, dow), ActivityHolder.schedule.tuesday);
-                    break;
-                case 4:
-                    addToView(getDateString(4, dow, 0), ActivityHolder.schedule.thursday);
-                    addToView(getDateString(5, dow, 1), ActivityHolder.schedule.friday);
-                    addToView(getDateString(6, dow), ActivityHolder.schedule.saturday);
-                    addToView(getDateString(7, dow), ActivityHolder.schedule.sunday);
-                    addToView(getDateString(1, dow), ActivityHolder.schedule.monday);
-                    addToView(getDateString(2, dow), ActivityHolder.schedule.tuesday);
-                    addToView(getDateString(3, dow), ActivityHolder.schedule.wednesday);
-                    break;
-                case 5:
-                    addToView(getDateString(5, dow, 0), ActivityHolder.schedule.friday);
-                    addToView(getDateString(6, dow, 1), ActivityHolder.schedule.saturday);
-                    addToView(getDateString(7, dow), ActivityHolder.schedule.sunday);
-                    addToView(getDateString(1, dow), ActivityHolder.schedule.monday);
-                    addToView(getDateString(2, dow), ActivityHolder.schedule.tuesday);
-                    addToView(getDateString(3, dow), ActivityHolder.schedule.wednesday);
-                    addToView(getDateString(4, dow), ActivityHolder.schedule.thursday);
-                    break;
-                case 6:
-                    addToView(getDateString(6, dow, 0), ActivityHolder.schedule.saturday);
-                    addToView(getDateString(7, dow, 1), ActivityHolder.schedule.sunday);
-                    addToView(getDateString(1, dow), ActivityHolder.schedule.monday);
-                    addToView(getDateString(2, dow), ActivityHolder.schedule.tuesday);
-                    addToView(getDateString(3, dow), ActivityHolder.schedule.wednesday);
-                    addToView(getDateString(4, dow), ActivityHolder.schedule.thursday);
-                    addToView(getDateString(5, dow), ActivityHolder.schedule.friday);
-                    break;
-                case 7:
-                    addToView(getDateString(7, dow, 0), ActivityHolder.schedule.sunday);
-                    addToView(getDateString(1, dow, 1), ActivityHolder.schedule.monday);
-                    addToView(getDateString(2, dow), ActivityHolder.schedule.tuesday);
-                    addToView(getDateString(3, dow), ActivityHolder.schedule.wednesday);
-                    addToView(getDateString(4, dow), ActivityHolder.schedule.thursday);
-                    addToView(getDateString(5, dow), ActivityHolder.schedule.friday);
-                    addToView(getDateString(6, dow), ActivityHolder.schedule.saturday);
-                    break;
-            }
+            updateSchedule();
             swiperefresher.setRefreshing(false);
             super.onPostExecute(aVoid);
         }

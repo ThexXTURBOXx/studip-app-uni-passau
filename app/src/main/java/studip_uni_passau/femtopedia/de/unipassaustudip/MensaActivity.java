@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -69,15 +70,17 @@ public class MensaActivity extends AppCompatActivity
         expListView.setAdapter(listAdapter);
         expListView.setGroupIndicator(null);
 
-        swiperefresher.setRefreshing(true);
-        updateData();
+        dateView = findViewById(R.id.dateView);
+        setDate(new DateTime().withTime(0, 0, 0, 0));
+
+        updateDataFirst();
 
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(1).setChecked(true);
-        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(ActivityHolder.current_user.getName().getFormatted());
-        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(ActivityHolder.current_user.getUsername());
-        if (ActivityHolder.profile_pic != null)
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(StudIPHelper.current_user.getName().getFormatted());
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(StudIPHelper.current_user.getUsername());
+        if (StudIPHelper.profile_pic != null)
             setProfilePic();
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -89,18 +92,30 @@ public class MensaActivity extends AppCompatActivity
             actionbar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
             drawerToggle.syncState();
         }
-
-        dateView = findViewById(R.id.dateView);
-        setDate(new DateTime().withTime(0, 0, 0, 0));
     }
 
     public void setProfilePic() {
-        ((CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView)).setImageBitmap(ActivityHolder.profile_pic);
+        ((CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView)).setImageBitmap(StudIPHelper.profile_pic);
+    }
+
+    private void updateDataFirst() {
+        StudIPHelper.loadMensaPlan(this.getApplicationContext());
+        updateMensaPlan();
+        if (StudIPHelper.isNetworkAvailable(this) && PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("auto_sync", true)) {
+            swiperefresher.setRefreshing(true);
+            CacheMensaPlan data = new CacheMensaPlan();
+            data.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
     }
 
     private void updateData() {
-        CacheMensaPlan data = new CacheMensaPlan();
-        data.execute();
+        if (StudIPHelper.isNetworkAvailable(this)) {
+            swiperefresher.setRefreshing(true);
+            CacheMensaPlan data = new CacheMensaPlan();
+            data.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            swiperefresher.setRefreshing(false);
+        }
     }
 
     private void setDate(DateTime dt) {
@@ -205,7 +220,9 @@ public class MensaActivity extends AppCompatActivity
     }
 
     private void setToView(DateTime dt) {
-        MensaPlan.DayMenu menu = ActivityHolder.mensaPlan.menu.get(dt.getMillis());
+        if (StudIPHelper.mensaPlan == null)
+            return;
+        MensaPlan.DayMenu menu = StudIPHelper.mensaPlan.menu.get(dt.getMillis());
         if (menu != null) {
             addListItem(getString(R.string.soup), new ArrayList<>(), Color.BLACK, Color.WHITE);
             for (MensaPlan.Food f : menu.soups) {
@@ -336,7 +353,6 @@ public class MensaActivity extends AppCompatActivity
                 dayMenus.put(dt.withTime(0, 0, 0, 0).getMillis(), menu);
             }
         } catch (IOException e) {
-            e.printStackTrace();
         }
         return dayMenus;
     }
@@ -349,6 +365,13 @@ public class MensaActivity extends AppCompatActivity
         }
     }
 
+    public void updateMensaPlan() {
+        if (StudIPHelper.mensaPlan == null)
+            return;
+        clearListItems();
+        setToView(dateTime.withTime(0, 0, 0, 0));
+    }
+
     @SuppressWarnings("StaticFieldLeak")
     public class CacheMensaPlan extends AsyncTask<Void, Void, Integer> {
 
@@ -357,15 +380,17 @@ public class MensaActivity extends AppCompatActivity
             try {
                 int week = new DateTime().getWeekOfWeekyear();
                 int next_week = new DateTime().plusDays(7).getWeekOfWeekyear();
-                ActivityHolder.mensaPlan.menu.putAll(parseMensaPlan(ActivityHolder.api.getShibbolethClient().getIfValid(mensaUrl + week + ".csv")));
-                ActivityHolder.mensaPlan.menu.putAll(parseMensaPlan(ActivityHolder.api.getShibbolethClient().getIfValid(mensaUrl + (next_week) + ".csv")));
+                if (StudIPHelper.mensaPlan == null)
+                    StudIPHelper.mensaPlan = new MensaPlan();
+                StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.api.getShibbolethClient().getIfValid(mensaUrl + week + ".csv")));
+                StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.api.getShibbolethClient().getIfValid(mensaUrl + (next_week) + ".csv")));
+                StudIPHelper.updateMensaPlan(getApplicationContext(), StudIPHelper.mensaPlan);
             } catch (IllegalAccessException e) {
                 Intent intent = new Intent(MensaActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish();
                 return 2;
             } catch (IOException e) {
-                e.printStackTrace();
                 return 1;
             }
             return 0;
@@ -374,8 +399,7 @@ public class MensaActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Integer success) {
             if (success == 0) {
-                clearListItems();
-                setToView(dateTime.withTime(0, 0, 0, 0));
+                updateMensaPlan();
                 swiperefresher.setRefreshing(false);
             } else if (success == 1) {
                 updateData();
