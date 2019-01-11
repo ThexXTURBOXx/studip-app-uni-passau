@@ -68,6 +68,7 @@ class StudIPHelper {
             BufferedReader in = new BufferedReader(new FileReader(file));
             return gson.fromJson(in, clazz);
         } catch (IOException e) {
+            e.printStackTrace();
         }
         return null;
     }
