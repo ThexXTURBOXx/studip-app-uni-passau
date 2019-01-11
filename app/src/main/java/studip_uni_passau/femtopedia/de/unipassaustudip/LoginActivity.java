@@ -289,7 +289,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("cookie_saving", true)) {
                     int i = 0;
                     for (Cookie c : StudIPHelper.api.getShibbolethClient().getCookieStore().getCookies()) {
-                        StudIPHelper.saveToFile(new File(getApplicationContext().getFilesDir(), "cookies/cookie_" + i + ".ser"), c);
+                        StudIPHelper.saveToFile(new File(getApplicationContext().getFilesDir(), "cookies/cookie_" + (i++) + ".ser"), c);
                     }
                 }
             } catch (IllegalAccessException e) {
