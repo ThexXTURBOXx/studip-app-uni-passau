@@ -25,8 +25,10 @@ import org.joda.time.Days;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import de.femtopedia.studip.json.Course;
 import de.femtopedia.studip.json.Event;
@@ -43,6 +45,7 @@ public class ScheduleActivity extends AppCompatActivity
     List<String> listDataHeader;
     List<List<Object>> listDataChild;
     List<Integer> listDataColorsBg, listDataColorsText;
+    int weeks = 0;
     private NavigationView navigationView;
     private SwipeRefreshLayout swiperefresher;
 
@@ -210,28 +213,48 @@ public class ScheduleActivity extends AppCompatActivity
         }
     }
 
-    private EventSchedule compareSchedule(Schedule schedule) throws IllegalAccessException, IOException {
+    @SuppressWarnings("UseSparseArrays")
+    private Map<Integer, List<ScheduledEvent>> compareSchedule(Schedule schedule) throws IllegalAccessException, IOException {
         Events events = StudIPHelper.api.getData("user/" + StudIPHelper.current_user.getUser_id() + "/events?limit=10000", Events.class);
-        EventSchedule sched = new EventSchedule();
-        sched.monday = compareDay(schedule.getMonday(), events.getCollection(), 1);
-        sched.tuesday = compareDay(schedule.getTuesday(), events.getCollection(), 2);
-        sched.wednesday = compareDay(schedule.getWednesday(), events.getCollection(), 3);
-        sched.thursday = compareDay(schedule.getThursday(), events.getCollection(), 4);
-        sched.friday = compareDay(schedule.getFriday(), events.getCollection(), 5);
-        sched.saturday = compareDay(schedule.getSaturday(), events.getCollection(), 6);
-        sched.sunday = compareDay(schedule.getSunday(), events.getCollection(), 7);
+        Map<Integer, List<ScheduledEvent>> sched = new HashMap<>();
+        for (int i = 0; i <= weeks; i++) {
+            for (int d = 0; d < 7; d++) {
+                int day = d + i * 7;
+                sched.put(day + 1, compareDay(getDayOfSchedule(schedule, day % 7 + 1), events.getCollection(), day + 1, i));
+            }
+        }
         return sched;
     }
 
+    private List<ScheduledCourse> getDayOfSchedule(Schedule schedule, int day) {
+        switch (day) {
+            case 1:
+                return schedule.getMonday();
+            case 2:
+                return schedule.getTuesday();
+            case 3:
+                return schedule.getWednesday();
+            case 4:
+                return schedule.getThursday();
+            case 5:
+                return schedule.getFriday();
+            case 6:
+                return schedule.getSaturday();
+            default:
+                return schedule.getSunday();
+        }
+    }
+
     @SuppressWarnings("EmptyCatchBlock")
-    private List<ScheduledEvent> compareDay(List<ScheduledCourse> courses, List<Event> events, int day) {
+    private List<ScheduledEvent> compareDay(List<ScheduledCourse> courses, List<Event> events, int day, int week) {
         List<ScheduledEvent> eventss = new ArrayList<>();
         if (courses != null) {
-            DateTime now = new DateTime().plusDays(1).withTime(0, 0, 0, 0);
+            DateTime now = new DateTime().plusDays(1 + week * 7).withTime(0, 0, 0, 0);
             for (Event event : events) {
                 boolean flag = false;
                 DateTime time = new DateTime(event.getStart() * 1000);
-                if (time.getDayOfWeek() != day || Days.daysBetween(now, new DateTime(time).withTime(1, 0, 0, 0)).getDays() >= 6)
+                if (time.getDayOfWeek() != (day - 1) % 7 + 1 || time.isBefore(now.minusDays(1).minusSeconds(1)) ||
+                        Days.daysBetween(now, new DateTime(time).withTime(1, 0, 0, 0)).getDays() >= 6)
                     continue;
                 DateTime dd = new DateTime(event.getEnd() * 1000);
                 ScheduledEvent se = new ScheduledEvent();
@@ -270,12 +293,12 @@ public class ScheduleActivity extends AppCompatActivity
         return eventss;
     }
 
-    private String getDateString(int day, int today) {
-        return getDateString(day, today, -1);
+    private String getDateString(int day, int today, int week) {
+        return getDateString(day, today, week, -1);
     }
 
-    private String getDateString(int day, int today, int isToday) {
-        DateTime time = new DateTime().plusDays((day < today ? day + 7 : day) - today);
+    private String getDateString(int day, int today, int week, int isToday) {
+        DateTime time = new DateTime().plusDays((day < today ? day + 7 : day) - today).plusDays(7 * week);
         StringBuilder sb = new StringBuilder();
         if (isToday == 0)
             sb = sb.append(getString(R.string.today)).append(", ");
@@ -313,70 +336,20 @@ public class ScheduleActivity extends AppCompatActivity
         clearListItems();
         DateTime dt = new DateTime();
         int dow = dt.getDayOfWeek();
-        switch (dow) {
-            case 1:
-                addToView(getDateString(1, dow, 0), StudIPHelper.schedule.monday);
-                addToView(getDateString(2, dow, 1), StudIPHelper.schedule.tuesday);
-                addToView(getDateString(3, dow), StudIPHelper.schedule.wednesday);
-                addToView(getDateString(4, dow), StudIPHelper.schedule.thursday);
-                addToView(getDateString(5, dow), StudIPHelper.schedule.friday);
-                addToView(getDateString(6, dow), StudIPHelper.schedule.saturday);
-                addToView(getDateString(7, dow), StudIPHelper.schedule.sunday);
-                break;
-            case 2:
-                addToView(getDateString(2, dow, 0), StudIPHelper.schedule.tuesday);
-                addToView(getDateString(3, dow, 1), StudIPHelper.schedule.wednesday);
-                addToView(getDateString(4, dow), StudIPHelper.schedule.thursday);
-                addToView(getDateString(5, dow), StudIPHelper.schedule.friday);
-                addToView(getDateString(6, dow), StudIPHelper.schedule.saturday);
-                addToView(getDateString(7, dow), StudIPHelper.schedule.sunday);
-                addToView(getDateString(1, dow), StudIPHelper.schedule.monday);
-                break;
-            case 3:
-                addToView(getDateString(3, dow, 0), StudIPHelper.schedule.wednesday);
-                addToView(getDateString(4, dow, 1), StudIPHelper.schedule.thursday);
-                addToView(getDateString(5, dow), StudIPHelper.schedule.friday);
-                addToView(getDateString(6, dow), StudIPHelper.schedule.saturday);
-                addToView(getDateString(7, dow), StudIPHelper.schedule.sunday);
-                addToView(getDateString(1, dow), StudIPHelper.schedule.monday);
-                addToView(getDateString(2, dow), StudIPHelper.schedule.tuesday);
-                break;
-            case 4:
-                addToView(getDateString(4, dow, 0), StudIPHelper.schedule.thursday);
-                addToView(getDateString(5, dow, 1), StudIPHelper.schedule.friday);
-                addToView(getDateString(6, dow), StudIPHelper.schedule.saturday);
-                addToView(getDateString(7, dow), StudIPHelper.schedule.sunday);
-                addToView(getDateString(1, dow), StudIPHelper.schedule.monday);
-                addToView(getDateString(2, dow), StudIPHelper.schedule.tuesday);
-                addToView(getDateString(3, dow), StudIPHelper.schedule.wednesday);
-                break;
-            case 5:
-                addToView(getDateString(5, dow, 0), StudIPHelper.schedule.friday);
-                addToView(getDateString(6, dow, 1), StudIPHelper.schedule.saturday);
-                addToView(getDateString(7, dow), StudIPHelper.schedule.sunday);
-                addToView(getDateString(1, dow), StudIPHelper.schedule.monday);
-                addToView(getDateString(2, dow), StudIPHelper.schedule.tuesday);
-                addToView(getDateString(3, dow), StudIPHelper.schedule.wednesday);
-                addToView(getDateString(4, dow), StudIPHelper.schedule.thursday);
-                break;
-            case 6:
-                addToView(getDateString(6, dow, 0), StudIPHelper.schedule.saturday);
-                addToView(getDateString(7, dow, 1), StudIPHelper.schedule.sunday);
-                addToView(getDateString(1, dow), StudIPHelper.schedule.monday);
-                addToView(getDateString(2, dow), StudIPHelper.schedule.tuesday);
-                addToView(getDateString(3, dow), StudIPHelper.schedule.wednesday);
-                addToView(getDateString(4, dow), StudIPHelper.schedule.thursday);
-                addToView(getDateString(5, dow), StudIPHelper.schedule.friday);
-                break;
-            case 7:
-                addToView(getDateString(7, dow, 0), StudIPHelper.schedule.sunday);
-                addToView(getDateString(1, dow, 1), StudIPHelper.schedule.monday);
-                addToView(getDateString(2, dow), StudIPHelper.schedule.tuesday);
-                addToView(getDateString(3, dow), StudIPHelper.schedule.wednesday);
-                addToView(getDateString(4, dow), StudIPHelper.schedule.thursday);
-                addToView(getDateString(5, dow), StudIPHelper.schedule.friday);
-                addToView(getDateString(6, dow), StudIPHelper.schedule.saturday);
-                break;
+        for (int wk = 0; wk <= weeks; wk++) {
+            for (int i = 0; i < 7; i++) {
+                int dows = (i + dow) % 7;
+                int days = dows + wk * 7;
+                List<ScheduledEvent> list = StudIPHelper.schedule.get(days);
+                if (list != null) {
+                    if (days == dow)
+                        addToView(getDateString(dows, dow, wk, 0), list);
+                    else if (days == dow + 1)
+                        addToView(getDateString(dows, dow, wk, 1), list);
+                    else
+                        addToView(getDateString(dows, dow, wk), list);
+                }
+            }
         }
     }
 
