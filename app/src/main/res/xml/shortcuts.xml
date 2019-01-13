@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_event_note_black_24dp"
+        android:shortcutId="schedule_shortcut"
+        android:shortcutLongLabel="@string/schedule"
+        android:shortcutShortLabel="@string/schedule">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="studip_uni_passau.femtopedia.de.unipassaustudip.LoginActivity"
+            android:targetPackage="studip_uni_passau.femtopedia.de.unipassaustudip">
+            <extra
+                android:name="target"
+                android:value="schedule" />
+        </intent>
+    </shortcut>
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_restaurant_black_24dp"
+        android:shortcutId="mensa_shortcut"
+        android:shortcutLongLabel="@string/mensa_plan"
+        android:shortcutShortLabel="@string/mensa_plan">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="studip_uni_passau.femtopedia.de.unipassaustudip.LoginActivity"
+            android:targetPackage="studip_uni_passau.femtopedia.de.unipassaustudip">
+            <extra
+                android:name="target"
+                android:value="mensa" />
+        </intent>
+    </shortcut>
+
+</shortcuts>

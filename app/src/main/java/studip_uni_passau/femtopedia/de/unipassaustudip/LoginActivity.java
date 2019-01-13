@@ -62,11 +62,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private TextView authenticationStatus;
     private List<Cookie> cookies;
     private boolean loggedIn = false, checkedForUpdates = false;
+    private String target;
 
     @Override
     @SuppressWarnings("ResultOfMethodCallIgnored")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.target = getIntent().getExtras().getString("target");
         setContentView(R.layout.activity_login);
         ((StudIPApp) getApplicationContext()).setCurrentActivity(this);
 
@@ -242,7 +244,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private void tryIntentChange() {
         if (loggedIn && checkedForUpdates) {
-            Intent intent = new Intent(LoginActivity.this, ScheduleActivity.class);
+            Intent intent;
+            if (target != null) {
+                switch (target) {
+                    case "mensa":
+                        intent = new Intent(LoginActivity.this, MensaActivity.class);
+                        break;
+                    default:
+                        intent = new Intent(LoginActivity.this, ScheduleActivity.class);
+                        break;
+                }
+            } else {
+                intent = new Intent(LoginActivity.this, ScheduleActivity.class);
+            }
             startActivity(intent);
         }
     }
