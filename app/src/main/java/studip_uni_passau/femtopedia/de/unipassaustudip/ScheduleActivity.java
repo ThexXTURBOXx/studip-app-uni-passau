@@ -103,8 +103,6 @@ public class ScheduleActivity extends AppCompatActivity
     }
 
     private void updateData() {
-        if (swiperefresher.isRefreshing())
-            return;
         if (StudIPHelper.isNetworkAvailable(this)) {
             swiperefresher.setRefreshing(true);
             CacheSchedule sched = new CacheSchedule();
@@ -358,8 +356,10 @@ public class ScheduleActivity extends AppCompatActivity
         addListItem(new ExpandableListAdapter.ButtonPreset(
                         getString(R.string.load_more), Color.WHITE, Color.BLACK,
                         (view) -> {
-                            weeks++;
-                            updateData();
+                            if (!swiperefresher.isRefreshing()) {
+                                weeks++;
+                                updateData();
+                            }
                         }),
                 new ArrayList<>(), Color.BLACK, Color.WHITE);
     }
