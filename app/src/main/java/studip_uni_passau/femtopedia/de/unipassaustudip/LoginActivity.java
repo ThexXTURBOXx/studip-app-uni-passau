@@ -30,7 +30,6 @@ import com.github.javiersantos.appupdater.AppUpdater;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.impl.cookie.BasicClientCookie;
@@ -43,6 +42,7 @@ import java.util.List;
 
 import de.femtopedia.studip.StudIPAPI;
 import de.femtopedia.studip.json.User;
+import de.femtopedia.studip.shib.ShibHttpResponse;
 
 /**
  * A login screen that offers login via username/password.
@@ -403,15 +403,25 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Bitmap doInBackground(String... url) {
-            HttpResponse response = null;
+            ShibHttpResponse response = null;
+            InputStream instream = null;
             try {
                 response = StudIPHelper.api.getShibbolethClient().getIfValid(url[0]);
-                HttpEntity entity = response.getEntity();
+                HttpEntity entity = response.getResponse().getEntity();
                 BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
-                InputStream instream = bufHttpEntity.getContent();
+                instream = bufHttpEntity.getContent();
                 return BitmapFactory.decodeStream(instream);
             } catch (IOException | IllegalAccessException e) {
                 e.printStackTrace();
+            } finally {
+                try {
+                    if (response != null)
+                        response.close();
+                    if (instream != null)
+                        instream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             return null;
         }

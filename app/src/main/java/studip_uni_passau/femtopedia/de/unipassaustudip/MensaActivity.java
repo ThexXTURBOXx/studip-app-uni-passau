@@ -21,7 +21,6 @@ import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
-import org.apache.http.HttpResponse;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.Days;
@@ -37,6 +36,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import de.femtopedia.studip.shib.ShibHttpResponse;
 import de.femtopedia.studip.shib.ShibbolethClient;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -293,11 +293,12 @@ public class MensaActivity extends AppCompatActivity
     }
 
     @SuppressWarnings({"useSparseArrays", "StringContatenationInLoop"})
-    public Map<Long, MensaPlan.DayMenu> parseMensaPlan(HttpResponse csv) {
+    public Map<Long, MensaPlan.DayMenu> parseMensaPlan(ShibHttpResponse csv) {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("dd.MM.yyyy");
         Map<Long, MensaPlan.DayMenu> dayMenus = new HashMap<>();
+        InputStream content = null;
         try {
-            InputStream content = csv.getEntity().getContent();
+            content = csv.getResponse().getEntity().getContent();
             MensaPlan.Food food = null;
             MensaPlan.DayMenu menu = new MensaPlan.DayMenu();
             String time = "";
@@ -354,6 +355,14 @@ public class MensaActivity extends AppCompatActivity
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                csv.close();
+                if (content != null)
+                    content.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return dayMenus;
     }
