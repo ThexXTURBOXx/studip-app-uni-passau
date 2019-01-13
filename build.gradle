@@ -5,7 +5,6 @@ buildscript {
     repositories {
         google()
         jcenter()
-        mavenLocal()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
@@ -19,11 +18,10 @@ buildscript {
 allprojects {
     repositories {
         maven {
-            url "https://jitpack.io"
+            url "http://femtopedia.de/maven"
         }
         google()
         jcenter()
-        mavenLocal()
     }
 }
 
