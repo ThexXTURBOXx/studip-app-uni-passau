@@ -1,7 +1,14 @@
 # StudIP App Uni Passau
+<p align="center">
+  <a target="_blank" href="https://travis-ci.org/ThexXTURBOXx/studip-app-uni-passau"><img src="https://travis-ci.org/ThexXTURBOXx/studip-app-uni-passau.svg?branch=master"></a>
+  <a target="_blank" href="http://femtopedia.de/studip/index.php"><img src="https://img.shields.io/website-up-down-green-red/http/www.femtopedia.de/index.php.svg?label=Repository"></a>
+  <a target="_blank" href="https://github.com/ThexXTURBOXx/studip-app-uni-passau/releases"><img src="https://img.shields.io/github/release-pre/thexxturboxx/studip-app-uni-passau.svg"></a>
+</p>
+<p>This app is being created by ThexXTURBOXx (Nico Mexis).<br>
+If you want to contribute, feel free to create a Merge Request or help me translating this app to another language.</p>
 
-This app is being created by ThexXTURBOXx (Nico Mexis).<br>
-If you want to contribute, feel free to create a Merge Request or help me translating this app to another language.
+## Download
+All Downloads are located on this [website](http://femtopedia.de/studip/index.php).
 
 ## Translating
 1. Translate [this file](app/src/main/res/values/strings.xml) into your desired language and name it "strings.xml"
