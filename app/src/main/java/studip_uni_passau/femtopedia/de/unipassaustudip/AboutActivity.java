@@ -18,7 +18,7 @@ import android.widget.TextView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AboutActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, StudIPHelper.ProfilePicHolder {
 
     private NavigationView navigationView;
 

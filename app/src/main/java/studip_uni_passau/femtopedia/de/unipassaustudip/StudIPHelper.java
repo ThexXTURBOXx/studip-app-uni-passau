@@ -43,12 +43,8 @@ class StudIPHelper {
     static void updatePic(Bitmap profile_pic, StudIPApp application) {
         StudIPHelper.profile_pic = profile_pic;
         Activity a = application.getCurrentActivity();
-        if (a instanceof ScheduleActivity)
-            ((ScheduleActivity) a).setProfilePic();
-        else if (a instanceof MensaActivity)
-            ((MensaActivity) a).setProfilePic();
-        else if (a instanceof AboutActivity)
-            ((AboutActivity) a).setProfilePic();
+        if (a instanceof ProfilePicHolder)
+            ((ProfilePicHolder) a).setProfilePic();
     }
 
     static void loadMensaPlan(Context context) {
@@ -123,6 +119,10 @@ class StudIPHelper {
             return activeNetworkInfo != null && activeNetworkInfo.isConnected();
         }
         return false;
+    }
+
+    interface ProfilePicHolder {
+        void setProfilePic();
     }
 
 }

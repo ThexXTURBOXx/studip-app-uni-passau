@@ -38,7 +38,7 @@ import de.femtopedia.studip.util.ScheduledCourse;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ScheduleActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, StudIPHelper.ProfilePicHolder {
 
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;

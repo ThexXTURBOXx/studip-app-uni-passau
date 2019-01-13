@@ -41,7 +41,7 @@ import de.femtopedia.studip.shib.ShibbolethClient;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MensaActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, StudIPHelper.ProfilePicHolder {
 
     public static String mensaUrl = "https://www.stwno.de/infomax/daten-extern/csv/UNI-P/";
     ExpandableListAdapter listAdapter;
