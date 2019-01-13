@@ -46,7 +46,7 @@ public class MensaActivity extends AppCompatActivity
     public static String mensaUrl = "https://www.stwno.de/infomax/daten-extern/csv/UNI-P/";
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
-    List<String> listDataHeader;
+    List<Object> listDataHeader;
     List<List<Object>> listDataChild;
     List<Integer> listDataColorsBg, listDataColorsText;
     DateTime dateTime;
@@ -292,7 +292,7 @@ public class MensaActivity extends AppCompatActivity
         return sb.append(", ").append(time.getDayOfMonth()).append(".").append(time.getMonthOfYear()).append(".").append(time.getYear()).toString();
     }
 
-    @SuppressWarnings({"useSparseArrays", "StringContatenationInLoop", "EmptyCatchBlock"})
+    @SuppressWarnings({"useSparseArrays", "StringContatenationInLoop"})
     public Map<Long, MensaPlan.DayMenu> parseMensaPlan(HttpResponse csv) {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("dd.MM.yyyy");
         Map<Long, MensaPlan.DayMenu> dayMenus = new HashMap<>();
@@ -353,6 +353,7 @@ public class MensaActivity extends AppCompatActivity
                 dayMenus.put(dt.withTime(0, 0, 0, 0).getMillis(), menu);
             }
         } catch (IOException e) {
+            e.printStackTrace();
         }
         return dayMenus;
     }

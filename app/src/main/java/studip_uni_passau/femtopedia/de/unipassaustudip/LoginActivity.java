@@ -259,7 +259,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    @SuppressWarnings({"StaticFieldLeak", "EmptyCatchBlock"})
+    @SuppressWarnings({"StaticFieldLeak"})
     public class UserLoginTask extends AsyncTask<Boolean, Void, Integer> {
 
         private final String mUsername;
@@ -295,6 +295,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             } catch (IllegalAccessException e) {
                 return 1;
             } catch (IOException e) {
+                e.printStackTrace();
             } catch (IllegalStateException | IllegalArgumentException e) {
                 return 2;
             }
@@ -350,7 +351,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     }
 
-    @SuppressWarnings({"StaticFieldLeak", "EmptyCatchBlock"})
+    @SuppressWarnings({"StaticFieldLeak"})
     public class CacheCurrentUserData extends AsyncTask<Void, Void, User> {
 
         CacheCurrentUserData() {
@@ -365,6 +366,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             try {
                 return StudIPHelper.api.getCurrentUserData();
             } catch (IOException | IllegalAccessException e) {
+                e.printStackTrace();
             }
             return null;
         }
@@ -387,7 +389,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-    @SuppressWarnings({"StaticFieldLeak", "EmptyCatchBlock"})
+    @SuppressWarnings({"StaticFieldLeak"})
     public class CacheCurrentUserPic extends AsyncTask<String, Void, Bitmap> {
 
         CacheCurrentUserPic() {
@@ -401,13 +403,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Bitmap doInBackground(String... url) {
+            HttpResponse response = null;
             try {
-                HttpResponse response = StudIPHelper.api.getShibbolethClient().getIfValid(url[0]);
+                response = StudIPHelper.api.getShibbolethClient().getIfValid(url[0]);
                 HttpEntity entity = response.getEntity();
                 BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
                 InputStream instream = bufHttpEntity.getContent();
                 return BitmapFactory.decodeStream(instream);
             } catch (IOException | IllegalAccessException e) {
+                e.printStackTrace();
             }
             return null;
         }

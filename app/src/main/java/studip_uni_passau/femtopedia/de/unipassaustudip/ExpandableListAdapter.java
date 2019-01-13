@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,11 +17,11 @@ import java.util.List;
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     private Activity _context;
-    private List<String> _listDataHeader;
+    private List<Object> _listDataHeader;
     private List<List<Object>> _listDataChild;
     private List<Integer> _listDataColorsBg, _listDataColorsText;
 
-    ExpandableListAdapter(Activity context, List<String> listDataHeader,
+    ExpandableListAdapter(Activity context, List<Object> listDataHeader,
                           List<List<Object>> listChildData,
                           List<Integer> listDataColorsBg,
                           List<Integer> listDataColorsText) {
@@ -105,18 +106,31 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @SuppressWarnings({"inflateParams"})
     public View getGroupView(int groupPosition, boolean isExpanded,
                              View convertView, ViewGroup parent) {
+        LayoutInflater infalInflater = (LayoutInflater) this._context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
-            LayoutInflater infalInflater = (LayoutInflater) this._context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             if (infalInflater != null)
                 convertView = infalInflater.inflate(R.layout.list_group, null);
         }
 
         if (convertView != null) {
-            TextView lblListHeader = convertView.findViewById(R.id.lblListHeader);
-            lblListHeader.setTypeface(null, Typeface.BOLD);
-            lblListHeader.setText((String) getGroup(groupPosition));
-            lblListHeader.setTextColor(_listDataColorsText.get(groupPosition));
+            Object group = getGroup(groupPosition);
+            if (group instanceof String) {
+                TextView lblListHeader = convertView.findViewById(R.id.lblListHeaderText);
+                lblListHeader.setTypeface(null, Typeface.BOLD);
+                lblListHeader.setText((String) group);
+                lblListHeader.setTextColor(_listDataColorsText.get(groupPosition));
+                lblListHeader.setVisibility(View.VISIBLE);
+                convertView.findViewById(R.id.lblListHeaderButton).setVisibility(View.GONE);
+            } else if (group instanceof ButtonPreset) {
+                Button lblListHeader = convertView.findViewById(R.id.lblListHeaderButton);
+                lblListHeader.setVisibility(View.VISIBLE);
+                lblListHeader.setText(((ButtonPreset) group).text);
+                lblListHeader.setBackgroundColor(((ButtonPreset) group).bgColor);
+                lblListHeader.setTextColor(((ButtonPreset) group).textColor);
+                lblListHeader.setOnClickListener(((ButtonPreset) group).onClickListener);
+                convertView.findViewById(R.id.lblListHeaderText).setVisibility(View.GONE);
+            }
             convertView.setBackgroundColor(_listDataColorsBg.get(groupPosition));
         }
 
@@ -132,4 +146,18 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
     }
+
+    static class ButtonPreset {
+        String text;
+        int textColor, bgColor;
+        View.OnClickListener onClickListener;
+
+        ButtonPreset(String text, int textColor, int bgColor, View.OnClickListener onClickListener) {
+            this.text = text;
+            this.textColor = textColor;
+            this.bgColor = bgColor;
+            this.onClickListener = onClickListener;
+        }
+    }
+
 }

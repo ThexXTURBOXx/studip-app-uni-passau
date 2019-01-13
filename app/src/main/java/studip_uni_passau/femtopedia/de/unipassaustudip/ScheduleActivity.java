@@ -42,7 +42,7 @@ public class ScheduleActivity extends AppCompatActivity
 
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
-    List<String> listDataHeader;
+    List<Object> listDataHeader;
     List<List<Object>> listDataChild;
     List<Integer> listDataColorsBg, listDataColorsText;
     int weeks = 0;
@@ -91,6 +91,8 @@ public class ScheduleActivity extends AppCompatActivity
     }
 
     private void updateDataFirst() {
+        if (swiperefresher.isRefreshing())
+            return;
         StudIPHelper.loadSchedule(this.getApplicationContext());
         updateSchedule();
         if (StudIPHelper.isNetworkAvailable(this) && PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("auto_sync", true)) {
@@ -101,6 +103,8 @@ public class ScheduleActivity extends AppCompatActivity
     }
 
     private void updateData() {
+        if (swiperefresher.isRefreshing())
+            return;
         if (StudIPHelper.isNetworkAvailable(this)) {
             swiperefresher.setRefreshing(true);
             CacheSchedule sched = new CacheSchedule();
@@ -126,7 +130,7 @@ public class ScheduleActivity extends AppCompatActivity
         listDataChild = new ArrayList<>();
     }
 
-    private void addListItem(String title, List<Object> info, int colorBg, int colorText) {
+    private void addListItem(Object title, List<Object> info, int colorBg, int colorText) {
         listDataHeader.add(title);
         listDataColorsBg.add(colorBg);
         listDataColorsText.add(colorText);
@@ -245,7 +249,6 @@ public class ScheduleActivity extends AppCompatActivity
         }
     }
 
-    @SuppressWarnings("EmptyCatchBlock")
     private List<ScheduledEvent> compareDay(List<ScheduledCourse> courses, List<Event> events, int day, int week) {
         List<ScheduledEvent> eventss = new ArrayList<>();
         if (courses != null) {
@@ -282,6 +285,7 @@ public class ScheduleActivity extends AppCompatActivity
                         Course c = StudIPHelper.api.getCourse(event.getCourse().replaceFirst("/studip/api.php/course/", ""));
                         se.description = c.getNumber() + " " + c.getTitle();
                     } catch (IOException | IllegalAccessException e) {
+                        e.printStackTrace();
                     }
                     se.color = "ea3838";
                 }
@@ -338,22 +342,29 @@ public class ScheduleActivity extends AppCompatActivity
         int dow = dt.getDayOfWeek();
         for (int wk = 0; wk <= weeks; wk++) {
             for (int i = 0; i < 7; i++) {
-                int dows = (i + dow) % 7;
+                int dows = (i + dow - 1) % 7 + 1;
                 int days = dows + wk * 7;
                 List<ScheduledEvent> list = StudIPHelper.schedule.get(days);
                 if (list != null) {
                     if (days == dow)
                         addToView(getDateString(dows, dow, wk, 0), list);
-                    else if (days == dow + 1)
+                    else if (days == dow % 7 + 1)
                         addToView(getDateString(dows, dow, wk, 1), list);
                     else
                         addToView(getDateString(dows, dow, wk), list);
                 }
             }
         }
+        addListItem(new ExpandableListAdapter.ButtonPreset(
+                        getString(R.string.load_more), Color.WHITE, Color.BLACK,
+                        (view) -> {
+                            weeks++;
+                            updateData();
+                        }),
+                new ArrayList<>(), Color.BLACK, Color.WHITE);
     }
 
-    @SuppressWarnings({"staticFieldLeak", "EmptyCatchBlock"})
+    @SuppressWarnings({"staticFieldLeak"})
     public class CacheSchedule extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -364,6 +375,7 @@ public class ScheduleActivity extends AppCompatActivity
                 Intent intent = new Intent(ScheduleActivity.this, LoginActivity.class);
                 startActivity(intent);
             } catch (IOException e) {
+                e.printStackTrace();
             }
             return null;
         }

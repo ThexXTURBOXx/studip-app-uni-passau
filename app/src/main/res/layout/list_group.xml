@@ -6,12 +6,20 @@
     android:orientation="vertical"
     android:padding="8dp">
 
-
     <TextView
-        android:id="@+id/lblListHeader"
+        android:id="@+id/lblListHeaderText"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textColor="#f9f93d"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/lblListHeaderButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        android:visibility="gone" />
 
 </LinearLayout>
