@@ -420,7 +420,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             ShibHttpResponse response = null;
             InputStream instream = null;
             try {
-                response = StudIPHelper.api.getShibbolethClient().getIfValid(url[0]);
+                response = StudIPHelper.api.getShibbolethClient().get(url[0]);
                 HttpEntity entity = response.getResponse().getEntity();
                 BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
                 instream = bufHttpEntity.getContent();

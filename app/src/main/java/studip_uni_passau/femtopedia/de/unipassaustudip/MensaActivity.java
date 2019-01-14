@@ -392,8 +392,8 @@ public class MensaActivity extends AppCompatActivity
                 int next_week = new DateTime().plusDays(7).getWeekOfWeekyear();
                 if (StudIPHelper.mensaPlan == null)
                     StudIPHelper.mensaPlan = new MensaPlan();
-                StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.api.getShibbolethClient().getIfValid(mensaUrl + week + ".csv")));
-                StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.api.getShibbolethClient().getIfValid(mensaUrl + (next_week) + ".csv")));
+                StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.api.getShibbolethClient().get(mensaUrl + week + ".csv")));
+                StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.api.getShibbolethClient().get(mensaUrl + (next_week) + ".csv")));
                 StudIPHelper.updateMensaPlan(getApplicationContext(), StudIPHelper.mensaPlan);
             } catch (IllegalAccessException e) {
                 Intent intent = new Intent(MensaActivity.this, LoginActivity.class);
