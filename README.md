@@ -2,7 +2,7 @@
 <p align="center">
   <a href="https://lgtm.com/projects/g/ThexXTURBOXx/studip-app-uni-passau/alerts/"><img alt="Total alerts" src="https://img.shields.io/lgtm/alerts/g/ThexXTURBOXx/studip-app-uni-passau.svg?logo=lgtm&logoWidth=18"/></a>
   <a href="https://lgtm.com/projects/g/ThexXTURBOXx/studip-app-uni-passau/context:java"><img alt="Language grade: Java" src="https://img.shields.io/lgtm/grade/java/g/ThexXTURBOXx/studip-app-uni-passau.svg?logo=lgtm&logoWidth=18"/></a>
-  <a href="https://travis-ci.org/ThexXTURBOXx/studip-app-uni-passau"><img src="https://travis-ci.org/ThexXTURBOXx/studip-app-uni-passau.svg?branch=master"></a>
+  <a href="https://travis-ci.com/ThexXTURBOXx/studip-app-uni-passau"><img src="https://travis-ci.com/ThexXTURBOXx/studip-app-uni-passau.svg?branch=master"></a>
   <a href="http://femtopedia.de/studip/index.php"><img src="https://img.shields.io/website-up-down-green-red/http/www.femtopedia.de/index.php.svg?label=Repository"></a>
   <a href="https://github.com/ThexXTURBOXx/studip-app-uni-passau/releases"><img src="https://img.shields.io/github/release-pre/thexxturboxx/studip-app-uni-passau.svg"></a>
 </p>
