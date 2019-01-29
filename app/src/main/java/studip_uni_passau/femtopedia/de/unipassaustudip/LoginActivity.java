@@ -17,8 +17,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -40,6 +38,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import de.femtopedia.studip.StudIPAPI;
 import de.femtopedia.studip.json.User;
 import de.femtopedia.studip.shib.ShibHttpResponse;

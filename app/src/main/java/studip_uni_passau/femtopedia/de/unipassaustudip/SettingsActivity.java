@@ -8,10 +8,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import androidx.core.app.NavUtils;
 import android.view.MenuItem;
 
 import java.util.List;
+
+import androidx.core.app.NavUtils;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
