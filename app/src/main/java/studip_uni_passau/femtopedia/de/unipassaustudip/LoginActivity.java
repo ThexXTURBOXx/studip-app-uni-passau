@@ -418,6 +418,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Bitmap doInBackground(String... url) {
+            if (!StudIPHelper.isNetworkAvailable(LoginActivity.this))
+                return null;
             ShibHttpResponse response = null;
             InputStream instream = null;
             try {

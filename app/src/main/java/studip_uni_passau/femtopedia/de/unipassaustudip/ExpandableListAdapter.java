@@ -59,7 +59,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 txtListChild.setTextColor(_listDataColorsText.get(groupPosition));
                 convertView.setBackgroundColor(_listDataColorsBg.get(groupPosition));
                 txtListChild.setText((String) getChild(groupPosition, childPosition));
-            } else if (data instanceof List && !((List) data).isEmpty()) {
+            } else if (data instanceof List) {
+                if (((List) data).isEmpty())
+                    ((List) data).add(R.drawable.unknown);
                 if (((List) data).get(0) instanceof Integer) {
                     convertView = infalInflater.inflate(R.layout.list_image_item, null);
                     convertView.setBackgroundColor(_listDataColorsBg.get(groupPosition));
