@@ -41,12 +41,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ScheduleActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, StudIPHelper.ProfilePicHolder {
 
+    static int weeks = 0;
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
     List<Object> listDataHeader;
     List<List<Object>> listDataChild;
     List<Integer> listDataColorsBg, listDataColorsText;
-    int weeks = 0;
     private NavigationView navigationView;
     private SwipeRefreshLayout swiperefresher;
 
@@ -110,6 +110,7 @@ public class ScheduleActivity extends AppCompatActivity
             sched.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             swiperefresher.setRefreshing(false);
+            updateSchedule();
         }
     }
 
@@ -220,7 +221,7 @@ public class ScheduleActivity extends AppCompatActivity
     private Map<Integer, List<ScheduledEvent>> compareSchedule(Schedule schedule) throws IllegalAccessException, IOException {
         Events events = StudIPHelper.api.getData("user/" + StudIPHelper.current_user.getUser_id() + "/events?limit=10000", Events.class);
         Map<Integer, List<ScheduledEvent>> sched = new HashMap<>();
-        for (int i = 0; i <= weeks; i++) {
+        for (int i = 0; i <= 4; i++) {
             for (int d = 0; d < 7; d++) {
                 int day = d + i * 7;
                 sched.put(day + 1, compareDay(getDayOfSchedule(schedule, day % 7 + 1), events.getCollection(), day + 1, i));
@@ -266,6 +267,8 @@ public class ScheduleActivity extends AppCompatActivity
                 se.canceled = event.getCanceled();
                 se.room = event.getRoom();
                 se.course = event.getCourse();
+                System.out.println(event.getTitle() + ": " + event.getDescription());
+                System.out.println(event.getCategories());
                 for (ScheduledCourse s : courses) {
                     if (event.getCourse().replaceFirst("/studip/api.php/course/", "").equals(s.getEvent_id())) {
                         String time1 = String.format(Locale.GERMANY, "%02d", time.getHourOfDay()) + String.format(Locale.GERMANY, "%02d", time.getMinuteOfHour());
@@ -357,7 +360,10 @@ public class ScheduleActivity extends AppCompatActivity
                         (view) -> {
                             if (!swiperefresher.isRefreshing()) {
                                 weeks++;
-                                updateData();
+                                if (weeks >= 4)
+                                    updateData();
+                                else
+                                    updateSchedule();
                             }
                         }),
                 new ArrayList<>(), Color.BLACK, Color.WHITE);
