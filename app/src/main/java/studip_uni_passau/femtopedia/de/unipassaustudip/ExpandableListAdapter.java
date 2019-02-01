@@ -16,25 +16,25 @@ import java.util.List;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
-    private Activity _context;
-    private List<Object> _listDataHeader;
-    private List<List<Object>> _listDataChild;
-    private List<Integer> _listDataColorsBg, _listDataColorsText;
+    private Activity context;
+    private List<Object> listDataHeader;
+    private List<List<Object>> listDataChild;
+    private List<Integer> listDataColorsBg, listDataColorsText;
 
     ExpandableListAdapter(Activity context, List<Object> listDataHeader,
                           List<List<Object>> listChildData,
                           List<Integer> listDataColorsBg,
                           List<Integer> listDataColorsText) {
-        this._context = context;
-        this._listDataHeader = listDataHeader;
-        this._listDataChild = listChildData;
-        this._listDataColorsBg = listDataColorsBg;
-        this._listDataColorsText = listDataColorsText;
+        this.context = context;
+        this.listDataHeader = listDataHeader;
+        this.listDataChild = listChildData;
+        this.listDataColorsBg = listDataColorsBg;
+        this.listDataColorsText = listDataColorsText;
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosititon) {
-        return this._listDataChild.get(groupPosition).get(childPosititon);
+        return this.listDataChild.get(groupPosition).get(childPosititon);
     }
 
     @Override
@@ -46,29 +46,27 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @SuppressWarnings({"inflateParams", "unchecked"})
     public View getChildView(int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
-
-        Object data = _listDataChild.get(groupPosition).get(childPosition);
-        LayoutInflater infalInflater = (LayoutInflater) this._context
+        Object data = listDataChild.get(groupPosition).get(childPosition);
+        LayoutInflater infalInflater = (LayoutInflater) this.context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
         if (infalInflater != null) {
             if (data instanceof String) {
                 convertView = infalInflater.inflate(R.layout.list_item, null);
                 TextView txtListChild = convertView
                         .findViewById(R.id.lblListItem);
-                txtListChild.setTextColor(_listDataColorsText.get(groupPosition));
-                convertView.setBackgroundColor(_listDataColorsBg.get(groupPosition));
+                txtListChild.setTextColor(listDataColorsText.get(groupPosition));
+                convertView.setBackgroundColor(listDataColorsBg.get(groupPosition));
                 txtListChild.setText((String) getChild(groupPosition, childPosition));
             } else if (data instanceof List) {
                 if (((List) data).isEmpty())
                     ((List) data).add(R.drawable.unknown);
                 if (((List) data).get(0) instanceof Integer) {
                     convertView = infalInflater.inflate(R.layout.list_image_item, null);
-                    convertView.setBackgroundColor(_listDataColorsBg.get(groupPosition));
+                    convertView.setBackgroundColor(listDataColorsBg.get(groupPosition));
                     LinearLayout ll = convertView.findViewById(R.id.imageViewFoodPp);
                     int c = 0;
                     for (int i : (List<Integer>) data) {
-                        ImageView iv = new ImageView(_context);
+                        ImageView iv = new ImageView(context);
                         iv.setPadding(c == 0 ? 125 : 0, 20, 0, 20);
                         iv.setImageResource(i);
                         iv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 100));
@@ -80,23 +78,22 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 }
             }
         }
-
         return convertView;
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return this._listDataChild.get(groupPosition).size();
+        return this.listDataChild.get(groupPosition).size();
     }
 
     @Override
     public Object getGroup(int groupPosition) {
-        return this._listDataHeader.get(groupPosition);
+        return this.listDataHeader.get(groupPosition);
     }
 
     @Override
     public int getGroupCount() {
-        return this._listDataHeader.size();
+        return this.listDataHeader.size();
     }
 
     @Override
@@ -108,20 +105,19 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @SuppressWarnings({"inflateParams"})
     public View getGroupView(int groupPosition, boolean isExpanded,
                              View convertView, ViewGroup parent) {
-        LayoutInflater infalInflater = (LayoutInflater) this._context
+        LayoutInflater infalInflater = (LayoutInflater) this.context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
             if (infalInflater != null)
                 convertView = infalInflater.inflate(R.layout.list_group, null);
         }
-
         if (convertView != null) {
             Object group = getGroup(groupPosition);
             if (group instanceof String) {
                 TextView lblListHeader = convertView.findViewById(R.id.lblListHeaderText);
                 lblListHeader.setTypeface(null, Typeface.BOLD);
                 lblListHeader.setText((String) group);
-                lblListHeader.setTextColor(_listDataColorsText.get(groupPosition));
+                lblListHeader.setTextColor(listDataColorsText.get(groupPosition));
                 lblListHeader.setVisibility(View.VISIBLE);
                 convertView.findViewById(R.id.lblListHeaderButton).setVisibility(View.GONE);
             } else if (group instanceof ButtonPreset) {
@@ -133,9 +129,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 lblListHeader.setOnClickListener(((ButtonPreset) group).onClickListener);
                 convertView.findViewById(R.id.lblListHeaderText).setVisibility(View.GONE);
             }
-            convertView.setBackgroundColor(_listDataColorsBg.get(groupPosition));
+            convertView.setBackgroundColor(listDataColorsBg.get(groupPosition));
         }
-
         return convertView;
     }
 

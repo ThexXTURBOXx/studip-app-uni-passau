@@ -1,9 +1,10 @@
 package studip_uni_passau.femtopedia.de.unipassaustudip;
 
 import android.app.Activity;
-import android.app.Application;
 
-public class StudIPApp extends Application {
+import androidx.multidex.MultiDexApplication;
+
+public class StudIPApp extends MultiDexApplication {
 
     private Activity currentActivity = null;
     private Activity currentTopActivity = null;
