@@ -40,7 +40,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import de.femtopedia.studip.StudIPAPI;
+import androidx.appcompat.app.AppCompatDelegate;
 import de.femtopedia.studip.json.User;
 import de.femtopedia.studip.shib.ShibHttpResponse;
 
@@ -48,6 +48,10 @@ import de.femtopedia.studip.shib.ShibHttpResponse;
  * A login screen that offers login via username/password.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -291,11 +295,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Integer doInBackground(Boolean... params) {
             if (!StudIPHelper.isNetworkAvailable(LoginActivity.this)) {
-                StudIPHelper.api = new StudIPAPI(mCookies);
+                StudIPHelper.constructAPI(getApplicationContext(), mCookies);
                 return 4;
             }
             try {
-                StudIPHelper.api = new StudIPAPI(mCookies);
+                StudIPHelper.constructAPI(getApplicationContext(), mCookies);
                 if (!params[0])
                     StudIPHelper.api.authenticate(mUsername, mPassword);
                 if (!StudIPHelper.api.getShibbolethClient().isSessionValid()) {

@@ -5,10 +5,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+
+import org.apache.http.cookie.Cookie;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -40,6 +43,15 @@ class StudIPHelper {
     private static Type scheduleType = new TypeToken<Map<Integer, List<ScheduledEvent>>>() {
     }.getType();
 
+    static void constructAPI(Context context, List<Cookie> cookies) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            StudIPHelper.api = new StudIPAPI(cookies, null, "");
+        } else {
+            StudIPHelper.api = new StudIPAPI(cookies,
+                    context.getResources().openRawResource(R.raw.newtruststore), "012345");
+        }
+    }
+
     static void updatePic(Bitmap profile_pic, StudIPApp application) {
         StudIPHelper.profile_pic = profile_pic;
         Activity a = application.getCurrentActivity();
@@ -68,6 +80,7 @@ class StudIPHelper {
     }
 
     static <T> T loadFromFile(File file, Type type) {
+        initFile(file);
         try {
             return gson.fromJson(new BufferedReader(new FileReader(file)), type);
         } catch (IOException e) {
@@ -77,6 +90,7 @@ class StudIPHelper {
     }
 
     static <T> T loadFromFile(File file, Class<T> clazz) {
+        initFile(file);
         try {
             return gson.fromJson(new BufferedReader(new FileReader(file)), clazz);
         } catch (IOException e) {
@@ -86,6 +100,7 @@ class StudIPHelper {
     }
 
     static <T> void saveToFile(File file, T obj, Type t) {
+        initFile(file);
         String ser = gson.toJson(obj, t);
         try {
             FileOutputStream fileOut = new FileOutputStream(file);
@@ -99,6 +114,7 @@ class StudIPHelper {
     }
 
     static void saveToFile(File file, Object obj) {
+        initFile(file);
         String ser = gson.toJson(obj);
         try {
             FileOutputStream fileOut = new FileOutputStream(file);
@@ -119,6 +135,20 @@ class StudIPHelper {
             return activeNetworkInfo != null && activeNetworkInfo.isConnected();
         }
         return false;
+    }
+
+    static boolean initFile(File file) {
+        boolean flag = false;
+        File parent = file.getParentFile();
+        if (!parent.exists())
+            flag = parent.mkdirs();
+        try {
+            if (!file.exists())
+                flag = file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return flag;
     }
 
     interface ProfilePicHolder {

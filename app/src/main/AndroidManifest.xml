@@ -50,6 +50,10 @@
             android:name=".AboutActivity"
             android:label="@string/title_activity_about"
             android:screenOrientation="sensorPortrait" />
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
     </application>
 
 </manifest>

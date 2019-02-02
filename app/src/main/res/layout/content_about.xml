@@ -29,7 +29,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nico_image" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_email_me"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,17 +37,18 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="8dp"
-        android:drawableStart="@drawable/ic_mail_outline_white_24dp"
-        android:drawableLeft="@drawable/ic_mail_outline_white_24dp"
         android:drawablePadding="10dp"
+        android:gravity="start|center_vertical"
         android:text="@string/email"
         android:textAlignment="textStart"
         android:textAllCaps="false"
+        app:drawableLeftCompat="@drawable/ic_mail_outline_white_24dp"
+        app:drawableStartCompat="@drawable/ic_mail_outline_white_24dp"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/about_text" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_source"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -55,17 +56,18 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
-        android:drawableStart="@drawable/ic_github"
-        android:drawableLeft="@drawable/ic_github"
         android:drawablePadding="10dp"
+        android:gravity="start|center_vertical"
         android:text="@string/source"
         android:textAlignment="textStart"
         android:textAllCaps="false"
+        app:drawableLeftCompat="@drawable/ic_github"
+        app:drawableStartCompat="@drawable/ic_github"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/button_email_me" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_credits"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -73,12 +75,13 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
-        android:drawableStart="@drawable/ic_library_books_black_24dp"
-        android:drawableLeft="@drawable/ic_library_books_black_24dp"
         android:drawablePadding="10dp"
+        android:gravity="start|center_vertical"
         android:text="@string/credits"
         android:textAlignment="textStart"
         android:textAllCaps="false"
+        app:drawableLeftCompat="@drawable/ic_library_books_black_24dp"
+        app:drawableStartCompat="@drawable/ic_library_books_black_24dp"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/button_source" />
