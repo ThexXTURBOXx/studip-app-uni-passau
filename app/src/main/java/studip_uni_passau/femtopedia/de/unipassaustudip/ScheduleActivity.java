@@ -98,16 +98,16 @@ public class ScheduleActivity extends AppCompatActivity
         updateSchedule();
         if (StudIPHelper.isNetworkAvailable(this) && PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("auto_sync", true)) {
             swiperefresher.setRefreshing(true);
-            CacheSchedule sched = new CacheSchedule();
-            sched.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            CacheSchedule schedule = new CacheSchedule();
+            schedule.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
     private void updateData() {
         if (StudIPHelper.isNetworkAvailable(this)) {
             swiperefresher.setRefreshing(true);
-            CacheSchedule sched = new CacheSchedule();
-            sched.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            CacheSchedule schedule = new CacheSchedule();
+            schedule.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             swiperefresher.setRefreshing(false);
             updateSchedule();
@@ -207,6 +207,8 @@ public class ScheduleActivity extends AppCompatActivity
             List<Object> info = new ArrayList<>();
             info.add(se.title);
             info.add(se.room);
+            if (se.categories != null)
+                info.add(se.categories);
             DateTime start = new DateTime(se.start);
             DateTime end = new DateTime(se.end);
             info.add(getString(R.string.start) + ": " + String.format(Locale.GERMANY, "%02d", start.getHourOfDay()) + ":" + String.format(Locale.GERMANY, "%02d", start.getMinuteOfHour()));
@@ -267,8 +269,10 @@ public class ScheduleActivity extends AppCompatActivity
                 se.canceled = event.getCanceled();
                 se.room = event.getRoom();
                 se.course = event.getCourse();
-                System.out.println(event.getTitle() + ": " + event.getDescription());
-                System.out.println(event.getCategories());
+                if (!event.getCategories().equals("Sitzung")) {
+                    se.categories = event.getCategories();
+                    se.color = "339966";
+                }
                 for (ScheduledCourse s : courses) {
                     if (event.getCourse().replaceFirst("/studip/api.php/course/", "").equals(s.getEvent_id())) {
                         String time1 = String.format(Locale.GERMANY, "%02d", time.getHourOfDay()) + String.format(Locale.GERMANY, "%02d", time.getMinuteOfHour());
@@ -289,7 +293,8 @@ public class ScheduleActivity extends AppCompatActivity
                     } catch (IOException | IllegalAccessException e) {
                         e.printStackTrace();
                     }
-                    se.color = "ea3838";
+                    if (se.color == null)
+                        se.color = "ea3838";
                 }
                 eventss.add(se);
             }

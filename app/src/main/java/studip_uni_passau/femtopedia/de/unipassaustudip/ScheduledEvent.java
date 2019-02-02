@@ -10,6 +10,7 @@ public class ScheduledEvent {
     String description;
     String room;
     String canceled;
+    String categories;
 
     @Override
     public String toString() {
