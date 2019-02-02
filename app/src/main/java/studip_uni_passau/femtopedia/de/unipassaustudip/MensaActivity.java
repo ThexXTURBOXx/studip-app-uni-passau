@@ -16,6 +16,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
+import org.joda.time.DateTimeZone;
 import org.joda.time.Days;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -72,7 +73,7 @@ public class MensaActivity extends AppCompatActivity
         expListView.setGroupIndicator(null);
 
         dateView = findViewById(R.id.dateView);
-        setDate(new DateTime().withTime(0, 0, 0, 0));
+        setDate(new DateTime().withTime(0, 0, 0, 0).withZone(DateTimeZone.forID("Europe/Berlin")));
 
         updateDataFirst();
 
@@ -120,7 +121,8 @@ public class MensaActivity extends AppCompatActivity
     }
 
     private void setDate(DateTime dt) {
-        int days = Days.daysBetween(new DateTime().withDayOfWeek(DateTimeConstants.MONDAY).toLocalDate(), dt.toLocalDate()).getDays();
+        int days = Days.daysBetween(new DateTime().withDayOfWeek(DateTimeConstants.MONDAY)
+                .withZone(DateTimeZone.forID("Europe/Berlin")).toLocalDate(), dt.toLocalDate()).getDays();
         if (days < 14 && days >= 0) {
             this.dateTime = dt;
             dateView.setText(getDateString(dt));
@@ -261,7 +263,8 @@ public class MensaActivity extends AppCompatActivity
 
     private String getDateString(DateTime time) {
         int day = time.getDayOfWeek();
-        int rr = Days.daysBetween(new DateTime().toLocalDate(), time.toLocalDate()).getDays();
+        int rr = Days.daysBetween(new DateTime().withZone(DateTimeZone.forID("Europe/Berlin")).toLocalDate(),
+                time.toLocalDate()).getDays();
         StringBuilder sb = new StringBuilder();
         if (rr == 0)
             sb = sb.append(getString(R.string.today)).append(", ");
@@ -389,8 +392,8 @@ public class MensaActivity extends AppCompatActivity
         @Override
         protected Integer doInBackground(Void... url) {
             try {
-                int week = new DateTime().getWeekOfWeekyear();
-                int next_week = new DateTime().plusDays(7).getWeekOfWeekyear();
+                int week = new DateTime().withZone(DateTimeZone.forID("Europe/Berlin")).getWeekOfWeekyear();
+                int next_week = new DateTime().withZone(DateTimeZone.forID("Europe/Berlin")).plusDays(7).getWeekOfWeekyear();
                 if (StudIPHelper.mensaPlan == null)
                     StudIPHelper.mensaPlan = new MensaPlan();
                 StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.api.getShibbolethClient().get(mensaUrl + week + ".csv")));

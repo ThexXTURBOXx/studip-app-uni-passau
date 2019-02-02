@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.google.android.material.navigation.NavigationView;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.Days;
 
 import java.io.IOException;
@@ -209,8 +210,8 @@ public class ScheduleActivity extends AppCompatActivity
             info.add(se.room);
             if (se.categories != null)
                 info.add(se.categories);
-            DateTime start = new DateTime(se.start);
-            DateTime end = new DateTime(se.end);
+            DateTime start = new DateTime(se.start).withZone(DateTimeZone.forID("Europe/Berlin"));
+            DateTime end = new DateTime(se.end).withZone(DateTimeZone.forID("Europe/Berlin"));
             info.add(getString(R.string.start) + ": " + String.format(Locale.GERMANY, "%02d", start.getHourOfDay()) + ":" + String.format(Locale.GERMANY, "%02d", start.getMinuteOfHour()));
             info.add(getString(R.string.end) + ": " + String.format(Locale.GERMANY, "%02d", end.getHourOfDay()) + ":" + String.format(Locale.GERMANY, "%02d", end.getMinuteOfHour()));
             int color = Color.parseColor("#" + se.color);
@@ -254,14 +255,14 @@ public class ScheduleActivity extends AppCompatActivity
     private List<ScheduledEvent> compareDay(List<ScheduledCourse> courses, List<Event> events, int day, int week) {
         List<ScheduledEvent> eventss = new ArrayList<>();
         if (courses != null) {
-            DateTime now = new DateTime().plusDays(1 + week * 7).withTime(0, 0, 0, 0);
+            DateTime now = new DateTime().plusDays(1 + week * 7).withTime(0, 0, 0, 0).withZone(DateTimeZone.forID("Europe/Berlin"));
             for (Event event : events) {
                 boolean flag = false;
-                DateTime time = new DateTime(event.getStart() * 1000);
+                DateTime time = new DateTime(event.getStart() * 1000).withZone(DateTimeZone.forID("Europe/Berlin"));
                 if (time.getDayOfWeek() != (day - 1) % 7 + 1 || time.isBefore(now.minusDays(1).minusSeconds(1)) ||
                         Days.daysBetween(now, new DateTime(time).withTime(1, 0, 0, 0)).getDays() >= 6)
                     continue;
-                DateTime dd = new DateTime(event.getEnd() * 1000);
+                DateTime dd = new DateTime(event.getEnd() * 1000).withZone(DateTimeZone.forID("Europe/Berlin"));
                 ScheduledEvent se = new ScheduledEvent();
                 se.start = time.getMillis();
                 se.end = dd.getMillis();
@@ -307,7 +308,7 @@ public class ScheduleActivity extends AppCompatActivity
     }
 
     private String getDateString(int day, int today, int week, int isToday) {
-        DateTime time = new DateTime().plusDays((day < today ? day + 7 : day) - today).plusDays(7 * week);
+        DateTime time = new DateTime().plusDays((day < today ? day + 7 : day) - today).plusDays(7 * week).withZone(DateTimeZone.forID("Europe/Berlin"));
         StringBuilder sb = new StringBuilder();
         if (isToday == 0)
             sb = sb.append(getString(R.string.today)).append(", ");
@@ -343,7 +344,7 @@ public class ScheduleActivity extends AppCompatActivity
         if (StudIPHelper.schedule == null)
             return;
         clearListItems();
-        DateTime dt = new DateTime();
+        DateTime dt = new DateTime().withZone(DateTimeZone.forID("Europe/Berlin"));
         int dow = dt.getDayOfWeek();
         for (int wk = 0; wk <= weeks; wk++) {
             for (int i = 0; i < 7; i++) {
