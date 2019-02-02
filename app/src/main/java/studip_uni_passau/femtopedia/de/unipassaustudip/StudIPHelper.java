@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -23,6 +22,8 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
+import javax.net.ssl.SSLPeerUnverifiedException;
+
 import de.femtopedia.studip.StudIPAPI;
 import de.femtopedia.studip.json.User;
 
@@ -32,7 +33,7 @@ import de.femtopedia.studip.json.User;
 
 class StudIPHelper {
 
-    static StudIPAPI api;
+    static StudIPAPI api = null;
 
     static User current_user;
     static Bitmap profile_pic = null;
@@ -43,12 +44,28 @@ class StudIPHelper {
     private static Type scheduleType = new TypeToken<Map<Integer, List<ScheduledEvent>>>() {
     }.getType();
 
-    static void constructAPI(Context context, List<Cookie> cookies) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            StudIPHelper.api = new StudIPAPI(cookies, null, "");
-        } else {
+    static void constructAPI(List<Cookie> cookies) {
+        if (StudIPHelper.api != null)
+            StudIPHelper.api.shutdown();
+        StudIPHelper.api = new StudIPAPI(cookies, null, "");
+    }
+
+    static void logIntoAPI(Context context, List<Cookie> cookies, String username, String password, boolean authenticate)
+            throws IllegalArgumentException, IllegalAccessException, IllegalStateException, IOException {
+        try {
+            if (authenticate)
+                StudIPHelper.api.authenticate(username, password);
+            StudIPHelper.api.getShibbolethClient()
+                    .get("https://studip.uni-passau.de/studip/index.php").getResponse().getEntity().getContent();
+            StudIPHelper.api.getShibbolethClient()
+                    .get("https://www.stwno.de/infomax/daten-extern/csv/UNI-P/1.csv").getResponse().getEntity().getContent();
+        } catch (SSLPeerUnverifiedException e) {
+            System.out.println("SSLPeerUnverifiedException thrown, using KeyStore.");
+            StudIPHelper.api.shutdown();
             StudIPHelper.api = new StudIPAPI(cookies,
                     context.getResources().openRawResource(R.raw.newtruststore), "012345");
+            if (authenticate)
+                StudIPHelper.api.authenticate(username, password);
         }
     }
 

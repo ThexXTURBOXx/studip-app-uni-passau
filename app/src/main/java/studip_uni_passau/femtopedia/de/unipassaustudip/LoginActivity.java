@@ -294,14 +294,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Integer doInBackground(Boolean... params) {
-            if (!StudIPHelper.isNetworkAvailable(LoginActivity.this)) {
-                StudIPHelper.constructAPI(getApplicationContext(), mCookies);
-                return 4;
-            }
             try {
-                StudIPHelper.constructAPI(getApplicationContext(), mCookies);
-                if (!params[0])
-                    StudIPHelper.api.authenticate(mUsername, mPassword);
+                StudIPHelper.constructAPI(mCookies);
+                if (!StudIPHelper.isNetworkAvailable(LoginActivity.this))
+                    return 4;
+                StudIPHelper.logIntoAPI(getApplicationContext(), mCookies, mUsername, mPassword, !params[0]);
                 if (!StudIPHelper.api.getShibbolethClient().isSessionValid()) {
                     return 3;
                 }
@@ -313,9 +310,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 }
             } catch (IllegalAccessException e) {
                 return 1;
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (IllegalStateException | IllegalArgumentException e) {
+            } catch (IOException | IllegalStateException | IllegalArgumentException e) {
                 return 2;
             }
             return 0;
