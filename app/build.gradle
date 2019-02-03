@@ -22,6 +22,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     lintOptions {
         abortOnError false
     }
@@ -59,4 +63,6 @@ dependencies {
     api 'org.jsoup:jsoup:1.11.3'
     implementation 'com.github.javiersantos:AppUpdater:2.7.1-onfinishfix'
     implementation 'joda-time:joda-time:2.10.1'
+    implementation "ch.acra:acra-mail:5.2.1"
+    implementation "ch.acra:acra-dialog:5.2.1"
 }

@@ -2,7 +2,6 @@ package studip_uni_passau.femtopedia.de.unipassaustudip;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -177,27 +176,7 @@ public class ScheduleActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_mensa) {
-            Intent intent = new Intent(ScheduleActivity.this, MensaActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_manage) {
-            Intent intent = new Intent(ScheduleActivity.this, SettingsActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_bugreport) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/ThexXTURBOXx/studip-app-uni-passau/issues/new"));
-            startActivity(intent);
-        } else if (id == R.id.nav_about) {
-            Intent intent = new Intent(ScheduleActivity.this, AboutActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.open_in_browser) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://studip.uni-passau.de/studip/index.php"));
-            startActivity(intent);
-        }
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        StudIPHelper.updateNavigation(item.getItemId(), R.id.nav_schedule, this);
         return true;
     }
 

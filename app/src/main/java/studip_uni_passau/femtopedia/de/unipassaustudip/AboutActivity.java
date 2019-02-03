@@ -45,7 +45,7 @@ public class AboutActivity extends AppCompatActivity
 
         findViewById(R.id.button_email_me).setOnClickListener((v) -> {
             final Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "nico.mexis@kabelmail.de", null));
-            emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Stud.IP App Bug");
+            emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Stud.IP App Feedback");
             startActivity(Intent.createChooser(emailIntent, getString(R.string.send_mail)));
         });
 
@@ -108,27 +108,7 @@ public class AboutActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_schedule) {
-            Intent intent = new Intent(AboutActivity.this, ScheduleActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_mensa) {
-            Intent intent = new Intent(AboutActivity.this, MensaActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_manage) {
-            Intent intent = new Intent(AboutActivity.this, SettingsActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_bugreport) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/ThexXTURBOXx/studip-app-uni-passau/issues/new"));
-            startActivity(intent);
-        } else if (id == R.id.open_in_browser) {
-            Intent intent = new Intent("android.intent.action.VIEW", Uri.parse("https://studip.uni-passau.de/studip/index.php"));
-            startActivity(intent);
-        }
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        StudIPHelper.updateNavigation(item.getItemId(), R.id.nav_about, this);
         return true;
     }
 

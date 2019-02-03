@@ -2,9 +2,11 @@ package studip_uni_passau.femtopedia.de.unipassaustudip;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -24,6 +26,8 @@ import java.util.Map;
 
 import javax.net.ssl.SSLPeerUnverifiedException;
 
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import de.femtopedia.studip.StudIPAPI;
 import de.femtopedia.studip.json.User;
 
@@ -142,6 +146,33 @@ class StudIPHelper {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    static void updateNavigation(int id, int currentActivity, Activity activity) {
+        if (id != currentActivity) {
+            if (id == R.id.nav_schedule) {
+                Intent intent = new Intent(activity, ScheduleActivity.class);
+                activity.startActivity(intent);
+            } else if (id == R.id.nav_mensa) {
+                Intent intent = new Intent(activity, MensaActivity.class);
+                activity.startActivity(intent);
+            } else if (id == R.id.nav_manage) {
+                Intent intent = new Intent(activity, SettingsActivity.class);
+                activity.startActivity(intent);
+            } else if (id == R.id.nav_bugreport) {
+                final Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "studipapp@femtopedia.de", null));
+                emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, activity.getString(R.string.bug_subject));
+                activity.startActivity(Intent.createChooser(emailIntent, activity.getString(R.string.send_mail)));
+            } else if (id == R.id.nav_about) {
+                Intent intent = new Intent(activity, AboutActivity.class);
+                activity.startActivity(intent);
+            } else if (id == R.id.open_in_browser) {
+                Intent intent = new Intent("android.intent.action.VIEW", Uri.parse("https://studip.uni-passau.de/studip/index.php"));
+                activity.startActivity(intent);
+            }
+        }
+        DrawerLayout drawer = activity.findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
     }
 
     static boolean isNetworkAvailable(Activity activity) {

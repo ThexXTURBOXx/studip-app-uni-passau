@@ -71,4 +71,6 @@
     <string name="credits">Quellen ansehen</string>
     <string name="version">Version: %1$s (%2$d)</string>
     <string name="load_more">Mehr laden...</string>
+    <string name="crash_dialog_text">Stud.IP App ist abgestürzt!</string>
+    <string name="crash_dialog_comment">Oops, sieht so aus, als wäre die App abgestürzt... Willst du eine Fehlermeldung senden? Das wäre ziemlich nett von dir ;) Du kannst hier einen Kommentar hinzufügen:</string>
 </resources>
