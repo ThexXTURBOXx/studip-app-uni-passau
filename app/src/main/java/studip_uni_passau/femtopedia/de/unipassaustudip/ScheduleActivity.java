@@ -254,26 +254,26 @@ public class ScheduleActivity extends AppCompatActivity
 
     private List<ScheduledEvent> compareDay(List<ScheduledCourse> courses, List<Event> events, int day, int week) {
         List<ScheduledEvent> eventss = new ArrayList<>();
-        if (courses != null) {
-            DateTime now = new DateTime().plusDays(1 + week * 7).withTime(0, 0, 0, 0).withZone(DateTimeZone.forID("Europe/Berlin"));
-            for (Event event : events) {
-                boolean flag = false;
-                DateTime time = new DateTime(event.getStart() * 1000).withZone(DateTimeZone.forID("Europe/Berlin"));
-                if (time.getDayOfWeek() != (day - 1) % 7 + 1 || time.isBefore(now.minusDays(1).minusSeconds(1)) ||
-                        Days.daysBetween(now, new DateTime(time).withTime(1, 0, 0, 0)).getDays() >= 6)
-                    continue;
-                DateTime dd = new DateTime(event.getEnd() * 1000).withZone(DateTimeZone.forID("Europe/Berlin"));
-                ScheduledEvent se = new ScheduledEvent();
-                se.start = time.getMillis();
-                se.end = dd.getMillis();
-                se.title = event.getTitle();
-                se.canceled = event.getCanceled();
-                se.room = event.getRoom();
-                se.course = event.getCourse();
-                if (!event.getCategories().equals("Sitzung")) {
-                    se.categories = event.getCategories();
-                    se.color = "339966";
-                }
+        DateTime now = new DateTime().plusDays(1 + week * 7).withTime(0, 0, 0, 0).withZone(DateTimeZone.forID("Europe/Berlin"));
+        for (Event event : events) {
+            boolean flag = false;
+            DateTime time = new DateTime(event.getStart() * 1000).withZone(DateTimeZone.forID("Europe/Berlin"));
+            if (time.getDayOfWeek() != (day - 1) % 7 + 1 || time.isBefore(now.minusDays(1).minusSeconds(1)) ||
+                    Days.daysBetween(now, new DateTime(time).withTime(1, 0, 0, 0)).getDays() >= 6)
+                continue;
+            DateTime dd = new DateTime(event.getEnd() * 1000).withZone(DateTimeZone.forID("Europe/Berlin"));
+            ScheduledEvent se = new ScheduledEvent();
+            se.start = time.getMillis();
+            se.end = dd.getMillis();
+            se.title = event.getTitle();
+            se.canceled = event.getCanceled();
+            se.room = event.getRoom();
+            se.course = event.getCourse();
+            if (!event.getCategories().equals("Sitzung")) {
+                se.categories = event.getCategories();
+                se.color = "339966";
+            }
+            if (courses != null) {
                 for (ScheduledCourse s : courses) {
                     if (event.getCourse().replaceFirst("/studip/api.php/course/", "").equals(s.getEvent_id())) {
                         String time1 = String.format(Locale.GERMANY, "%02d", time.getHourOfDay()) + String.format(Locale.GERMANY, "%02d", time.getMinuteOfHour());
@@ -287,18 +287,18 @@ public class ScheduleActivity extends AppCompatActivity
                         }
                     }
                 }
-                if (!flag) {
-                    try {
-                        Course c = StudIPHelper.api.getCourse(event.getCourse().replaceFirst("/studip/api.php/course/", ""));
-                        se.description = c.getNumber() + " " + c.getTitle();
-                    } catch (IOException | IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
-                    if (se.color == null)
-                        se.color = "ea3838";
-                }
-                eventss.add(se);
             }
+            if (!flag) {
+                try {
+                    Course c = StudIPHelper.api.getCourse(event.getCourse().replaceFirst("/studip/api.php/course/", ""));
+                    se.description = c.getNumber() + " " + c.getTitle();
+                } catch (IOException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+                if (se.color == null)
+                    se.color = "ea3838";
+            }
+            eventss.add(se);
         }
         return eventss;
     }
