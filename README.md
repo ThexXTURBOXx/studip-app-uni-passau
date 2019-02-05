@@ -20,6 +20,7 @@ All Downloads are located on this [website](http://femtopedia.de/studip/index.ph
 ## Credits
 | Used resource  | Credit |
 | ------------- | ------------- |
+| App Icon | Icon made by Freepik from [www.flaticon.com](http://flaticon.com)  |
 | Pig, Cow, Lamb, Deer Icons (Mensa Plan) | Icon made by Freepik from [www.flaticon.com](http://flaticon.com)  |
 | Alcohol Icon (Mensa Plan) | [simpleicon.com](http://simpleicon.com)  |
 | Vegetarian Icon (Mensa Plan) | [Online Web Fonts](http://onlinewebfonts.com) |
