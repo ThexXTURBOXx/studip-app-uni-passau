@@ -10,6 +10,7 @@ import android.net.Uri;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.cookie.Cookie;
@@ -106,6 +107,13 @@ class StudIPHelper {
             return gson.fromJson(new BufferedReader(new FileReader(file)), type);
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+            if (!file.delete()) {
+                file.deleteOnExit();
+            } else {
+                initFile(file);
+            }
         }
         return null;
     }
@@ -116,6 +124,13 @@ class StudIPHelper {
             return gson.fromJson(new BufferedReader(new FileReader(file)), clazz);
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+            if (!file.delete()) {
+                file.deleteOnExit();
+            } else {
+                initFile(file);
+            }
         }
         return null;
     }
