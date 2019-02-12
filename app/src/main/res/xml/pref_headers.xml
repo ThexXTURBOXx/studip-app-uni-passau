@@ -2,17 +2,17 @@
 
     <header
         android:fragment="studip_uni_passau.femtopedia.de.unipassaustudip.activities.SettingsActivity$SchedulePreferenceFragment"
-        android:icon="@drawable/ic_event_note_black_24dp"
+        android:icon="@drawable/ic_event_note"
         android:title="@string/schedule" />
 
     <header
         android:fragment="studip_uni_passau.femtopedia.de.unipassaustudip.activities.SettingsActivity$MensaPreferenceFragment"
-        android:icon="@drawable/ic_restaurant_black_24dp"
+        android:icon="@drawable/ic_restaurant"
         android:title="@string/mensa_plan" />
 
     <header
         android:fragment="studip_uni_passau.femtopedia.de.unipassaustudip.activities.SettingsActivity$DataSyncPreferenceFragment"
-        android:icon="@drawable/ic_sync_black_24dp"
+        android:icon="@drawable/ic_sync"
         android:title="@string/pref_header_data_sync" />
 
 </preference-headers>

@@ -5,31 +5,31 @@
 
     <item
         android:id="@+id/nav_schedule"
-        android:icon="@drawable/ic_event_note_black_24dp"
+        android:icon="@drawable/ic_event_note"
         android:title="@string/schedule" />
 
     <item
         android:id="@+id/nav_mensa"
-        android:icon="@drawable/ic_restaurant_black_24dp"
+        android:icon="@drawable/ic_restaurant"
         android:title="@string/mensa_plan" />
 
     <item android:title="@string/cat_misc">
         <menu>
             <item
                 android:id="@+id/open_in_browser"
-                android:icon="@drawable/ic_insert_link_black_24dp"
+                android:icon="@drawable/ic_insert_link"
                 android:title="@string/open_in_browser" />
             <item
                 android:id="@+id/nav_manage"
-                android:icon="@drawable/ic_build_black_24dp"
+                android:icon="@drawable/ic_build"
                 android:title="@string/button_settings" />
             <item
                 android:id="@+id/nav_bugreport"
-                android:icon="@drawable/ic_bug_report_black_24dp"
+                android:icon="@drawable/ic_bug_report"
                 android:title="@string/button_bugreport" />
             <item
                 android:id="@+id/nav_about"
-                android:icon="@drawable/ic_info_outline_black_24dp"
+                android:icon="@drawable/ic_info_outline"
                 android:title="@string/button_about" />
         </menu>
     </item>

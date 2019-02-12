@@ -38,7 +38,7 @@
         android:layout_height="36dp"
         android:background="@color/colorBackgroundDark"
         android:onClick="onClickButtonDatePrev"
-        app:srcCompat="@drawable/ic_keyboard_arrow_left_white_24dp" />
+        app:srcCompat="@drawable/ic_keyboard_arrow_left" />
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/next_date"
@@ -47,6 +47,6 @@
         android:background="@color/colorBackgroundDark"
         android:onClick="onClickButtonDateNext"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_keyboard_arrow_right_white_24dp" />
+        app:srcCompat="@drawable/ic_keyboard_arrow_right" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

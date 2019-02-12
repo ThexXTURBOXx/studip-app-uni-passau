@@ -88,7 +88,7 @@ public class ScheduleActivity extends AppCompatActivity
             ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawer, (Toolbar) actionbar.getCustomView(), R.string.navigation_drawer_open, R.string.navigation_drawer_close);
             drawer.addDrawerListener(drawerToggle);
             actionbar.setDisplayHomeAsUpEnabled(true);
-            actionbar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
+            actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
             drawerToggle.syncState();
         }
     }

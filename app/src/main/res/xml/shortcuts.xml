@@ -3,7 +3,7 @@
 
     <shortcut
         android:enabled="true"
-        android:icon="@drawable/ic_event_note_black_24dp"
+        android:icon="@drawable/ic_event_note_black"
         android:shortcutId="schedule_shortcut"
         android:shortcutLongLabel="@string/schedule"
         android:shortcutShortLabel="@string/schedule">
@@ -20,7 +20,7 @@
 
     <shortcut
         android:enabled="true"
-        android:icon="@drawable/ic_restaurant_black_24dp"
+        android:icon="@drawable/ic_restaurant_black"
         android:shortcutId="mensa_shortcut"
         android:shortcutLongLabel="@string/mensa_plan"
         android:shortcutShortLabel="@string/mensa_plan">
