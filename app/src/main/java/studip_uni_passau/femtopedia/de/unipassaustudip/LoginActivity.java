@@ -2,6 +2,7 @@ package studip_uni_passau.femtopedia.de.unipassaustudip;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +16,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((StudIPApp) getApplicationContext()).setCurrentActivity(this);
-        setContentView(R.layout.content_layout);
+        setContentView(R.layout.content_login);
         OAuthTask oAuthTask = new OAuthTask();
         oAuthTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -32,10 +33,14 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... params) {
-            try {
-                return StudIPHelper.api.getAuthorizationUrl("studipassau://oauth_callback");
-            } catch (OAuthException e) {
-                e.printStackTrace();
+            if (StudIPHelper.isNetworkAvailable(LoginActivity.this)) {
+                try {
+                    return StudIPHelper.api.getAuthorizationUrl("studipassau://oauth_callback");
+                } catch (OAuthException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                ((TextView) findViewById(R.id.login_warning)).setText(R.string.login_warning_no_internet);
             }
             return null;
         }

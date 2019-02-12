@@ -206,11 +206,13 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
         @Override
         protected Integer doInBackground(Void... params) {
             try {
+                boolean internetAvailable = StudIPHelper.isNetworkAvailable(LoadActivity.this);
                 if (StudIPHelper.api == null) {
                     StudIPHelper.constructAPI();
-                    StudIPHelper.verifyAPI(LoadActivity.this);
+                    if (internetAvailable)
+                        StudIPHelper.verifyAPI(LoadActivity.this);
                 }
-                if (oAuthData != null) {
+                if (oAuthData != null && oAuthData.verifier != null && internetAvailable) {
                     StudIPHelper.api.verifyAccess(oAuthData.verifier);
                 } else {
                     OAuthData.OAuthSaveData saveData = StudIPHelper.loadFromFile(oAuthDataFile, OAuthData.OAuthSaveData.class);
@@ -220,7 +222,7 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
                         return 3;
                     }
                 }
-                if (!StudIPHelper.isNetworkAvailable(LoadActivity.this)) {
+                if (!internetAvailable) {
                     return 4;
                 }
                 if (!StudIPHelper.api.getOAuthClient().isSessionValid()) {
