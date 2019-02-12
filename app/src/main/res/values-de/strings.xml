@@ -73,4 +73,6 @@
     <string name="crash_dialog_text">Stud.IP App ist abgestürzt!</string>
     <string name="crash_dialog_comment">Oops, sieht so aus, als wäre die App abgestürzt&#8230; Willst du eine Fehlermeldung senden? Das wäre ziemlich nett von dir ;) Du kannst hier einen Kommentar hinzufügen:</string>
     <string name="verifying_api">Zugriff überprüfen&#8230;</string>
+    <string name="login_warning">Ein Browser sollte gerade geöffnet sein. Falls nicht, schreib mir bitte eine E-Mail:\n\nstudipapp@femtopedia.de</string>
+
 </resources>

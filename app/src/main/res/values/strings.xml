@@ -77,5 +77,6 @@
     <string name="crash_dialog_comment">Oops, looks like, the app has crashed&#8230; Would you like to send a bug report? That would be very kind of you ;) You could add a comment here:</string>
     <string name="bug_subject" translatable="false">[BUG] Bug</string>
     <string name="verifying_api">Verifying Access&#8230;</string>
+    <string name="login_warning">A Browser should be open right now. If it\'s not, please consult me:\n\nstudipapp@femtopedia.de</string>
 
 </resources>

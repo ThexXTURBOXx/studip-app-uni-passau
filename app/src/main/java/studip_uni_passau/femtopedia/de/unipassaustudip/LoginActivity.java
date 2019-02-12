@@ -15,6 +15,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((StudIPApp) getApplicationContext()).setCurrentActivity(this);
+        setContentView(R.layout.content_layout);
         OAuthTask oAuthTask = new OAuthTask();
         oAuthTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -28,9 +29,6 @@ public class LoginActivity extends AppCompatActivity {
 
     @SuppressWarnings({"StaticFieldLeak"})
     public class OAuthTask extends AsyncTask<Void, Void, String> {
-
-        OAuthTask() {
-        }
 
         @Override
         protected String doInBackground(Void... params) {
