@@ -1,4 +1,14 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.novoda.build-properties'
+
+buildProperties {
+    debug {
+        file rootProject.file('debug_gradle.properties')
+    }
+    secrets {
+        file rootProject.file('gradle.properties')
+    }
+}
 
 android {
     compileOptions {
@@ -8,10 +18,12 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "studip_uni_passau.femtopedia.de.unipassaustudip"
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 28
         versionCode 5
         versionName "0.0.5"
+        buildConfigString "CONSUMER_KEY", (buildProperties.secrets['consumer_key'] | buildProperties.debug['consumer_key']).string
+        buildConfigString "CONSUMER_KEY_SECRET", (buildProperties.secrets['consumer_key_secret'] | buildProperties.debug['consumer_key_secret']).string
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -42,24 +54,29 @@ android {
     useLibrary 'org.apache.http.legacy'
 }
 
+configurations {
+    all*.exclude group: 'com.google.guava', module: 'listenablefuture'
+}
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.appcompat:appcompat:1.1.0-alpha01'
+    implementation 'androidx.appcompat:appcompat:1.1.0-alpha02'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.0.1'
     implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'androidx.browser:browser:1.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     implementation 'cz.msebera.android:httpclient:4.4.1.2'
-    implementation 'de.femtopedia.studip:studip-uni-passau:1.3.3'
+    implementation 'de.femtopedia.studip:studip-uni-passau:1.4'
     implementation 'de.hdodenhof:circleimageview:3.0.0'
-    api 'androidx.appcompat:appcompat:1.1.0-alpha01'
+    api 'androidx.appcompat:appcompat:1.1.0-alpha02'
     api 'com.google.android.material:material:1.0.0'
-    api 'com.squareup.okhttp3:okhttp:3.12.1'
+    api 'com.squareup.okhttp3:okhttp:3.13.1'
     api 'org.jsoup:jsoup:1.11.3'
     implementation 'com.github.javiersantos:AppUpdater:2.7.1-onfinishfix'
     implementation 'joda-time:joda-time:2.10.1'

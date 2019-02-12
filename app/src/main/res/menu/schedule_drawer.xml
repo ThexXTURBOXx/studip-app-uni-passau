@@ -17,7 +17,7 @@
         <menu>
             <item
                 android:id="@+id/open_in_browser"
-                android:icon="@drawable/ic_insert_link_white_24dp"
+                android:icon="@drawable/ic_insert_link_black_24dp"
                 android:title="@string/open_in_browser" />
             <item
                 android:id="@+id/nav_manage"

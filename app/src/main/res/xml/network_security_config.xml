@@ -3,5 +3,6 @@
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">femtopedia.de</domain>
         <domain includeSubdomains="true">uni-passau.de</domain>
+        <domain includeSubdomains="true">stwno.de</domain>
     </domain-config>
 </network-security-config>

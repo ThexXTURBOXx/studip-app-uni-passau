@@ -37,6 +37,7 @@ import de.femtopedia.studip.json.Events;
 import de.femtopedia.studip.util.Schedule;
 import de.femtopedia.studip.util.ScheduledCourse;
 import de.hdodenhof.circleimageview.CircleImageView;
+import oauth.signpost.exception.OAuthException;
 
 public class ScheduleActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, StudIPHelper.ProfilePicHolder {
@@ -53,8 +54,11 @@ public class ScheduleActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.schedule);
+
         ((StudIPApp) getApplicationContext()).setCurrentActivity(this);
+        StudIPHelper.target = "schedule";
+
+        setContentView(R.layout.schedule);
 
         swiperefresher = findViewById(R.id.swiperefresh_schedule);
         swiperefresher.setOnRefreshListener(this::updateData);
@@ -200,7 +204,7 @@ public class ScheduleActivity extends AppCompatActivity
     }
 
     @SuppressWarnings("UseSparseArrays")
-    private Map<Integer, List<ScheduledEvent>> compareSchedule(Schedule schedule) throws IllegalAccessException, IOException {
+    private Map<Integer, List<ScheduledEvent>> compareSchedule(Schedule schedule) throws IllegalAccessException, IOException, OAuthException {
         Events events = StudIPHelper.api.getData("user/" + StudIPHelper.current_user.getUser_id() + "/events?limit=10000", Events.class);
         Map<Integer, List<ScheduledEvent>> sched = new HashMap<>();
         for (int i = 0; i <= 4; i++) {
@@ -271,7 +275,7 @@ public class ScheduleActivity extends AppCompatActivity
                 try {
                     Course c = StudIPHelper.api.getCourse(event.getCourse().replaceFirst("/studip/api.php/course/", ""));
                     se.description = c.getNumber() + " " + c.getTitle();
-                } catch (IOException | IllegalAccessException e) {
+                } catch (IOException | IllegalAccessException | OAuthException e) {
                     e.printStackTrace();
                 }
                 if (se.color == null)
@@ -361,8 +365,9 @@ public class ScheduleActivity extends AppCompatActivity
         protected Void doInBackground(Void... url) {
             try {
                 StudIPHelper.updateSchedule(getApplicationContext(), compareSchedule(StudIPHelper.api.getSchedule()));
-            } catch (IllegalAccessException e) {
+            } catch (IllegalAccessException | OAuthException e) {
                 Intent intent = new Intent(ScheduleActivity.this, LoginActivity.class);
+                intent.putExtra("ignoreFileLoad", true);
                 startActivity(intent);
             } catch (IOException e) {
                 e.printStackTrace();

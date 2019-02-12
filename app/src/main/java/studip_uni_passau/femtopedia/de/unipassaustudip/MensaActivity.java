@@ -37,9 +37,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import de.femtopedia.studip.shib.ShibHttpResponse;
+import de.femtopedia.studip.shib.CustomAccessHttpResponse;
 import de.femtopedia.studip.shib.ShibbolethClient;
 import de.hdodenhof.circleimageview.CircleImageView;
+import oauth.signpost.exception.OAuthException;
 
 public class MensaActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, StudIPHelper.ProfilePicHolder {
@@ -60,6 +61,7 @@ public class MensaActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mense);
         ((StudIPApp) getApplicationContext()).setCurrentActivity(this);
+        StudIPHelper.target = "mensa";
 
         swiperefresher = findViewById(R.id.swiperefresh_mensa);
         swiperefresher.setOnRefreshListener(this::updateData);
@@ -276,7 +278,7 @@ public class MensaActivity extends AppCompatActivity
     }
 
     @SuppressWarnings({"useSparseArrays", "StringContatenationInLoop"})
-    public Map<Long, MensaPlan.DayMenu> parseMensaPlan(ShibHttpResponse csv) {
+    public Map<Long, MensaPlan.DayMenu> parseMensaPlan(CustomAccessHttpResponse csv) {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("dd.MM.yyyy");
         Map<Long, MensaPlan.DayMenu> dayMenus = new HashMap<>();
         InputStream content = null;
@@ -375,11 +377,12 @@ public class MensaActivity extends AppCompatActivity
                 int next_week = new DateTime().withZone(DateTimeZone.forID("Europe/Berlin")).plusDays(7).getWeekOfWeekyear();
                 if (StudIPHelper.mensaPlan == null)
                     StudIPHelper.mensaPlan = new MensaPlan();
-                StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.api.getShibbolethClient().get(mensaUrl + week + ".csv")));
-                StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.api.getShibbolethClient().get(mensaUrl + (next_week) + ".csv")));
+                StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.api.getOAuthClient().get(mensaUrl + week + ".csv")));
+                StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.api.getOAuthClient().get(mensaUrl + (next_week) + ".csv")));
                 StudIPHelper.updateMensaPlan(getApplicationContext(), StudIPHelper.mensaPlan);
-            } catch (IllegalAccessException e) {
+            } catch (IllegalAccessException | OAuthException e) {
                 Intent intent = new Intent(MensaActivity.this, LoginActivity.class);
+                intent.putExtra("ignoreFileLoad", true);
                 startActivity(intent);
                 return 2;
             } catch (IOException e) {

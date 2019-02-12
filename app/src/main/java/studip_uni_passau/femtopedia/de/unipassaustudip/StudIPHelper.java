@@ -13,13 +13,12 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
-import org.apache.http.cookie.Cookie;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.util.List;
@@ -31,6 +30,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import de.femtopedia.studip.StudIPAPI;
 import de.femtopedia.studip.json.User;
+import oauth.signpost.exception.OAuthException;
 
 /**
  * Created by Nico Mexis on 22.10.2018.
@@ -38,40 +38,50 @@ import de.femtopedia.studip.json.User;
 
 class StudIPHelper {
 
+    private static final String CONSUMER_KEY = BuildConfig.CONSUMER_KEY;
+    private static final String CONSUMER_SECRET = BuildConfig.CONSUMER_KEY_SECRET;
     static StudIPAPI api = null;
-
     static User current_user;
     static Bitmap profile_pic = null;
     static Map<Integer, List<ScheduledEvent>> schedule = null;
     static MensaPlan mensaPlan = new MensaPlan();
-
+    static String target = null;
     private static Gson gson = new GsonBuilder().enableComplexMapKeySerialization().disableHtmlEscaping().create();
     private static Type scheduleType = new TypeToken<Map<Integer, List<ScheduledEvent>>>() {
     }.getType();
 
-    static void constructAPI(List<Cookie> cookies) {
-        if (StudIPHelper.api != null)
+    static void constructAPI() {
+        if (StudIPHelper.api != null) {
             StudIPHelper.api.shutdown();
-        StudIPHelper.api = new StudIPAPI(cookies, null, "");
+        }
+        StudIPHelper.api = new StudIPAPI(CONSUMER_KEY, CONSUMER_SECRET);
     }
 
-    static void logIntoAPI(Context context, List<Cookie> cookies, String username, String password, boolean authenticate)
-            throws IllegalArgumentException, IllegalAccessException, IllegalStateException, IOException {
+    static void verifyAPI(Activity activity)
+            throws IllegalArgumentException, IllegalAccessException, IllegalStateException, IOException, OAuthException {
+        InputStream inputStream = null;
         try {
-            if (authenticate)
-                StudIPHelper.api.authenticate(username, password);
-            StudIPHelper.api.getShibbolethClient()
-                    .get("https://studip.uni-passau.de/studip/index.php").getResponse().getEntity().getContent();
-            StudIPHelper.api.getShibbolethClient()
+            inputStream = StudIPHelper.api.getOAuthClient()
+                    .get("https://studip.uni-passau.de/studip/test.php").getResponse().getEntity().getContent();
+            inputStream.close();
+            inputStream = StudIPHelper.api.getOAuthClient()
                     .get("https://www.stwno.de/infomax/daten-extern/csv/UNI-P/1.csv").getResponse().getEntity().getContent();
+            inputStream.close();
+            inputStream = null;
         } catch (SSLPeerUnverifiedException e) {
             System.out.println("SSLPeerUnverifiedException thrown, using KeyStore.");
             StudIPHelper.api.shutdown();
-            StudIPHelper.api = new StudIPAPI(cookies,
-                    context.getResources().openRawResource(R.raw.newtruststore), "012345");
-            if (authenticate)
-                StudIPHelper.api.authenticate(username, password);
+            StudIPHelper.api = new StudIPAPI(CONSUMER_KEY, CONSUMER_SECRET,
+                    activity.getResources().openRawResource(R.raw.newtruststore), "012345");
         }
+        if (inputStream != null)
+            inputStream.close();
+    }
+
+    static CustomTabHelper authenticate(Activity activity, String authorizeUrl) {
+        CustomTabHelper helper = new CustomTabHelper(activity, Uri.parse(authorizeUrl));
+        helper.show();
+        return helper;
     }
 
     static void updatePic(Bitmap profile_pic, StudIPApp application) {
