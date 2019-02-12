@@ -15,6 +15,8 @@ import com.google.android.material.navigation.NavigationView;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.Days;
+import org.joda.time.Duration;
+import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -49,6 +51,7 @@ public class MensaActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, StudIPHelper.ProfilePicHolder {
 
     public static String mensaUrl = "https://www.stwno.de/infomax/daten-extern/csv/UNI-P/";
+    private static final LocalDateTime JAN_1_1970 = new LocalDateTime(1970, 1, 1, 0, 0);
     private ExpandableListAdapter listAdapter;
     private List<Object> listDataHeader;
     private List<List<Object>> listDataChild;
@@ -99,6 +102,10 @@ public class MensaActivity extends AppCompatActivity
         }
     }
 
+    private long getMillis(DateTime dt) {
+        return new Duration(JAN_1_1970.toDateTime(StudIPHelper.ZONE), dt.withZone(StudIPHelper.ZONE)).getMillis();
+    }
+
     public void setProfilePic() {
         ((CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView)).setImageBitmap(StudIPHelper.profile_pic);
     }
@@ -125,10 +132,10 @@ public class MensaActivity extends AppCompatActivity
 
     private void setDate(DateTime dt) {
         int days = Days.daysBetween(new DateTime().withDayOfWeek(DateTimeConstants.MONDAY)
-                .withZone(StudIPHelper.ZONE).toLocalDate(), dt.toLocalDate()).getDays();
+                .withZone(StudIPHelper.ZONE).toLocalDate(), dt.withZone(StudIPHelper.ZONE).toLocalDate()).getDays();
         if (days < 14 && days >= 0) {
-            this.dateTime = dt;
-            dateView.setText(getDateString(dt));
+            this.dateTime = dt.withZone(StudIPHelper.ZONE);
+            dateView.setText(getDateString(this.dateTime));
             clearListItems();
             setToView(dateTime);
         }
@@ -179,6 +186,7 @@ public class MensaActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.app_bar_refresh, menu);
         return true;
     }
 
@@ -191,6 +199,9 @@ public class MensaActivity extends AppCompatActivity
                 drawer.openDrawer(GravityCompat.START);
             else
                 drawer.closeDrawer(GravityCompat.START);
+            return true;
+        } else if (id == R.id.action_refresh_bar) {
+            this.updateData();
             return true;
         }
 
@@ -208,37 +219,37 @@ public class MensaActivity extends AppCompatActivity
     private void setToView(DateTime dt) {
         if (StudIPHelper.mensaPlan == null)
             return;
-        MensaPlan.DayMenu menu = StudIPHelper.mensaPlan.menu.get(dt.getMillis());
-        int separatorColor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("separator_mensa_color", 0xFF000000);
-        int soupColor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("soup_color", 0xFF7bad41);
-        int mainColor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("main_color", 0xFFea3838);
-        int garnishColor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("garnish_color", 0xFF61dfed);
-        int dessertColor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("desserts_color", 0xFFbaac18);
-        int separatorColorCon = StudIPHelper.contraColor(separatorColor);
-        int soupColorCon = StudIPHelper.contraColor(soupColor);
-        int mainColorCon = StudIPHelper.contraColor(mainColor);
-        int garnishColorCon = StudIPHelper.contraColor(garnishColor);
-        int dessertColorCon = StudIPHelper.contraColor(dessertColor);
+        MensaPlan.DayMenu menu = StudIPHelper.mensaPlan.menu.get(getMillis(dt));
         if (menu != null) {
+            int separatorColor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("separator_mensa_color", 0xFF000000);
+            int separatorColorCon = StudIPHelper.contraColor(separatorColor);
             if (!menu.soups.isEmpty()) {
+                int soupColor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("soup_color", 0xFF7bad41);
+                int soupColorCon = StudIPHelper.contraColor(soupColor);
                 addListItem(getString(R.string.soup), new ArrayList<>(), separatorColor, separatorColorCon);
                 for (MensaPlan.Food f : menu.soups) {
                     addFood(f, soupColor, soupColorCon);
                 }
             }
             if (!menu.mains.isEmpty()) {
+                int mainColor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("main_color", 0xFFea3838);
+                int mainColorCon = StudIPHelper.contraColor(mainColor);
                 addListItem(getString(R.string.mains), new ArrayList<>(), separatorColor, separatorColorCon);
                 for (MensaPlan.Food f : menu.mains) {
                     addFood(f, mainColor, mainColorCon);
                 }
             }
             if (!menu.garnishes.isEmpty()) {
+                int garnishColor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("garnish_color", 0xFF61dfed);
+                int garnishColorCon = StudIPHelper.contraColor(garnishColor);
                 addListItem(getString(R.string.garnishes), new ArrayList<>(), separatorColor, separatorColorCon);
                 for (MensaPlan.Food f : menu.garnishes) {
                     addFood(f, garnishColor, garnishColorCon);
                 }
             }
             if (!menu.desserts.isEmpty()) {
+                int dessertColor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("desserts_color", 0xFFbaac18);
+                int dessertColorCon = StudIPHelper.contraColor(dessertColor);
                 addListItem(getString(R.string.desserts), new ArrayList<>(), separatorColor, separatorColorCon);
                 for (MensaPlan.Food f : menu.desserts) {
                     addFood(f, dessertColor, dessertColorCon);
@@ -338,7 +349,7 @@ public class MensaActivity extends AppCompatActivity
                 if (!cols[0].equals(time)) {
                     if (!time.equals("")) {
                         dt = formatter.parseDateTime(time);
-                        dayMenus.put(dt.withTime(0, 0, 0, 0).getMillis(), menu);
+                        dayMenus.put(getMillis(dt.withTime(0, 0, 0, 0)), menu);
                         menu = new MensaPlan.DayMenu();
                     }
                     time = cols[0];
@@ -354,7 +365,7 @@ public class MensaActivity extends AppCompatActivity
             }
             if (!time.equals("")) {
                 dt = formatter.parseDateTime(time);
-                dayMenus.put(dt.withTime(0, 0, 0, 0).getMillis(), menu);
+                dayMenus.put(getMillis(dt.withTime(0, 0, 0, 0)), menu);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -382,7 +393,7 @@ public class MensaActivity extends AppCompatActivity
         if (StudIPHelper.mensaPlan == null)
             return;
         clearListItems();
-        setToView(dateTime.withTime(0, 0, 0, 0));
+        setToView(dateTime.withTime(0, 0, 0, 0).withZone(StudIPHelper.ZONE));
     }
 
     @SuppressWarnings("StaticFieldLeak")
@@ -397,7 +408,6 @@ public class MensaActivity extends AppCompatActivity
                     StudIPHelper.mensaPlan = new MensaPlan();
                 StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.api.getOAuthClient().get(mensaUrl + week + ".csv")));
                 StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.api.getOAuthClient().get(mensaUrl + (next_week) + ".csv")));
-                StudIPHelper.updateMensaPlan(getApplicationContext(), StudIPHelper.mensaPlan);
             } catch (IllegalAccessException | OAuthException e) {
                 Intent intent = new Intent(MensaActivity.this, LoginActivity.class);
                 intent.putExtra("ignoreFileLoad", true);
@@ -412,6 +422,7 @@ public class MensaActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Integer success) {
             if (success == 0) {
+                StudIPHelper.updateMensaPlan(MensaActivity.this, StudIPHelper.mensaPlan);
                 updateMensaPlan();
                 swiperefresher.setRefreshing(false);
             } else if (success == 1) {

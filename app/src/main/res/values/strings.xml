@@ -87,5 +87,6 @@
     <string name="verifying_api">Verifying Access&#8230;</string>
     <string name="login_warning_normal">A Browser should be open right now. If it\'s not, please consult me:\n\nstudipapp@femtopedia.de</string>
     <string name="login_warning_no_internet">Please enable your internet connection and restart the app.</string>
+    <string name="action_refresh">Refresh&#8230;</string>
 
 </resources>

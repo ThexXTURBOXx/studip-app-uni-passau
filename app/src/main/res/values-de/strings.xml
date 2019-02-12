@@ -83,5 +83,6 @@
     <string name="verifying_api">Zugriff überprüfen&#8230;</string>
     <string name="login_warning_normal">Ein Browser sollte gerade geöffnet sein. Falls nicht, schreib mir bitte eine E-Mail:\n\nstudipapp@femtopedia.de</string>
     <string name="login_warning_no_internet">Bitte stelle eine Internetverbindung her und starte die App neu.</string>
+    <string name="action_refresh">Aktualisieren&#8230;</string>
 
 </resources>

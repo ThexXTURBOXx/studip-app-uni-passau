@@ -157,6 +157,7 @@ public class ScheduleActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.app_bar_refresh, menu);
         return true;
     }
 
@@ -172,6 +173,9 @@ public class ScheduleActivity extends AppCompatActivity
                 drawer.openDrawer(GravityCompat.START);
             else
                 drawer.closeDrawer(GravityCompat.START);
+            return true;
+        } else if (id == R.id.action_refresh_bar) {
+            this.updateData();
             return true;
         }
 
