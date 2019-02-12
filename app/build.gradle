@@ -3,10 +3,10 @@ apply plugin: 'com.novoda.build-properties'
 
 buildProperties {
     debug {
-        file rootProject.file('debug_gradle.properties')
+        file rootProject.file('gradle.properties')
     }
     secrets {
-        file rootProject.file('gradle.properties')
+        file rootProject.file('secrets.properties')
     }
 }
 

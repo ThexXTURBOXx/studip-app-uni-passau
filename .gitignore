@@ -60,4 +60,4 @@ fastlane/readme.md
 
 app/release/
 
-gradle\.properties
+secrets\.properties
