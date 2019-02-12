@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package studip_uni_passau.femtopedia.de.unipassaustudip;
+package studip_uni_passau.femtopedia.de.unipassaustudip.activities;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

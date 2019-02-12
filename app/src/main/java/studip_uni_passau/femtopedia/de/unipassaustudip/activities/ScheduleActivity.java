@@ -1,4 +1,4 @@
-package studip_uni_passau.femtopedia.de.unipassaustudip;
+package studip_uni_passau.femtopedia.de.unipassaustudip.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -38,6 +38,11 @@ import de.femtopedia.studip.util.Schedule;
 import de.femtopedia.studip.util.ScheduledCourse;
 import de.hdodenhof.circleimageview.CircleImageView;
 import oauth.signpost.exception.OAuthException;
+import studip_uni_passau.femtopedia.de.unipassaustudip.R;
+import studip_uni_passau.femtopedia.de.unipassaustudip.StudIPApp;
+import studip_uni_passau.femtopedia.de.unipassaustudip.api.ScheduledEvent;
+import studip_uni_passau.femtopedia.de.unipassaustudip.util.ExpandableListAdapter;
+import studip_uni_passau.femtopedia.de.unipassaustudip.util.StudIPHelper;
 
 public class ScheduleActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, StudIPHelper.ProfilePicHolder {

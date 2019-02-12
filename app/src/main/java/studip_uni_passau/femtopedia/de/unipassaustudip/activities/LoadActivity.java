@@ -1,4 +1,4 @@
-package studip_uni_passau.femtopedia.de.unipassaustudip;
+package studip_uni_passau.femtopedia.de.unipassaustudip.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -32,6 +32,10 @@ import androidx.appcompat.app.AppCompatDelegate;
 import de.femtopedia.studip.json.User;
 import de.femtopedia.studip.shib.CustomAccessHttpResponse;
 import oauth.signpost.exception.OAuthException;
+import studip_uni_passau.femtopedia.de.unipassaustudip.R;
+import studip_uni_passau.femtopedia.de.unipassaustudip.StudIPApp;
+import studip_uni_passau.femtopedia.de.unipassaustudip.api.OAuthData;
+import studip_uni_passau.femtopedia.de.unipassaustudip.util.StudIPHelper;
 
 /**
  * A login screen that offers login via username/password.
@@ -50,7 +54,7 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
     private View mProgressView;
     private TextView loadingStatus;
     private boolean loggedIn = false, checkedForUpdates = false;
-    private OAuthData.OAuthAccessData oAuthData = null;
+    private String oAuthVerifier = null;
     private File oAuthDataFile;
 
     @Override
@@ -195,10 +199,7 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
                 String action = intent.getAction();
                 String data = intent.getDataString();
                 if (Intent.ACTION_VIEW.equals(action) && data != null) {
-                    Uri oauthUrl = Uri.parse(data);
-                    String accessToken = oauthUrl.getQueryParameter("oauth_token");
-                    String verifier = oauthUrl.getQueryParameter("oauth_verifier");
-                    oAuthData = new OAuthData.OAuthAccessData(accessToken, verifier);
+                    oAuthVerifier = Uri.parse(data).getQueryParameter("oauth_verifier");
                 }
             }
         }
@@ -212,10 +213,10 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
                     if (internetAvailable)
                         StudIPHelper.verifyAPI(LoadActivity.this);
                 }
-                if (oAuthData != null && oAuthData.verifier != null && internetAvailable) {
-                    StudIPHelper.api.verifyAccess(oAuthData.verifier);
+                if (oAuthVerifier != null && internetAvailable) {
+                    StudIPHelper.api.verifyAccess(oAuthVerifier);
                 } else {
-                    OAuthData.OAuthSaveData saveData = StudIPHelper.loadFromFile(oAuthDataFile, OAuthData.OAuthSaveData.class);
+                    OAuthData saveData = StudIPHelper.loadFromFile(oAuthDataFile, OAuthData.class);
                     if (saveData != null) {
                         StudIPHelper.api.getOAuthClient().setToken(saveData.accessToken, saveData.accessTokenSecret);
                     } else {
@@ -245,8 +246,7 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
                 case 0:
                     //Success
                     String[] token = StudIPHelper.api.getOAuthClient().getToken();
-                    StudIPHelper.saveToFile(oAuthDataFile,
-                            new OAuthData.OAuthSaveData(token[0], token[1]));
+                    StudIPHelper.saveToFile(oAuthDataFile, new OAuthData(token[0], token[1]));
                 case 4:
                     //Offline
                     CacheCurrentUserData data = new CacheCurrentUserData();

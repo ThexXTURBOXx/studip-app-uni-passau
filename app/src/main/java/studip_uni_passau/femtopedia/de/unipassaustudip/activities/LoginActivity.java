@@ -1,4 +1,4 @@
-package studip_uni_passau.femtopedia.de.unipassaustudip;
+package studip_uni_passau.femtopedia.de.unipassaustudip.activities;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -7,6 +7,10 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import oauth.signpost.exception.OAuthException;
+import studip_uni_passau.femtopedia.de.unipassaustudip.R;
+import studip_uni_passau.femtopedia.de.unipassaustudip.StudIPApp;
+import studip_uni_passau.femtopedia.de.unipassaustudip.util.CustomTabHelper;
+import studip_uni_passau.femtopedia.de.unipassaustudip.util.StudIPHelper;
 
 public class LoginActivity extends AppCompatActivity {
 

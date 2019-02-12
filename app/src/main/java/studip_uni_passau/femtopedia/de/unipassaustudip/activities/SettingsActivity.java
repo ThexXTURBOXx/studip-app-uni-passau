@@ -1,4 +1,4 @@
-package studip_uni_passau.femtopedia.de.unipassaustudip;
+package studip_uni_passau.femtopedia.de.unipassaustudip.activities;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -13,6 +13,8 @@ import android.view.MenuItem;
 import java.util.List;
 
 import androidx.core.app.NavUtils;
+import studip_uni_passau.femtopedia.de.unipassaustudip.R;
+import studip_uni_passau.femtopedia.de.unipassaustudip.StudIPApp;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On

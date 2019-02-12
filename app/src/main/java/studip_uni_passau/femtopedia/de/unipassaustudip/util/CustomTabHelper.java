@@ -1,4 +1,4 @@
-package studip_uni_passau.femtopedia.de.unipassaustudip;
+package studip_uni_passau.femtopedia.de.unipassaustudip.util;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -37,13 +37,13 @@ public class CustomTabHelper {
     private boolean warmupWhenReady = false;
     private boolean mayLaunchWhenReady = false;
 
-    public CustomTabHelper(Activity activity, Uri uri) {
+    CustomTabHelper(Activity activity, Uri uri) {
         this.activity = activity;
         this.uri = uri;
         bindCustomTabsService();
     }
 
-    public void warmup() {
+    private void warmup() {
         if (client != null) {
             warmupWhenReady = false;
             client.warmup(0);
@@ -52,7 +52,7 @@ public class CustomTabHelper {
         }
     }
 
-    public void mayLaunch() {
+    private void mayLaunch() {
         CustomTabsSession session = getSession();
         if (client != null) {
             mayLaunchWhenReady = false;
@@ -62,7 +62,7 @@ public class CustomTabHelper {
         }
     }
 
-    public void show() {
+    void show() {
         CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder(getSession())
                 .setShowTitle(true)
                 .build();

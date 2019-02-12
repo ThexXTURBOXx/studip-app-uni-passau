@@ -1,9 +1,11 @@
-package studip_uni_passau.femtopedia.de.unipassaustudip;
+package studip_uni_passau.femtopedia.de.unipassaustudip.api;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import studip_uni_passau.femtopedia.de.unipassaustudip.R;
 
 public class MensaPlan {
 
@@ -49,25 +51,21 @@ public class MensaPlan {
 
     }
 
-    static class DayMenu {
+    public static class DayMenu {
 
-        List<Food> soups = new ArrayList<>();
-        List<Food> mains = new ArrayList<>();
-        List<Food> garnishes = new ArrayList<>();
-        List<Food> desserts = new ArrayList<>();
+        public List<Food> soups = new ArrayList<>();
+        public List<Food> mains = new ArrayList<>();
+        public List<Food> garnishes = new ArrayList<>();
+        public List<Food> desserts = new ArrayList<>();
 
     }
 
     public static class Food {
 
-        String name;
-        List<FoodProperty> properties;
-        double price_stud, price_bed, price_guest;
+        public String name;
+        public List<FoodProperty> properties;
+        public double price_stud, price_bed, price_guest;
 
-        @Override
-        public String toString() {
-            return name + ", " + properties.size() + ", " + price_stud + ", " + price_bed + ", " + price_guest;
-        }
     }
 
 }

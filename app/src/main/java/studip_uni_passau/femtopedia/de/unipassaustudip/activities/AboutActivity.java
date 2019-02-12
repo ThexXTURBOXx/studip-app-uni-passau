@@ -1,4 +1,4 @@
-package studip_uni_passau.femtopedia.de.unipassaustudip;
+package studip_uni_passau.femtopedia.de.unipassaustudip.activities;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -17,6 +17,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import de.hdodenhof.circleimageview.CircleImageView;
+import studip_uni_passau.femtopedia.de.unipassaustudip.BuildConfig;
+import studip_uni_passau.femtopedia.de.unipassaustudip.R;
+import studip_uni_passau.femtopedia.de.unipassaustudip.StudIPApp;
+import studip_uni_passau.femtopedia.de.unipassaustudip.util.StudIPHelper;
 
 public class AboutActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, StudIPHelper.ProfilePicHolder {

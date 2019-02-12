@@ -3,12 +3,12 @@
     <!-- These settings headers are only used on tablets. -->
 
     <header
-        android:fragment="studip_uni_passau.femtopedia.de.unipassaustudip.SettingsActivity$GeneralPreferenceFragment"
+        android:fragment="studip_uni_passau.femtopedia.de.unipassaustudip.activities.SettingsActivity$GeneralPreferenceFragment"
         android:icon="@drawable/ic_info_black_24dp"
         android:title="@string/pref_header_general" />
 
     <header
-        android:fragment="studip_uni_passau.femtopedia.de.unipassaustudip.SettingsActivity$DataSyncPreferenceFragment"
+        android:fragment="studip_uni_passau.femtopedia.de.unipassaustudip.activities.SettingsActivity$DataSyncPreferenceFragment"
         android:icon="@drawable/ic_sync_black_24dp"
         android:title="@string/pref_header_data_sync" />
 

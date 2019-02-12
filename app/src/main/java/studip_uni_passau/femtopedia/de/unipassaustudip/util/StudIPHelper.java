@@ -1,4 +1,4 @@
-package studip_uni_passau.femtopedia.de.unipassaustudip;
+package studip_uni_passau.femtopedia.de.unipassaustudip.util;
 
 import android.app.Activity;
 import android.content.Context;
@@ -31,33 +31,46 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import de.femtopedia.studip.StudIPAPI;
 import de.femtopedia.studip.json.User;
 import oauth.signpost.exception.OAuthException;
+import studip_uni_passau.femtopedia.de.unipassaustudip.BuildConfig;
+import studip_uni_passau.femtopedia.de.unipassaustudip.R;
+import studip_uni_passau.femtopedia.de.unipassaustudip.StudIPApp;
+import studip_uni_passau.femtopedia.de.unipassaustudip.activities.AboutActivity;
+import studip_uni_passau.femtopedia.de.unipassaustudip.activities.MensaActivity;
+import studip_uni_passau.femtopedia.de.unipassaustudip.activities.ScheduleActivity;
+import studip_uni_passau.femtopedia.de.unipassaustudip.activities.SettingsActivity;
+import studip_uni_passau.femtopedia.de.unipassaustudip.api.MensaPlan;
+import studip_uni_passau.femtopedia.de.unipassaustudip.api.ScheduledEvent;
 
 /**
  * Created by Nico Mexis on 22.10.2018.
  */
 
-class StudIPHelper {
+public class StudIPHelper {
 
     private static final String CONSUMER_KEY = BuildConfig.CONSUMER_KEY;
     private static final String CONSUMER_SECRET = BuildConfig.CONSUMER_KEY_SECRET;
-    static StudIPAPI api = null;
-    static User current_user;
-    static Bitmap profile_pic = null;
-    static Map<Integer, List<ScheduledEvent>> schedule = null;
-    static MensaPlan mensaPlan = new MensaPlan();
-    static String target = null;
+
+    public static String target = null;
+
+    public static StudIPAPI api = null;
+    public static User current_user = null;
+    public static Bitmap profile_pic = null;
+
+    public static Map<Integer, List<ScheduledEvent>> schedule = null;
+    public static MensaPlan mensaPlan = new MensaPlan();
+
     private static Gson gson = new GsonBuilder().enableComplexMapKeySerialization().disableHtmlEscaping().create();
     private static Type scheduleType = new TypeToken<Map<Integer, List<ScheduledEvent>>>() {
     }.getType();
 
-    static void constructAPI() {
+    public static void constructAPI() {
         if (StudIPHelper.api != null) {
             StudIPHelper.api.shutdown();
         }
         StudIPHelper.api = new StudIPAPI(CONSUMER_KEY, CONSUMER_SECRET);
     }
 
-    static void verifyAPI(Activity activity)
+    public static void verifyAPI(Activity activity)
             throws IllegalArgumentException, IllegalAccessException, IllegalStateException, IOException, OAuthException {
         InputStream inputStream = null;
         try {
@@ -78,40 +91,40 @@ class StudIPHelper {
             inputStream.close();
     }
 
-    static CustomTabHelper authenticate(Activity activity, String authorizeUrl) {
+    public static CustomTabHelper authenticate(Activity activity, String authorizeUrl) {
         CustomTabHelper helper = new CustomTabHelper(activity, Uri.parse(authorizeUrl));
         helper.show();
         return helper;
     }
 
-    static void updatePic(Bitmap profile_pic, StudIPApp application) {
+    public static void updatePic(Bitmap profile_pic, StudIPApp application) {
         StudIPHelper.profile_pic = profile_pic;
         Activity a = application.getCurrentActivity();
         if (a instanceof ProfilePicHolder)
             ((ProfilePicHolder) a).setProfilePic();
     }
 
-    static void loadMensaPlan(Context context) {
+    public static void loadMensaPlan(Context context) {
         StudIPHelper.mensaPlan = StudIPHelper.loadFromFile(new File(context.getFilesDir(), "mensa-plan.json"), MensaPlan.class);
     }
 
-    static void updateMensaPlan(Context context, MensaPlan mensaPlan) {
+    public static void updateMensaPlan(Context context, MensaPlan mensaPlan) {
         StudIPHelper.mensaPlan = mensaPlan;
         StudIPHelper.saveToFile(new File(context.getFilesDir(), "mensa-plan.json"), StudIPHelper.mensaPlan);
     }
 
-    static void loadSchedule(Context context) {
+    public static void loadSchedule(Context context) {
         StudIPHelper.schedule = StudIPHelper.loadFromFile(new File(context.getFilesDir(), "schedule.json"), scheduleType);
     }
 
-    static void updateSchedule(Context context, Map<Integer, List<ScheduledEvent>> schedule) {
+    public static void updateSchedule(Context context, Map<Integer, List<ScheduledEvent>> schedule) {
         if (schedule == null)
             return;
         StudIPHelper.schedule = schedule;
         StudIPHelper.saveToFile(new File(context.getFilesDir(), "schedule.json"), StudIPHelper.schedule, scheduleType);
     }
 
-    static <T> T loadFromFile(File file, Type type) {
+    public static <T> T loadFromFile(File file, Type type) {
         initFile(file);
         try {
             return gson.fromJson(new BufferedReader(new FileReader(file)), type);
@@ -128,7 +141,7 @@ class StudIPHelper {
         return null;
     }
 
-    static <T> T loadFromFile(File file, Class<T> clazz) {
+    public static <T> T loadFromFile(File file, Class<T> clazz) {
         initFile(file);
         try {
             return gson.fromJson(new BufferedReader(new FileReader(file)), clazz);
@@ -145,7 +158,7 @@ class StudIPHelper {
         return null;
     }
 
-    static <T> void saveToFile(File file, T obj, Type t) {
+    public static <T> void saveToFile(File file, T obj, Type t) {
         initFile(file);
         String ser = gson.toJson(obj, t);
         try {
@@ -159,7 +172,7 @@ class StudIPHelper {
         }
     }
 
-    static void saveToFile(File file, Object obj) {
+    public static void saveToFile(File file, Object obj) {
         initFile(file);
         String ser = gson.toJson(obj);
         try {
@@ -173,7 +186,7 @@ class StudIPHelper {
         }
     }
 
-    static void updateNavigation(int id, int currentActivity, Activity activity) {
+    public static void updateNavigation(int id, int currentActivity, Activity activity) {
         if (id != currentActivity) {
             if (id == R.id.nav_schedule) {
                 Intent intent = new Intent(activity, ScheduleActivity.class);
@@ -200,7 +213,7 @@ class StudIPHelper {
         drawer.closeDrawer(GravityCompat.START);
     }
 
-    static boolean isNetworkAvailable(Activity activity) {
+    public static boolean isNetworkAvailable(Activity activity) {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager != null) {
@@ -210,7 +223,7 @@ class StudIPHelper {
         return false;
     }
 
-    static boolean initFile(File file) {
+    public static boolean initFile(File file) {
         boolean flag = false;
         File parent = file.getParentFile();
         if (!parent.exists())
@@ -224,7 +237,7 @@ class StudIPHelper {
         return flag;
     }
 
-    interface ProfilePicHolder {
+    public interface ProfilePicHolder {
         void setProfilePic();
     }
 

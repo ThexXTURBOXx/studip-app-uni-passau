@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="studip_uni_passau.femtopedia.de.unipassaustudip.MensaActivity"
+    tools:context="studip_uni_passau.femtopedia.de.unipassaustudip.activities.MensaActivity"
     tools:showIn="@layout/app_bar_mensa">
 
     <TextView

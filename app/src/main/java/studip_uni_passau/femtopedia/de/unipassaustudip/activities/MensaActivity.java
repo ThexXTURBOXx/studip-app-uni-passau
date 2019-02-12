@@ -1,4 +1,4 @@
-package studip_uni_passau.femtopedia.de.unipassaustudip;
+package studip_uni_passau.femtopedia.de.unipassaustudip.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -38,9 +38,14 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import de.femtopedia.studip.shib.CustomAccessHttpResponse;
-import de.femtopedia.studip.shib.ShibbolethClient;
+import de.femtopedia.studip.shib.OAuthClient;
 import de.hdodenhof.circleimageview.CircleImageView;
 import oauth.signpost.exception.OAuthException;
+import studip_uni_passau.femtopedia.de.unipassaustudip.R;
+import studip_uni_passau.femtopedia.de.unipassaustudip.StudIPApp;
+import studip_uni_passau.femtopedia.de.unipassaustudip.api.MensaPlan;
+import studip_uni_passau.femtopedia.de.unipassaustudip.util.ExpandableListAdapter;
+import studip_uni_passau.femtopedia.de.unipassaustudip.util.StudIPHelper;
 
 public class MensaActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, StudIPHelper.ProfilePicHolder {
@@ -288,7 +293,7 @@ public class MensaActivity extends AppCompatActivity
             MensaPlan.DayMenu menu = new MensaPlan.DayMenu();
             String time = "";
             DateTime dt;
-            for (String s : ShibbolethClient.readLines(content, "Cp1252")) {
+            for (String s : OAuthClient.readLines(content, "Cp1252")) {
                 if (food == null) {
                     food = new MensaPlan.Food();
                     continue;

@@ -1,4 +1,4 @@
-package studip_uni_passau.femtopedia.de.unipassaustudip;
+package studip_uni_passau.femtopedia.de.unipassaustudip.util;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import studip_uni_passau.femtopedia.de.unipassaustudip.R;
+
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     private Activity context;
@@ -21,10 +23,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private List<List<Object>> listDataChild;
     private List<Integer> listDataColorsBg, listDataColorsText;
 
-    ExpandableListAdapter(Activity context, List<Object> listDataHeader,
-                          List<List<Object>> listChildData,
-                          List<Integer> listDataColorsBg,
-                          List<Integer> listDataColorsText) {
+    public ExpandableListAdapter(Activity context, List<Object> listDataHeader,
+                                 List<List<Object>> listChildData,
+                                 List<Integer> listDataColorsBg,
+                                 List<Integer> listDataColorsText) {
         this.context = context;
         this.listDataHeader = listDataHeader;
         this.listDataChild = listChildData;
@@ -144,12 +146,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
-    static class ButtonPreset {
-        String text;
-        int textColor, bgColor;
-        View.OnClickListener onClickListener;
+    public static class ButtonPreset {
+        private String text;
+        private int textColor, bgColor;
+        private View.OnClickListener onClickListener;
 
-        ButtonPreset(String text, int textColor, int bgColor, View.OnClickListener onClickListener) {
+        public ButtonPreset(String text, int textColor, int bgColor, View.OnClickListener onClickListener) {
             this.text = text;
             this.textColor = textColor;
             this.bgColor = bgColor;
