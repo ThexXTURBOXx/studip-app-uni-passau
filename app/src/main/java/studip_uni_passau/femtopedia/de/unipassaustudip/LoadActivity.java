@@ -61,23 +61,6 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle(R.string.load_activity_name);
 
-        oAuthDataFile = new File(getApplicationContext().getFilesDir(), "/oauth.ser");
-        StudIPHelper.initFile(oAuthDataFile);
-        if (getIntent() != null) {
-            Intent intent = getIntent();
-            if (intent.getExtras() != null) {
-                StudIPHelper.target = intent.getExtras().getString("target");
-            }
-            String action = intent.getAction();
-            String data = intent.getDataString();
-            if (Intent.ACTION_VIEW.equals(action) && data != null) {
-                Uri oauthUrl = Uri.parse(data);
-                String accessToken = oauthUrl.getQueryParameter("oauth_token");
-                String verifier = oauthUrl.getQueryParameter("oauth_verifier");
-                oAuthData = new OAuthData.OAuthAccessData(accessToken, verifier);
-            }
-        }
-
         setContentView(R.layout.activity_load);
 
         AppUpdater updater = new AppUpdater(this)
@@ -195,13 +178,29 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
     }
 
     /**
-     * Represents an asynchronous data loading task used to cache User data.
+     * Represents an asynchronous data loading task used to verify API access.
      */
     @SuppressWarnings({"StaticFieldLeak"})
     public class VerifyTask extends AsyncTask<Void, Void, Integer> {
 
         VerifyTask() {
             loadingStatus.setText(getString(R.string.verifying_api));
+            oAuthDataFile = new File(getApplicationContext().getFilesDir(), "/oauth.ser");
+            StudIPHelper.initFile(oAuthDataFile);
+            if (getIntent() != null) {
+                Intent intent = getIntent();
+                if (intent.getExtras() != null) {
+                    StudIPHelper.target = intent.getExtras().getString("target");
+                }
+                String action = intent.getAction();
+                String data = intent.getDataString();
+                if (Intent.ACTION_VIEW.equals(action) && data != null) {
+                    Uri oauthUrl = Uri.parse(data);
+                    String accessToken = oauthUrl.getQueryParameter("oauth_token");
+                    String verifier = oauthUrl.getQueryParameter("oauth_verifier");
+                    oAuthData = new OAuthData.OAuthAccessData(accessToken, verifier);
+                }
+            }
         }
 
         @Override
