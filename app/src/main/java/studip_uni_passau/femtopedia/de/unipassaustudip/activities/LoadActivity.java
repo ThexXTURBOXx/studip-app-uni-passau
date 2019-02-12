@@ -37,20 +37,13 @@ import studip_uni_passau.femtopedia.de.unipassaustudip.StudIPApp;
 import studip_uni_passau.femtopedia.de.unipassaustudip.api.OAuthData;
 import studip_uni_passau.femtopedia.de.unipassaustudip.util.StudIPHelper;
 
-/**
- * A login screen that offers login via username/password.
- */
 public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
     private VerifyTask verifyTask = null;
-    // UI references.
     private View mProgressView;
     private TextView loadingStatus;
     private boolean loggedIn = false, checkedForUpdates = false;
@@ -88,23 +81,15 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
         mProgressView = findViewById(R.id.load_progress);
         loadingStatus = findViewById(R.id.load_progress_status);
 
-        attemptLogin();
+        startLoading();
     }
 
-    /**
-     * Callback received when a permissions request has been completed.
-     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
     }
 
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
-    private void attemptLogin() {
+    private void startLoading() {
         if (verifyTask != null) {
             return;
         }
@@ -220,20 +205,20 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
                     if (saveData != null) {
                         StudIPHelper.api.getOAuthClient().setToken(saveData.accessToken, saveData.accessTokenSecret);
                     } else {
-                        return 3;
+                        return 2;
                     }
                 }
                 if (!internetAvailable) {
-                    return 4;
+                    return 1;
                 }
                 if (!StudIPHelper.api.getOAuthClient().isSessionValid()) {
-                    return 3;
+                    return 2;
                 }
             } catch (IllegalAccessException | OAuthException e) {
-                return 3;
+                return 2;
             } catch (IOException | IllegalStateException | IllegalArgumentException e) {
                 e.printStackTrace();
-                return 2;
+                return 3;
             }
             return 0;
         }
@@ -247,23 +232,20 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
                     //Success
                     String[] token = StudIPHelper.api.getOAuthClient().getToken();
                     StudIPHelper.saveToFile(oAuthDataFile, new OAuthData(token[0], token[1]));
-                case 4:
+                    //No break here
+                case 1:
                     //Offline
                     CacheCurrentUserData data = new CacheCurrentUserData();
                     data.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     break;
-                case 3:
-                    //Login again
-                case 1:
-                    //Wrong credentials, Legacy
+                case 2:
+                    //Wrong credentials
                     Intent intent = new Intent(LoadActivity.this, LoginActivity.class);
                     intent.putExtra("ignoreFileLoad", true);
                     startActivity(intent);
                     break;
-                case 2:
-                    //IO Error
                 default:
-                    //Unknown error
+                    //IO and various Error
                     verifyTask = new VerifyTask();
                     verifyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     break;

@@ -15,7 +15,6 @@ import com.google.android.material.navigation.NavigationView;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
-import org.joda.time.DateTimeZone;
 import org.joda.time.Days;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -51,12 +50,11 @@ public class MensaActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, StudIPHelper.ProfilePicHolder {
 
     public static String mensaUrl = "https://www.stwno.de/infomax/daten-extern/csv/UNI-P/";
-    ExpandableListAdapter listAdapter;
-    ExpandableListView expListView;
-    List<Object> listDataHeader;
-    List<List<Object>> listDataChild;
-    List<Integer> listDataColorsBg, listDataColorsText;
-    DateTime dateTime;
+    private ExpandableListAdapter listAdapter;
+    private List<Object> listDataHeader;
+    private List<List<Object>> listDataChild;
+    private List<Integer> listDataColorsBg, listDataColorsText;
+    private DateTime dateTime;
     private TextView dateView;
     private NavigationView navigationView;
     private SwipeRefreshLayout swiperefresher;
@@ -71,7 +69,7 @@ public class MensaActivity extends AppCompatActivity
         swiperefresher = findViewById(R.id.swiperefresh_mensa);
         swiperefresher.setOnRefreshListener(this::updateData);
 
-        expListView = findViewById(R.id.mensacontent);
+        ExpandableListView expListView = findViewById(R.id.mensacontent);
         prepareListData();
         listAdapter = new ExpandableListAdapter(this,
                 listDataHeader, listDataChild, listDataColorsBg, listDataColorsText);
@@ -79,7 +77,7 @@ public class MensaActivity extends AppCompatActivity
         expListView.setGroupIndicator(null);
 
         dateView = findViewById(R.id.dateView);
-        setDate(new DateTime().withTime(0, 0, 0, 0).withZone(DateTimeZone.forID("Europe/Berlin")));
+        setDate(new DateTime().withTime(0, 0, 0, 0).withZone(StudIPHelper.ZONE));
 
         updateDataFirst();
 
@@ -128,7 +126,7 @@ public class MensaActivity extends AppCompatActivity
 
     private void setDate(DateTime dt) {
         int days = Days.daysBetween(new DateTime().withDayOfWeek(DateTimeConstants.MONDAY)
-                .withZone(DateTimeZone.forID("Europe/Berlin")).toLocalDate(), dt.toLocalDate()).getDays();
+                .withZone(StudIPHelper.ZONE).toLocalDate(), dt.toLocalDate()).getDays();
         if (days < 14 && days >= 0) {
             this.dateTime = dt;
             dateView.setText(getDateString(dt));
@@ -249,7 +247,7 @@ public class MensaActivity extends AppCompatActivity
 
     private String getDateString(DateTime time) {
         int day = time.getDayOfWeek();
-        int rr = Days.daysBetween(new DateTime().withZone(DateTimeZone.forID("Europe/Berlin")).toLocalDate(),
+        int rr = Days.daysBetween(new DateTime().withZone(StudIPHelper.ZONE).toLocalDate(),
                 time.toLocalDate()).getDays();
         StringBuilder sb = new StringBuilder();
         if (rr == 0)
@@ -378,8 +376,8 @@ public class MensaActivity extends AppCompatActivity
         @Override
         protected Integer doInBackground(Void... url) {
             try {
-                int week = new DateTime().withZone(DateTimeZone.forID("Europe/Berlin")).getWeekOfWeekyear();
-                int next_week = new DateTime().withZone(DateTimeZone.forID("Europe/Berlin")).plusDays(7).getWeekOfWeekyear();
+                int week = new DateTime().withZone(StudIPHelper.ZONE).getWeekOfWeekyear();
+                int next_week = new DateTime().withZone(StudIPHelper.ZONE).plusDays(7).getWeekOfWeekyear();
                 if (StudIPHelper.mensaPlan == null)
                     StudIPHelper.mensaPlan = new MensaPlan();
                 StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.api.getOAuthClient().get(mensaUrl + week + ".csv")));

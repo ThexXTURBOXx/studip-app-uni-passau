@@ -13,6 +13,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
+import org.joda.time.DateTimeZone;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -49,6 +51,8 @@ public class StudIPHelper {
 
     private static final String CONSUMER_KEY = BuildConfig.CONSUMER_KEY;
     private static final String CONSUMER_SECRET = BuildConfig.CONSUMER_KEY_SECRET;
+
+    public static final DateTimeZone ZONE = DateTimeZone.forID("Europe/Berlin");
 
     public static String target = null;
 
