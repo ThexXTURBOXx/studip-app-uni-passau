@@ -50,8 +50,8 @@ import studip_uni_passau.femtopedia.de.unipassaustudip.util.StudIPHelper;
 public class MensaActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, StudIPHelper.ProfilePicHolder {
 
-    public static String mensaUrl = "https://www.stwno.de/infomax/daten-extern/csv/UNI-P/";
     private static final LocalDateTime JAN_1_1970 = new LocalDateTime(1970, 1, 1, 0, 0);
+    public static String mensaUrl = "https://www.stwno.de/infomax/daten-extern/csv/UNI-P/";
     private ExpandableListAdapter listAdapter;
     private List<Object> listDataHeader;
     private List<List<Object>> listDataChild;
