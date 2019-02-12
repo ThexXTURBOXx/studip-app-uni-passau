@@ -1,11 +1,14 @@
 <preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- These settings headers are only used on tablets. -->
+    <header
+        android:fragment="studip_uni_passau.femtopedia.de.unipassaustudip.activities.SettingsActivity$SchedulePreferenceFragment"
+        android:icon="@drawable/ic_event_note_black_24dp"
+        android:title="@string/schedule" />
 
     <header
-        android:fragment="studip_uni_passau.femtopedia.de.unipassaustudip.activities.SettingsActivity$GeneralPreferenceFragment"
-        android:icon="@drawable/ic_info_black_24dp"
-        android:title="@string/pref_header_general" />
+        android:fragment="studip_uni_passau.femtopedia.de.unipassaustudip.activities.SettingsActivity$MensaPreferenceFragment"
+        android:icon="@drawable/ic_restaurant_black_24dp"
+        android:title="@string/mensa_plan" />
 
     <header
         android:fragment="studip_uni_passau.femtopedia.de.unipassaustudip.activities.SettingsActivity$DataSyncPreferenceFragment"

@@ -1,7 +1,6 @@
 package studip_uni_passau.femtopedia.de.unipassaustudip.activities;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -188,8 +187,10 @@ public class ScheduleActivity extends AppCompatActivity
     }
 
     private void addToView(String day, @NonNull List<ScheduledEvent> list) {
-        if (!list.isEmpty())
-            addListItem(day, new ArrayList<>(), Color.BLACK, Color.WHITE);
+        if (!list.isEmpty()) {
+            int colorBg = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("separator_schedule_color", 0xFF000000);
+            addListItem(day, new ArrayList<>(), colorBg, StudIPHelper.contraColor(colorBg));
+        }
         for (ScheduledEvent se : list) {
             List<Object> info = new ArrayList<>();
             info.add(se.title);
@@ -200,9 +201,7 @@ public class ScheduleActivity extends AppCompatActivity
             DateTime end = new DateTime(se.end).withZone(StudIPHelper.ZONE);
             info.add(getString(R.string.start) + ": " + String.format(Locale.GERMANY, "%02d", start.getHourOfDay()) + ":" + String.format(Locale.GERMANY, "%02d", start.getMinuteOfHour()));
             info.add(getString(R.string.end) + ": " + String.format(Locale.GERMANY, "%02d", end.getHourOfDay()) + ":" + String.format(Locale.GERMANY, "%02d", end.getMinuteOfHour()));
-            int color = Color.parseColor("#" + se.color);
-            double lum = 0.299d * (double) Color.red(color) + 0.587d * (double) Color.green(color) + 0.114d * (double) Color.blue(color);
-            addListItem(se.description, info, color, lum > 128 ? Color.BLACK : Color.WHITE);
+            addListItem(se.description, info, se.color, StudIPHelper.contraColor(se.color));
         }
     }
 
@@ -257,7 +256,7 @@ public class ScheduleActivity extends AppCompatActivity
             se.course = event.getCourse();
             if (!event.getCategories().equals("Sitzung")) {
                 se.categories = event.getCategories();
-                se.color = "339966";
+                se.color = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("non_lecture_color", 0xFF339966);
             }
             if (courses != null) {
                 for (ScheduledCourse s : courses) {
@@ -268,7 +267,7 @@ public class ScheduleActivity extends AppCompatActivity
                             if (Integer.parseInt(time2) == s.getEnd()) {
                                 flag = true;
                                 se.description = s.getContent();
-                                se.color = s.getColor();
+                                se.color = Integer.parseInt("ff" + s.getColor(), 16);
                             }
                         }
                     }
@@ -281,8 +280,8 @@ public class ScheduleActivity extends AppCompatActivity
                 } catch (IOException | IllegalAccessException | OAuthException e) {
                     e.printStackTrace();
                 }
-                if (se.color == null)
-                    se.color = "ea3838";
+                if (se.color == -1)
+                    se.color = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("not_found_lecture_color", 0xFFea3838);
             }
             eventss.add(se);
         }
@@ -347,8 +346,10 @@ public class ScheduleActivity extends AppCompatActivity
                 }
             }
         }
+        int colorButton = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("load_more_color", 0xFF000000);
+        int colorButtonCon = StudIPHelper.contraColor(colorButton);
         addListItem(new ExpandableListAdapter.ButtonPreset(
-                        getString(R.string.load_more), Color.WHITE, Color.BLACK,
+                        getString(R.string.load_more), colorButtonCon, colorButton,
                         (view) -> {
                             if (!swiperefresher.isRefreshing()) {
                                 weeks++;
@@ -358,7 +359,7 @@ public class ScheduleActivity extends AppCompatActivity
                                     updateSchedule();
                             }
                         }),
-                new ArrayList<>(), Color.BLACK, Color.WHITE);
+                new ArrayList<>(), colorButton, colorButtonCon);
     }
 
     @SuppressWarnings({"staticFieldLeak"})

@@ -1,7 +1,6 @@
 package studip_uni_passau.femtopedia.de.unipassaustudip.activities;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -210,27 +209,45 @@ public class MensaActivity extends AppCompatActivity
         if (StudIPHelper.mensaPlan == null)
             return;
         MensaPlan.DayMenu menu = StudIPHelper.mensaPlan.menu.get(dt.getMillis());
+        int separatorColor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("separator_mensa_color", 0xFF000000);
+        int soupColor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("soup_color", 0xFF7bad41);
+        int mainColor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("main_color", 0xFFea3838);
+        int garnishColor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("garnish_color", 0xFF61dfed);
+        int dessertColor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("desserts_color", 0xFFbaac18);
+        int separatorColorCon = StudIPHelper.contraColor(separatorColor);
+        int soupColorCon = StudIPHelper.contraColor(soupColor);
+        int mainColorCon = StudIPHelper.contraColor(mainColor);
+        int garnishColorCon = StudIPHelper.contraColor(garnishColor);
+        int dessertColorCon = StudIPHelper.contraColor(dessertColor);
         if (menu != null) {
-            addListItem(getString(R.string.soup), new ArrayList<>(), Color.BLACK, Color.WHITE);
-            for (MensaPlan.Food f : menu.soups) {
-                addFood(f, "7bad41");
+            if (!menu.soups.isEmpty()) {
+                addListItem(getString(R.string.soup), new ArrayList<>(), separatorColor, separatorColorCon);
+                for (MensaPlan.Food f : menu.soups) {
+                    addFood(f, soupColor, soupColorCon);
+                }
             }
-            addListItem(getString(R.string.mains), new ArrayList<>(), Color.BLACK, Color.WHITE);
-            for (MensaPlan.Food f : menu.mains) {
-                addFood(f, "ea3838");
+            if (!menu.mains.isEmpty()) {
+                addListItem(getString(R.string.mains), new ArrayList<>(), separatorColor, separatorColorCon);
+                for (MensaPlan.Food f : menu.mains) {
+                    addFood(f, mainColor, mainColorCon);
+                }
             }
-            addListItem(getString(R.string.garnishes), new ArrayList<>(), Color.BLACK, Color.WHITE);
-            for (MensaPlan.Food f : menu.garnishes) {
-                addFood(f, "61dfed");
+            if (!menu.garnishes.isEmpty()) {
+                addListItem(getString(R.string.garnishes), new ArrayList<>(), separatorColor, separatorColorCon);
+                for (MensaPlan.Food f : menu.garnishes) {
+                    addFood(f, garnishColor, garnishColorCon);
+                }
             }
-            addListItem(getString(R.string.desserts), new ArrayList<>(), Color.BLACK, Color.WHITE);
-            for (MensaPlan.Food f : menu.desserts) {
-                addFood(f, "baac18");
+            if (!menu.desserts.isEmpty()) {
+                addListItem(getString(R.string.desserts), new ArrayList<>(), separatorColor, separatorColorCon);
+                for (MensaPlan.Food f : menu.desserts) {
+                    addFood(f, dessertColor, dessertColorCon);
+                }
             }
         }
     }
 
-    public void addFood(MensaPlan.Food f, String colorBg) {
+    public void addFood(MensaPlan.Food f, int colorBg, int colorText) {
         List<Object> info = new ArrayList<>();
         List<Integer> images = new ArrayList<>();
         for (MensaPlan.FoodProperty fp : f.properties)
@@ -240,9 +257,7 @@ public class MensaActivity extends AppCompatActivity
         info.add(getString(R.string.students) + ": " + formatter.format(f.price_stud));
         info.add(getString(R.string.servants) + ": " + formatter.format(f.price_bed));
         info.add(getString(R.string.guests) + ": " + formatter.format(f.price_guest));
-        int color = Color.parseColor("#" + colorBg);
-        double lum = 0.299d * (double) Color.red(color) + 0.587d * (double) Color.green(color) + 0.114d * (double) Color.blue(color);
-        addListItem(f.name, info, color, lum > 128 ? Color.BLACK : Color.WHITE);
+        addListItem(f.name, info, colorBg, colorText);
     }
 
     private String getDateString(DateTime time) {

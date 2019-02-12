@@ -49,7 +49,8 @@
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:screenOrientation="sensorPortrait">
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/WhiteIconsAppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="studip_uni_passau.femtopedia.de.unipassaustudip.activities.ScheduleActivity" />

@@ -1,9 +1,0 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <SwitchPreference
-        android:defaultValue="true"
-        android:key="cookie_saving"
-        android:summary="@string/pref_description_cookie_saving"
-        android:title="@string/pref_title_cookie_saving" />
-
-</PreferenceScreen>

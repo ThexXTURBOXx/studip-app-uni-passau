@@ -3,7 +3,7 @@ package studip_uni_passau.femtopedia.de.unipassaustudip.api;
 public class ScheduledEvent {
 
     public long start, end;
-    public String color;
+    public int color = -1;
     public String course;
     public String title;
     public String description;

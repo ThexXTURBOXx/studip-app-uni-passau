@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package studip_uni_passau.femtopedia.de.unipassaustudip.activities;
+package studip_uni_passau.femtopedia.de.unipassaustudip.util;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -40,7 +40,7 @@ import androidx.appcompat.widget.Toolbar;
  */
 public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
 
-    private AppCompatDelegate mDelegate;
+    private AppCompatDelegate delegate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,9 +126,10 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
     }
 
     private AppCompatDelegate getDelegate() {
-        if (mDelegate == null) {
-            mDelegate = AppCompatDelegate.create(this, null);
+        if (delegate == null) {
+            delegate = AppCompatDelegate.create(this, null);
         }
-        return mDelegate;
+        return delegate;
     }
+
 }

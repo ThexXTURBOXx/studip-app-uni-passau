@@ -2,17 +2,9 @@
 <resources>
     <string name="app_name" translatable="false">StudiPassau</string>
     <string name="load_activity_name">Loading Stud.IP Data&#8230;</string>
-    <string name="prompt_username">Username</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in</string>
-    <string name="error_incorrect_password">Incorrect credentials!</string>
-    <string name="error_random_error">An I/O Error has occurred!</string>
-    <string name="error_field_required">This field is required</string>
     <string name="title_activity_schedule">Stud.IP Uni Passau</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="error_sum_sh">An unknown error has occurred!</string>
-    <string name="error_login_again">Please login again</string>
     <string name="studip_user_format">Stud.IP User</string>
     <string name="studip_username" translatable="false">studip01</string>
     <string name="button_settings">Settings</string>
@@ -20,7 +12,6 @@
     <string name="cat_misc">Miscellaneous</string>
     <string name="button_bugreport">Report a bug</string>
     <string name="title_activity_settings">Stud.IP Uni Passau Settings</string>
-    <string name="pref_header_general">General</string>
     <string name="pref_header_data_sync">Synchronization</string>
     <string name="today">Today</string>
     <string name="monday">Monday</string>
@@ -65,10 +56,27 @@
     <string name="send_mail">Send Email&#8230;</string>
     <string name="source">View Source on GitHub</string>
     <string name="unknown">Unknown</string>
+    <string name="pref_cat_colors">Colors</string>
     <string name="pref_title_auto_sync">Auto Sync</string>
-    <string name="pref_description_auto_sync">Automatically synchronizes, when you open the schedule and mensa plan.</string>
-    <string name="pref_title_cookie_saving">Save Cookies</string>
-    <string name="pref_description_cookie_saving">Saves the sessions, so you don\'t have to login every time, you open the app.</string>
+    <string name="pref_desc_auto_sync">Automatically synchronizes, when you open a supported activity</string>
+    <string name="pref_title_sep_mensa_color">Food Separator Color</string>
+    <string name="pref_desc_sep_mensa_color">The background color of the Food Category Separators</string>
+    <string name="pref_title_soup_mensa_color">Soups Color</string>
+    <string name="pref_desc_soup_mensa_color">The background color of Soups</string>
+    <string name="pref_title_main_mensa_color">Main Dishes Color</string>
+    <string name="pref_desc_main_mensa_color">The background color of Main Dishes</string>
+    <string name="pref_title_garnish_mensa_color">Garnishes Color</string>
+    <string name="pref_desc_garnish_mensa_color">The background color of Garnishes</string>
+    <string name="pref_title_dessert_mensa_color">Desserts Color</string>
+    <string name="pref_desc_dessert_mensa_color">The background color of Desserts</string>
+    <string name="pref_title_sep_schedule_color">Separator Color</string>
+    <string name="pref_desc_sep_schedule_color">The background color of the Day Separators</string>
+    <string name="pref_title_nonlec_schedule_color">Non-Lecture Color</string>
+    <string name="pref_desc_nonlec_schedule_color">The background color of Non-Lecture Events (Exams etc.)</string>
+    <string name="pref_title_notfoundlec_schedule_color">Not-Found Lecture Color</string>
+    <string name="pref_desc_notfoundlec_schedule_color">The background color of Lectures, that aren\'t in your regular Schedule</string>
+    <string name="pref_title_loadmore_schedule_color">Load More Color</string>
+    <string name="pref_desc_loadmore_schedule_color">The background color of the \"Load More&#8230;\"-Button</string>
     <string name="credits">View Credits</string>
     <string name="version">Version: %1$s (%2$d)</string>
     <string name="load_more">Load more&#8230;</string>

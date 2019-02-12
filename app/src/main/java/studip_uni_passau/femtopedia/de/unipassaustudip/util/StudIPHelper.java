@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -49,11 +50,9 @@ import studip_uni_passau.femtopedia.de.unipassaustudip.api.ScheduledEvent;
 
 public class StudIPHelper {
 
+    public static final DateTimeZone ZONE = DateTimeZone.forID("Europe/Berlin");
     private static final String CONSUMER_KEY = BuildConfig.CONSUMER_KEY;
     private static final String CONSUMER_SECRET = BuildConfig.CONSUMER_KEY_SECRET;
-
-    public static final DateTimeZone ZONE = DateTimeZone.forID("Europe/Berlin");
-
     public static String target = null;
 
     public static StudIPAPI api = null;
@@ -239,6 +238,13 @@ public class StudIPHelper {
             e.printStackTrace();
         }
         return flag;
+    }
+
+    public static int contraColor(int color) {
+        double lum = 0.299d * (double) Color.red(color) +
+                0.587d * (double) Color.green(color) +
+                0.114d * (double) Color.blue(color);
+        return lum > 128 ? Color.BLACK : Color.WHITE;
     }
 
     public interface ProfilePicHolder {
