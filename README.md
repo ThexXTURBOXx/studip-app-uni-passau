@@ -13,9 +13,7 @@ If you want to contribute, feel free to create a Merge Request or help me transl
 All Downloads are located on this [website](http://femtopedia.de/studip/index.php).
 
 ## Translating
-1. Translate [this file](app/src/main/res/values/strings.xml) into your desired language and name it "strings.xml"
-2. Send the file to [me](mailto:nico.mexis@kabelmail.de) and tell me, which language you translated it into (please write the email in German or English...).
-3. Thank you for contributing!
+Follow [this link](https://poeditor.com/join/project/KUzUA6JkXe), create an account there and you can immediately start translating! Thank you very much in advance!
 
 ## Credits
 | Used resource  | Credit |
