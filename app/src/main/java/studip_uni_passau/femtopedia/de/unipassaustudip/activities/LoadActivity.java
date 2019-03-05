@@ -193,11 +193,9 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
         protected Integer doInBackground(Void... params) {
             try {
                 boolean internetAvailable = StudIPHelper.isNetworkAvailable(LoadActivity.this);
-                if (StudIPHelper.api == null) {
-                    StudIPHelper.constructAPI();
-                    if (internetAvailable)
-                        StudIPHelper.verifyAPI(LoadActivity.this);
-                }
+                StudIPHelper.constructAPI();
+                if (internetAvailable)
+                    StudIPHelper.verifyAPI(LoadActivity.this);
                 if (oAuthVerifier != null && internetAvailable) {
                     StudIPHelper.api.verifyAccess(oAuthVerifier);
                 } else {
@@ -241,7 +239,6 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
                 case 2:
                     //Wrong credentials
                     Intent intent = new Intent(LoadActivity.this, LoginActivity.class);
-                    intent.putExtra("ignoreFileLoad", true);
                     startActivity(intent);
                     break;
                 default:
@@ -273,8 +270,12 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
                 return null;
             try {
                 return StudIPHelper.api.getCurrentUserData();
-            } catch (IOException | IllegalAccessException | OAuthException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
+            } catch (IllegalAccessException | OAuthException e) {
+                Intent intent = new Intent(((StudIPApp) getApplication()).getCurrentActivity(),
+                        LoadActivity.class);
+                startActivity(intent);
             }
             return null;
         }
@@ -318,8 +319,12 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
                 BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
                 instream = bufHttpEntity.getContent();
                 return BitmapFactory.decodeStream(instream);
-            } catch (IOException | IllegalAccessException | OAuthException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
+            } catch (IllegalAccessException | OAuthException e) {
+                Intent intent = new Intent(((StudIPApp) getApplication()).getCurrentActivity(),
+                        LoadActivity.class);
+                startActivity(intent);
             } finally {
                 try {
                     if (response != null)

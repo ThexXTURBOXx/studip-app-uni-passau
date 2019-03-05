@@ -281,8 +281,11 @@ public class ScheduleActivity extends AppCompatActivity
                 try {
                     Course c = StudIPHelper.api.getCourse(event.getCourse().replaceFirst("/studip/api.php/course/", ""));
                     se.description = c.getNumber() + " " + c.getTitle();
-                } catch (IOException | IllegalAccessException | OAuthException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
+                } catch (IllegalAccessException | OAuthException e) {
+                    Intent intent = new Intent(ScheduleActivity.this, LoadActivity.class);
+                    startActivity(intent);
                 }
                 if (se.color == -1)
                     se.color = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("not_found_lecture_color", 0xFFea3838);
@@ -374,8 +377,7 @@ public class ScheduleActivity extends AppCompatActivity
             try {
                 StudIPHelper.updateSchedule(getApplicationContext(), compareSchedule(StudIPHelper.api.getSchedule()));
             } catch (IllegalAccessException | OAuthException e) {
-                Intent intent = new Intent(ScheduleActivity.this, LoginActivity.class);
-                intent.putExtra("ignoreFileLoad", true);
+                Intent intent = new Intent(ScheduleActivity.this, LoadActivity.class);
                 startActivity(intent);
             } catch (IOException e) {
                 e.printStackTrace();

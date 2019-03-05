@@ -409,8 +409,7 @@ public class MensaActivity extends AppCompatActivity
                 StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.api.getOAuthClient().get(mensaUrl + week + ".csv")));
                 StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.api.getOAuthClient().get(mensaUrl + (next_week) + ".csv")));
             } catch (IllegalAccessException | OAuthException e) {
-                Intent intent = new Intent(MensaActivity.this, LoginActivity.class);
-                intent.putExtra("ignoreFileLoad", true);
+                Intent intent = new Intent(MensaActivity.this, LoadActivity.class);
                 startActivity(intent);
                 return 2;
             } catch (IOException e) {

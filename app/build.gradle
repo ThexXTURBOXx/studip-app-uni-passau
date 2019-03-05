@@ -3,10 +3,10 @@ apply plugin: 'com.novoda.build-properties'
 
 buildProperties {
     debug {
-        file rootProject.file('gradle.properties')
+        using rootProject.file('gradle.properties')
     }
     secrets {
-        file rootProject.file('secrets.properties')
+        using rootProject.file('secrets.properties')
     }
 }
 
@@ -17,14 +17,14 @@ android {
     }
     compileSdkVersion 28
     defaultConfig {
-        applicationId "studip_uni_passau.femtopedia.de.unipassaustudip"
+        applicationId 'studip_uni_passau.femtopedia.de.unipassaustudip'
         minSdkVersion 15
         targetSdkVersion 28
         versionCode 6
-        versionName "0.1"
-        buildConfigString "CONSUMER_KEY", (buildProperties.secrets['consumer_key'] | buildProperties.debug['consumer_key']).string
-        buildConfigString "CONSUMER_KEY_SECRET", (buildProperties.secrets['consumer_key_secret'] | buildProperties.debug['consumer_key_secret']).string
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        versionName '0.1'
+        buildConfigString 'CONSUMER_KEY', (buildProperties.secrets['consumer_key'] | buildProperties.debug['consumer_key']).string
+        buildConfigString 'CONSUMER_KEY_SECRET', (buildProperties.secrets['consumer_key_secret'] | buildProperties.debug['consumer_key_secret']).string
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
     }
@@ -71,12 +71,11 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.browser:browser:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
-    implementation 'de.femtopedia.studip:studip-uni-passau:1.4'
+    implementation 'de.femtopedia.studip:studip-uni-passau:1.4.2'
     implementation 'com.github.javiersantos:AppUpdater:2.7.1-onfinishfix'
-    implementation 'cz.msebera.android:httpclient:4.4.1.2'
     implementation 'de.hdodenhof:circleimageview:3.0.0'
-    implementation "ch.acra:acra-mail:5.2.1"
-    implementation "ch.acra:acra-dialog:5.2.1"
+    implementation 'ch.acra:acra-mail:5.2.1'
+    implementation 'ch.acra:acra-dialog:5.2.1'
     implementation 'com.rarepebble:colorpicker:2.4.2'
     implementation 'joda-time:joda-time:2.10.1'
     testImplementation 'junit:junit:4.12'
