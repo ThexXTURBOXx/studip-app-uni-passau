@@ -193,7 +193,7 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
         protected Integer doInBackground(Void... params) {
             try {
                 boolean internetAvailable = StudIPHelper.isNetworkAvailable(LoadActivity.this);
-                StudIPHelper.constructAPI();
+                StudIPHelper.constructAPI(internetAvailable, oAuthVerifier != null);
                 if (internetAvailable)
                     StudIPHelper.verifyAPI(LoadActivity.this);
                 if (oAuthVerifier != null && internetAvailable) {
@@ -213,6 +213,7 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
                     return 2;
                 }
             } catch (IllegalAccessException | OAuthException e) {
+                e.printStackTrace();
                 return 2;
             } catch (IOException | IllegalStateException | IllegalArgumentException e) {
                 e.printStackTrace();

@@ -66,11 +66,16 @@ public class StudIPHelper {
     private static Type scheduleType = new TypeToken<Map<Integer, List<ScheduledEvent>>>() {
     }.getType();
 
-    public static void constructAPI() {
-        if (StudIPHelper.api != null) {
-            StudIPHelper.api.shutdown();
+    public static void constructAPI(boolean online, boolean auth) {
+        if (auth || !online) {
+            if (StudIPHelper.api == null)
+                StudIPHelper.api = new StudIPAPI(CONSUMER_KEY, CONSUMER_SECRET);
+        } else {
+            if (StudIPHelper.api != null) {
+                StudIPHelper.api.shutdown();
+            }
+            StudIPHelper.api = new StudIPAPI(CONSUMER_KEY, CONSUMER_SECRET);
         }
-        StudIPHelper.api = new StudIPAPI(CONSUMER_KEY, CONSUMER_SECRET);
     }
 
     public static void verifyAPI(Activity activity)
