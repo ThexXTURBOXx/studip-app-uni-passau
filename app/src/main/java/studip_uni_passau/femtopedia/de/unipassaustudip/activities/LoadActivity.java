@@ -19,9 +19,6 @@ import android.widget.TextView;
 import com.github.javiersantos.appupdater.AppUpdater;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.entity.BufferedHttpEntity;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -194,8 +191,6 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
             try {
                 boolean internetAvailable = StudIPHelper.isNetworkAvailable(LoadActivity.this);
                 StudIPHelper.constructAPI(internetAvailable, oAuthVerifier != null);
-                if (internetAvailable)
-                    StudIPHelper.verifyAPI(LoadActivity.this);
                 if (oAuthVerifier != null && internetAvailable) {
                     StudIPHelper.api.verifyAccess(oAuthVerifier);
                 } else {
@@ -212,7 +207,7 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
                 if (!StudIPHelper.api.getOAuthClient().isSessionValid()) {
                     return 2;
                 }
-            } catch (IllegalAccessException | OAuthException e) {
+            } catch (OAuthException e) {
                 e.printStackTrace();
                 return 2;
             } catch (IOException | IllegalStateException | IllegalArgumentException e) {
@@ -316,9 +311,7 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
             InputStream instream = null;
             try {
                 response = StudIPHelper.api.getOAuthClient().get(url[0]);
-                HttpEntity entity = response.getResponse().getEntity();
-                BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
-                instream = bufHttpEntity.getContent();
+                instream = response.getResponse().body().byteStream();
                 return BitmapFactory.decodeStream(instream);
             } catch (IOException e) {
                 e.printStackTrace();

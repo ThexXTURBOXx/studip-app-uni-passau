@@ -21,19 +21,15 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
-import javax.net.ssl.SSLPeerUnverifiedException;
-
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import de.femtopedia.studip.StudIPAPI;
 import de.femtopedia.studip.json.User;
-import oauth.signpost.exception.OAuthException;
 import studip_uni_passau.femtopedia.de.unipassaustudip.BuildConfig;
 import studip_uni_passau.femtopedia.de.unipassaustudip.R;
 import studip_uni_passau.femtopedia.de.unipassaustudip.StudIPApp;
@@ -71,32 +67,8 @@ public class StudIPHelper {
             if (StudIPHelper.api == null)
                 StudIPHelper.api = new StudIPAPI(CONSUMER_KEY, CONSUMER_SECRET);
         } else {
-            if (StudIPHelper.api != null) {
-                StudIPHelper.api.shutdown();
-            }
             StudIPHelper.api = new StudIPAPI(CONSUMER_KEY, CONSUMER_SECRET);
         }
-    }
-
-    public static void verifyAPI(Activity activity)
-            throws IllegalArgumentException, IllegalAccessException, IllegalStateException, IOException, OAuthException {
-        InputStream inputStream = null;
-        try {
-            inputStream = StudIPHelper.api.getOAuthClient()
-                    .get("https://studip.uni-passau.de/studip/test.php").getResponse().getEntity().getContent();
-            inputStream.close();
-            inputStream = StudIPHelper.api.getOAuthClient()
-                    .get("https://www.stwno.de/infomax/daten-extern/csv/UNI-P/1.csv").getResponse().getEntity().getContent();
-            inputStream.close();
-            inputStream = null;
-        } catch (SSLPeerUnverifiedException e) {
-            System.out.println("SSLPeerUnverifiedException thrown, using KeyStore.");
-            StudIPHelper.api.shutdown();
-            StudIPHelper.api = new StudIPAPI(CONSUMER_KEY, CONSUMER_SECRET,
-                    activity.getResources().openRawResource(R.raw.newtruststore), "012345");
-        }
-        if (inputStream != null)
-            inputStream.close();
     }
 
     public static CustomTabHelper authenticate(Activity activity, String authorizeUrl) {

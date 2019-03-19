@@ -312,7 +312,7 @@ public class MensaActivity extends AppCompatActivity
         Map<Long, MensaPlan.DayMenu> dayMenus = new HashMap<>();
         InputStream content = null;
         try {
-            content = csv.getResponse().getEntity().getContent();
+            content = csv.getResponse().body().byteStream();
             MensaPlan.Food food = null;
             MensaPlan.DayMenu menu = new MensaPlan.DayMenu();
             String time = "";
