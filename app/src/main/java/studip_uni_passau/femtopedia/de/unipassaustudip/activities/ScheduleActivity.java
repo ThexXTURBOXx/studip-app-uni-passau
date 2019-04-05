@@ -77,6 +77,11 @@ public class ScheduleActivity extends AppCompatActivity
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
+
+        if (StudIPHelper.current_user == null) {
+            Intent intent = new Intent(ScheduleActivity.this, LoadActivity.class);
+            startActivity(intent);
+        }
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(StudIPHelper.current_user.getName().getFormatted());
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(StudIPHelper.current_user.getUsername());
         if (StudIPHelper.profile_pic != null)

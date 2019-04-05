@@ -29,6 +29,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import de.femtopedia.studip.json.User;
 import de.femtopedia.studip.shib.CustomAccessHttpResponse;
 import oauth.signpost.exception.OAuthException;
+import okhttp3.ResponseBody;
 import studip_uni_passau.femtopedia.de.unipassaustudip.R;
 import studip_uni_passau.femtopedia.de.unipassaustudip.StudIPApp;
 import studip_uni_passau.femtopedia.de.unipassaustudip.api.OAuthData;
@@ -167,7 +168,7 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
      * Represents an asynchronous data loading task used to verify API access.
      */
     @SuppressWarnings({"StaticFieldLeak"})
-    public class VerifyTask extends AsyncTask<Void, Void, Integer> {
+    public class VerifyTask extends AsyncTask<Void, Void, LoadingState> {
 
         VerifyTask() {
             loadingStatus.setText(getString(R.string.verifying_api));
@@ -187,7 +188,7 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
         }
 
         @Override
-        protected Integer doInBackground(Void... params) {
+        protected LoadingState doInBackground(Void... params) {
             try {
                 boolean internetAvailable = StudIPHelper.isNetworkAvailable(LoadActivity.this);
                 StudIPHelper.constructAPI(internetAvailable, oAuthVerifier != null);
@@ -198,47 +199,43 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
                     if (saveData != null) {
                         StudIPHelper.api.getOAuthClient().setToken(saveData.accessToken, saveData.accessTokenSecret);
                     } else {
-                        return 2;
+                        return LoadingState.WRONG_CREDENTIALS;
                     }
                 }
                 if (!internetAvailable) {
-                    return 1;
+                    return LoadingState.OFFLINE;
                 }
                 if (!StudIPHelper.api.getOAuthClient().isSessionValid()) {
-                    return 2;
+                    return LoadingState.WRONG_CREDENTIALS;
                 }
             } catch (OAuthException e) {
                 e.printStackTrace();
-                return 2;
+                return LoadingState.WRONG_CREDENTIALS;
             } catch (IOException | IllegalStateException | IllegalArgumentException e) {
                 e.printStackTrace();
-                return 3;
+                return LoadingState.IO;
             }
-            return 0;
+            return LoadingState.SUCCESS;
         }
 
         @Override
-        protected void onPostExecute(final Integer success) {
+        protected void onPostExecute(final LoadingState success) {
             verifyTask = null;
 
             switch (success) {
-                case 0:
-                    //Success
+                case SUCCESS:
                     String[] token = StudIPHelper.api.getOAuthClient().getToken();
                     StudIPHelper.saveToFile(oAuthDataFile, new OAuthData(token[0], token[1]));
                     //No break here
-                case 1:
-                    //Offline
+                case OFFLINE:
                     CacheCurrentUserData data = new CacheCurrentUserData();
                     data.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     break;
-                case 2:
-                    //Wrong credentials
+                case WRONG_CREDENTIALS:
                     Intent intent = new Intent(LoadActivity.this, LoginActivity.class);
                     startActivity(intent);
                     break;
                 default:
-                    //IO and various Error
                     verifyTask = new VerifyTask();
                     verifyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     break;
@@ -311,8 +308,11 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
             InputStream instream = null;
             try {
                 response = StudIPHelper.api.getOAuthClient().get(url[0]);
-                instream = response.getResponse().body().byteStream();
-                return BitmapFactory.decodeStream(instream);
+                ResponseBody body = response.getResponse().body();
+                if (body != null) {
+                    instream = body.byteStream();
+                    return BitmapFactory.decodeStream(instream);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException | OAuthException e) {
@@ -342,6 +342,10 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
             }
             super.onPostExecute(bitmap);
         }
+    }
+
+    public enum LoadingState {
+        SUCCESS, OFFLINE, WRONG_CREDENTIALS, IO
     }
 
 }
