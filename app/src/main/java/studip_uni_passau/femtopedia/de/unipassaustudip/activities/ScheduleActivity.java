@@ -276,7 +276,7 @@ public class ScheduleActivity extends AppCompatActivity
                             if (Integer.parseInt(time2) == s.getEnd()) {
                                 flag = true;
                                 se.description = s.getContent();
-                                se.color = Integer.parseInt("ff" + s.getColor(), 16);
+                                se.color = (int) Long.parseLong("ff" + s.getColor(), 16);
                             }
                         }
                     }
