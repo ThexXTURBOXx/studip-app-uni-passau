@@ -81,9 +81,10 @@ public class ScheduleActivity extends AppCompatActivity
         if (StudIPHelper.current_user == null) {
             Intent intent = new Intent(ScheduleActivity.this, LoadActivity.class);
             startActivity(intent);
+        } else {
+            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(StudIPHelper.current_user.getName().getFormatted());
+            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(StudIPHelper.current_user.getUsername());
         }
-        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(StudIPHelper.current_user.getName().getFormatted());
-        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(StudIPHelper.current_user.getUsername());
         if (StudIPHelper.profile_pic != null)
             setProfilePic();
 
