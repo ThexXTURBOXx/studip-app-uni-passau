@@ -23,13 +23,13 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import javax.annotation.Nullable;
-
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+
+import javax.annotation.Nullable;
 
 /**
  * A {@link PreferenceActivity} which implements and proxies the necessary calls

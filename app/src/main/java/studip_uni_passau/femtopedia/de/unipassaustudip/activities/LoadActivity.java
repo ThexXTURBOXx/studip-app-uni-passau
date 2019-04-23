@@ -16,6 +16,10 @@ import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+
 import com.github.javiersantos.appupdater.AppUpdater;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
 
@@ -23,9 +27,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import de.femtopedia.studip.json.User;
 import de.femtopedia.studip.shib.CustomAccessHttpResponse;
 import oauth.signpost.exception.OAuthException;
@@ -156,6 +157,10 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
         }
     }
 
+
+    public enum LoadingState {
+        SUCCESS, OFFLINE, WRONG_CREDENTIALS, IO
+    }
 
     private interface ProfileQuery {
         String[] PROJECTION = {
@@ -342,10 +347,6 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
             }
             super.onPostExecute(bitmap);
         }
-    }
-
-    public enum LoadingState {
-        SUCCESS, OFFLINE, WRONG_CREDENTIALS, IO
     }
 
 }

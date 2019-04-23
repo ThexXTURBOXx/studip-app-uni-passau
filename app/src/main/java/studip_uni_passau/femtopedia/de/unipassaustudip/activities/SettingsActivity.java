@@ -7,9 +7,10 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.view.MenuItem;
 
+import androidx.core.app.NavUtils;
+
 import java.util.List;
 
-import androidx.core.app.NavUtils;
 import studip_uni_passau.femtopedia.de.unipassaustudip.R;
 import studip_uni_passau.femtopedia.de.unipassaustudip.StudIPApp;
 import studip_uni_passau.femtopedia.de.unipassaustudip.util.AppCompatPreferenceActivity;

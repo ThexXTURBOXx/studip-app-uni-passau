@@ -9,6 +9,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -26,8 +29,6 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import de.femtopedia.studip.StudIPAPI;
 import de.femtopedia.studip.json.User;
 import studip_uni_passau.femtopedia.de.unipassaustudip.BuildConfig;

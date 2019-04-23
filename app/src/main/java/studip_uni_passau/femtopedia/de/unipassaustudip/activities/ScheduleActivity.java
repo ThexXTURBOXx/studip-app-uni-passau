@@ -9,6 +9,15 @@ import android.view.MenuItem;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.google.android.material.navigation.NavigationView;
 
 import org.joda.time.DateTime;
@@ -21,19 +30,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import de.femtopedia.studip.json.Course;
 import de.femtopedia.studip.json.Event;
 import de.femtopedia.studip.json.Events;
-import de.femtopedia.studip.util.Schedule;
-import de.femtopedia.studip.util.ScheduledCourse;
+import de.femtopedia.studip.json.Schedule;
+import de.femtopedia.studip.json.ScheduledCourse;
 import de.hdodenhof.circleimageview.CircleImageView;
 import oauth.signpost.exception.OAuthException;
 import studip_uni_passau.femtopedia.de.unipassaustudip.R;
@@ -188,7 +189,6 @@ public class ScheduleActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
@@ -222,32 +222,13 @@ public class ScheduleActivity extends AppCompatActivity
         for (int i = 0; i <= 4; i++) {
             for (int d = 0; d < 7; d++) {
                 int day = d + i * 7;
-                sched.put(day + 1, compareDay(getDayOfSchedule(schedule, day % 7 + 1), events.getCollection(), day + 1, i));
+                sched.put(day + 1, compareDay(schedule.getDay(day % 7), events.getCollection(), day + 1, i));
             }
         }
         return sched;
     }
 
-    private List<ScheduledCourse> getDayOfSchedule(Schedule schedule, int day) {
-        switch (day) {
-            case 1:
-                return schedule.getMonday();
-            case 2:
-                return schedule.getTuesday();
-            case 3:
-                return schedule.getWednesday();
-            case 4:
-                return schedule.getThursday();
-            case 5:
-                return schedule.getFriday();
-            case 6:
-                return schedule.getSaturday();
-            default:
-                return schedule.getSunday();
-        }
-    }
-
-    private List<ScheduledEvent> compareDay(List<ScheduledCourse> courses, List<Event> events, int day, int week) {
+    private List<ScheduledEvent> compareDay(Map<String, ScheduledCourse> courses, List<Event> events, int day, int week) {
         List<ScheduledEvent> eventss = new ArrayList<>();
         DateTime now = new DateTime().plusDays(1 + week * 7).withTime(0, 0, 0, 0).withZone(StudIPHelper.ZONE);
         for (Event event : events) {
@@ -269,15 +250,15 @@ public class ScheduleActivity extends AppCompatActivity
                 se.color = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("non_lecture_color", 0xFF339966);
             }
             if (courses != null) {
-                for (ScheduledCourse s : courses) {
-                    if (event.getCourse().replaceFirst("/studip/api.php/course/", "").equals(s.getEvent_id())) {
+                for (Map.Entry<String, ScheduledCourse> s : courses.entrySet()) {
+                    if (event.getCourse().replaceFirst("/studip/api.php/course/", "").equals(s.getKey().split("-")[0])) {
                         String time1 = String.format(Locale.GERMANY, "%02d", time.getHourOfDay()) + String.format(Locale.GERMANY, "%02d", time.getMinuteOfHour());
-                        if (Integer.parseInt(time1) == s.getStart()) {
+                        if (Integer.parseInt(time1) == s.getValue().getStart()) {
                             String time2 = String.format(Locale.GERMANY, "%02d", dd.getHourOfDay()) + String.format(Locale.GERMANY, "%02d", dd.getMinuteOfHour());
-                            if (Integer.parseInt(time2) == s.getEnd()) {
+                            if (Integer.parseInt(time2) == s.getValue().getEnd()) {
                                 flag = true;
-                                se.description = s.getContent();
-                                se.color = (int) Long.parseLong("ff" + s.getColor(), 16);
+                                se.description = s.getValue().getContent();
+                                se.color = (int) Long.parseLong("ff" + s.getValue().getColor().replaceFirst("#", ""), 16);
                             }
                         }
                     }
@@ -381,7 +362,7 @@ public class ScheduleActivity extends AppCompatActivity
         @Override
         protected Void doInBackground(Void... url) {
             try {
-                StudIPHelper.updateSchedule(getApplicationContext(), compareSchedule(StudIPHelper.api.getSchedule()));
+                StudIPHelper.updateSchedule(getApplicationContext(), compareSchedule(StudIPHelper.api.getSchedule(StudIPHelper.current_user.getUser_id())));
             } catch (IllegalAccessException | OAuthException e) {
                 Intent intent = new Intent(ScheduleActivity.this, LoadActivity.class);
                 startActivity(intent);

@@ -3,12 +3,12 @@ package studip_uni_passau.femtopedia.de.unipassaustudip;
 import android.app.Activity;
 import android.content.Context;
 
+import androidx.multidex.MultiDexApplication;
+
 import org.acra.ACRA;
 import org.acra.annotation.AcraCore;
 import org.acra.annotation.AcraDialog;
 import org.acra.annotation.AcraMailSender;
-
-import androidx.multidex.MultiDexApplication;
 
 @AcraCore(buildConfigClass = BuildConfig.class)
 @AcraMailSender(mailTo = "studipapp@femtopedia.de",
