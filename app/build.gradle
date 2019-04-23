@@ -20,8 +20,8 @@ android {
         applicationId 'studip_uni_passau.femtopedia.de.unipassaustudip'
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 7
-        versionName '0.1.1'
+        versionCode 8
+        versionName '0.1.2'
         buildConfigString 'CONSUMER_KEY', (buildProperties.secrets['consumer_key'] | buildProperties.debug['consumer_key']).string
         buildConfigString 'CONSUMER_KEY_SECRET', (buildProperties.secrets['consumer_key_secret'] | buildProperties.debug['consumer_key_secret']).string
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
