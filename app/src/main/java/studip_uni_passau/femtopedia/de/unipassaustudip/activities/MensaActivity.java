@@ -354,7 +354,7 @@ public class MensaActivity extends AppCompatActivity
                 }
                 if (!cols[0].equals(time)) {
                     if (!time.equals("")) {
-                        dt = formatter.parseDateTime(time);
+                        dt = formatter.parseDateTime(time).withZone(StudIPHelper.ZONE);
                         dayMenus.put(getMillis(dt.withTime(0, 0, 0, 0)), menu);
                         menu = new MensaPlan.DayMenu();
                     }
@@ -370,7 +370,7 @@ public class MensaActivity extends AppCompatActivity
                     menu.desserts.add(food);
             }
             if (!time.equals("")) {
-                dt = formatter.parseDateTime(time);
+                dt = formatter.parseDateTime(time).withZone(StudIPHelper.ZONE);
                 dayMenus.put(getMillis(dt.withTime(0, 0, 0, 0)), menu);
             }
         } catch (IOException e) {

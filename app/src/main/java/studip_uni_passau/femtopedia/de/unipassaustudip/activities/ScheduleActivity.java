@@ -230,12 +230,12 @@ public class ScheduleActivity extends AppCompatActivity
 
     private List<ScheduledEvent> compareDay(Map<String, ScheduledCourse> courses, List<Event> events, int day, int week) {
         List<ScheduledEvent> eventss = new ArrayList<>();
-        DateTime now = new DateTime().plusDays(1 + week * 7).withTime(0, 0, 0, 0).withZone(StudIPHelper.ZONE);
+        DateTime now = new DateTime().withZone(StudIPHelper.ZONE).plusDays(1 + week * 7).withTime(0, 0, 0, 0);
         for (Event event : events) {
             boolean flag = false;
             DateTime time = new DateTime(event.getStart() * 1000).withZone(StudIPHelper.ZONE);
             if (time.getDayOfWeek() != (day - 1) % 7 + 1 || time.isBefore(now.minusDays(1).minusSeconds(1)) ||
-                    Days.daysBetween(now, new DateTime(time).withTime(1, 0, 0, 0)).getDays() >= 6)
+                    Days.daysBetween(now, new DateTime(time).withTime(1, 0, 0, 0).withZone(StudIPHelper.ZONE)).getDays() >= 6)
                 continue;
             DateTime dd = new DateTime(event.getEnd() * 1000).withZone(StudIPHelper.ZONE);
             ScheduledEvent se = new ScheduledEvent();
@@ -287,7 +287,7 @@ public class ScheduleActivity extends AppCompatActivity
     }
 
     private String getDateString(int day, int today, int week, int isToday) {
-        DateTime time = new DateTime().plusDays((day < today ? day + 7 : day) - today).plusDays(7 * week).withZone(StudIPHelper.ZONE);
+        DateTime time = new DateTime().withZone(StudIPHelper.ZONE).plusDays((day < today ? day + 7 : day) - today).plusDays(7 * week);
         StringBuilder sb = new StringBuilder();
         if (isToday == 0)
             sb = sb.append(getString(R.string.today)).append(", ");
