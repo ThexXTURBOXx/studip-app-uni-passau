@@ -58,6 +58,12 @@ public class ScheduleActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (StudIPHelper.current_user == null) {
+            Intent intent = new Intent(ScheduleActivity.this, LoadActivity.class);
+            startActivity(intent);
+            return;
+        }
+
         ((StudIPApp) getApplicationContext()).setCurrentActivity(this);
         StudIPHelper.target = "schedule";
 
@@ -79,13 +85,9 @@ public class ScheduleActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
 
-        if (StudIPHelper.current_user == null) {
-            Intent intent = new Intent(ScheduleActivity.this, LoadActivity.class);
-            startActivity(intent);
-        } else {
-            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(StudIPHelper.current_user.getName().getFormatted());
-            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(StudIPHelper.current_user.getUsername());
-        }
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(StudIPHelper.current_user.getName().getFormatted());
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(StudIPHelper.current_user.getUsername());
+
         if (StudIPHelper.profile_pic != null)
             setProfilePic();
 

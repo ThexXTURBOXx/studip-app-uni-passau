@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             } else {
-                ((TextView) findViewById(R.id.login_warning)).setText(R.string.login_warning_no_internet);
+                return "";
             }
             return null;
         }
@@ -53,7 +53,11 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(final String authUrl) {
             if (authUrl != null) {
-                tabHelper = StudIPHelper.authenticate(LoginActivity.this, authUrl);
+                if (authUrl.equals("")) {
+                    ((TextView) findViewById(R.id.login_warning)).setText(R.string.login_warning_no_internet);
+                } else {
+                    tabHelper = StudIPHelper.authenticate(LoginActivity.this, authUrl);
+                }
             }
         }
 

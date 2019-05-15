@@ -207,7 +207,7 @@ public class StudIPHelper {
     public static boolean initFile(File file) {
         boolean flag = false;
         File parent = file.getParentFile();
-        if (!parent.exists())
+        if (parent != null && !parent.exists())
             flag = parent.mkdirs();
         try {
             if (!file.exists())

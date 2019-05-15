@@ -71,8 +71,11 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
         //Delete Legacy Data
         File cookieDir = new File(getApplicationContext().getFilesDir(), "/cookies");
         if (cookieDir.exists()) {
-            for (File f : cookieDir.listFiles()) {
-                f.delete();
+            File[] files = cookieDir.listFiles();
+            if (files != null) {
+                for (File f : files) {
+                    f.delete();
+                }
             }
             cookieDir.delete();
         }

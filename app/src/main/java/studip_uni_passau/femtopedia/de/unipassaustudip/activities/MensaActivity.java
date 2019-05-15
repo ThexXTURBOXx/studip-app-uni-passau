@@ -42,6 +42,7 @@ import de.femtopedia.studip.shib.CustomAccessHttpResponse;
 import de.femtopedia.studip.shib.OAuthClient;
 import de.hdodenhof.circleimageview.CircleImageView;
 import oauth.signpost.exception.OAuthException;
+import okhttp3.ResponseBody;
 import studip_uni_passau.femtopedia.de.unipassaustudip.R;
 import studip_uni_passau.femtopedia.de.unipassaustudip.StudIPApp;
 import studip_uni_passau.femtopedia.de.unipassaustudip.api.MensaPlan;
@@ -65,6 +66,13 @@ public class MensaActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (StudIPHelper.current_user == null) {
+            Intent intent = new Intent(MensaActivity.this, LoadActivity.class);
+            startActivity(intent);
+            return;
+        }
+
         setContentView(R.layout.mense);
         ((StudIPApp) getApplicationContext()).setCurrentActivity(this);
         StudIPHelper.target = "mensa";
@@ -87,13 +95,10 @@ public class MensaActivity extends AppCompatActivity
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(1).setChecked(true);
-        if (StudIPHelper.current_user == null) {
-            Intent intent = new Intent(MensaActivity.this, LoadActivity.class);
-            startActivity(intent);
-        } else {
-            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(StudIPHelper.current_user.getName().getFormatted());
-            ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(StudIPHelper.current_user.getUsername());
-        }
+
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(StudIPHelper.current_user.getName().getFormatted());
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(StudIPHelper.current_user.getUsername());
+
         if (StudIPHelper.profile_pic != null)
             setProfilePic();
 
@@ -214,7 +219,6 @@ public class MensaActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
@@ -318,7 +322,11 @@ public class MensaActivity extends AppCompatActivity
         Map<Long, MensaPlan.DayMenu> dayMenus = new HashMap<>();
         InputStream content = null;
         try {
-            content = csv.getResponse().body().byteStream();
+            ResponseBody body = csv.getResponse().body();
+            if (body == null) {
+                return new HashMap<>();
+            }
+            content = body.byteStream();
             MensaPlan.Food food = null;
             MensaPlan.DayMenu menu = new MensaPlan.DayMenu();
             String time = "";

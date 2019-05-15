@@ -48,7 +48,7 @@
     <string name="loading_user_pic">Lade Profilbild&#8230;</string>
     <string name="open_in_browser">In Browser öffnen</string>
     <string name="title_activity_about">Über Stud.IP Uni Passau App</string>
-    <string name="about_string">Hallo, Student!\n\nIch bin Nico Mexis, ein (Stand WS 2018) Studienanfänger an der Universität Passau, und ich entwickle diese App.\nWenn du irgendwelche Fehler in der App findest, kontaktiere mich gern via E-Mail oder klicke den \"Einen Fehler melden\"-Knopf im Seitenmenü. \n\nHab noch einen schönen Tag und bis bald,\nDein Nico</string>
+    <string name="about_string">Hallo, Student!\n\nIch bin Nico Mexis, ein Student an der Universität Passau, und ich entwickle diese App.\nWenn du irgendwelche Fehler in der App findest, kontaktiere mich gern via E-Mail oder klicke den \"Einen Fehler melden\"-Knopf im Seitenmenü. \n\nHab noch einen schönen Tag und bis bald,\nDein Nico\n\nIch übernehme keine Haftung für jegliche Fehler!</string>
     <string name="email">E-Mail: nico.mexis@kabelmail.de</string>
     <string name="send_mail">Sende E-Mail&#8230;</string>
     <string name="source">Quellcode auf GitHub</string>
