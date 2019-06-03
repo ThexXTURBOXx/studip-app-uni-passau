@@ -12,7 +12,7 @@
     <string name="cat_misc">Miscellaneous</string>
     <string name="button_bugreport">Report a bug</string>
     <string name="title_activity_settings">Stud.IP Uni Passau Settings</string>
-    <string name="pref_header_data_sync">Synchronization</string>
+    <string name="pref_title_data_sync_subscreen">Synchronization</string>
     <string name="today">Today</string>
     <string name="monday">Monday</string>
     <string name="tuesday">Tuesday</string>
@@ -21,8 +21,8 @@
     <string name="friday">Friday</string>
     <string name="saturday">Saturday</string>
     <string name="sunday">Sunday</string>
-    <string name="schedule">Schedule</string>
-    <string name="mensa_plan">Mensa menu</string>
+    <string name="pref_title_schedule_subscreen">Schedule</string>
+    <string name="pref_title_mensa_subscreen">Mensa menu</string>
     <string name="title_activity_mensa">Mensa menu Uni Passau</string>
     <string name="chicken">Poultry</string>
     <string name="pig">Pig</string>
@@ -88,5 +88,8 @@
     <string name="login_warning_normal">A Browser should be open right now. If it\'s not, please consult me:\n\nstudipapp@femtopedia.de</string>
     <string name="login_warning_no_internet">Please enable your internet connection and restart the app.</string>
     <string name="action_refresh">Refresh&#8230;</string>
+    <string name="pref_desc_data_sync_subscreen">Change the sync behavior of the App</string>
+    <string name="pref_desc_mensa_subscreen">Customize the Mensa section</string>
+    <string name="pref_desc_schedule_subscreen">Customize the Schedule section</string>
 
 </resources>

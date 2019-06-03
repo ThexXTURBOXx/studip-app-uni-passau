@@ -18,8 +18,8 @@
     <string name="friday">Freitag</string>
     <string name="saturday">Samstag</string>
     <string name="sunday">Sonntag</string>
-    <string name="schedule">Stundenplan</string>
-    <string name="mensa_plan">Mensaplan</string>
+    <string name="pref_title_schedule_subscreen">Stundenplan</string>
+    <string name="pref_title_mensa_subscreen">Mensaplan</string>
     <string name="title_activity_mensa">Mensaplan Uni Passau</string>
     <string name="chicken">Geflügel</string>
     <string name="pig">Schwein</string>
@@ -54,7 +54,7 @@
     <string name="source">Quellcode auf GitHub</string>
     <string name="unknown">Unbekannt</string>
     <string name="pref_cat_colors">Farben</string>
-    <string name="pref_header_data_sync">Synchronisation</string>
+    <string name="pref_title_data_sync_subscreen">Synchronisation</string>
     <string name="pref_title_auto_sync">Auto Sync</string>
     <string name="pref_desc_auto_sync">Synchronisiert automatisch, wenn du den Stundenplan oder den Mensaplan aufrufst.</string>
     <string name="pref_title_sep_mensa_color">Mahlzeiten-Farbe</string>
@@ -84,5 +84,8 @@
     <string name="login_warning_normal">Ein Browser sollte gerade geöffnet sein. Falls nicht, schreib mir bitte eine E-Mail:\n\nstudipapp@femtopedia.de</string>
     <string name="login_warning_no_internet">Bitte stelle eine Internetverbindung her und starte die App neu.</string>
     <string name="action_refresh">Aktualisieren&#8230;</string>
+    <string name="pref_desc_data_sync_subscreen">Synchronisationsverhalten der App ändern</string>
+    <string name="pref_desc_mensa_subscreen">Anpassen des Mensabereichs</string>
+    <string name="pref_desc_schedule_subscreen">Anpassen des Studenplans</string>
 
 </resources>

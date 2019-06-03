@@ -6,12 +6,12 @@
     <item
         android:id="@+id/nav_schedule"
         android:icon="@drawable/ic_event_note"
-        android:title="@string/schedule" />
+        android:title="@string/pref_title_schedule_subscreen" />
 
     <item
         android:id="@+id/nav_mensa"
         android:icon="@drawable/ic_restaurant"
-        android:title="@string/mensa_plan" />
+        android:title="@string/pref_title_mensa_subscreen" />
 
     <item android:title="@string/cat_misc">
         <menu>

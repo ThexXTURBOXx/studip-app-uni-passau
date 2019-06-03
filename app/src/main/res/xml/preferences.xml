@@ -1,0 +1,107 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceScreen
+        app:icon="@drawable/ic_sync"
+        app:key="data_sync_subscreen"
+        app:persistent="false"
+        app:summary="@string/pref_desc_data_sync_subscreen"
+        app:title="@string/pref_title_data_sync_subscreen">
+
+        <SwitchPreference
+            app:defaultValue="true"
+            app:key="auto_sync"
+            app:summary="@string/pref_desc_auto_sync"
+            app:title="@string/pref_title_auto_sync" />
+
+    </PreferenceScreen>
+
+    <PreferenceScreen
+        app:icon="@drawable/ic_event_note"
+        app:key="schedule_subscreen"
+        app:persistent="false"
+        app:summary="@string/pref_desc_schedule_subscreen"
+        app:title="@string/pref_title_schedule_subscreen">
+
+        <PreferenceCategory app:title="@string/pref_cat_colors">
+
+            <com.rarepebble.colorpicker.ColorPreference
+                app:colorpicker_showAlpha="false"
+                app:defaultValue="#000000"
+                app:key="separator_schedule_color"
+                app:summary="@string/pref_desc_sep_schedule_color"
+                app:title="@string/pref_title_sep_schedule_color" />
+
+            <com.rarepebble.colorpicker.ColorPreference
+                app:colorpicker_showAlpha="false"
+                app:defaultValue="#339966"
+                app:key="non_lecture_color"
+                app:summary="@string/pref_desc_nonlec_schedule_color"
+                app:title="@string/pref_title_nonlec_schedule_color" />
+
+            <com.rarepebble.colorpicker.ColorPreference
+                app:colorpicker_showAlpha="false"
+                app:defaultValue="#ea3838"
+                app:key="not_found_lecture_color"
+                app:summary="@string/pref_desc_notfoundlec_schedule_color"
+                app:title="@string/pref_title_notfoundlec_schedule_color" />
+
+            <com.rarepebble.colorpicker.ColorPreference
+                app:colorpicker_showAlpha="false"
+                app:defaultValue="#000000"
+                app:key="load_more_color"
+                app:summary="@string/pref_desc_loadmore_schedule_color"
+                app:title="@string/pref_title_loadmore_schedule_color" />
+
+        </PreferenceCategory>
+
+    </PreferenceScreen>
+
+    <PreferenceScreen
+        app:icon="@drawable/ic_restaurant"
+        app:key="mensa_subscreen"
+        app:persistent="false"
+        app:summary="@string/pref_desc_mensa_subscreen"
+        app:title="@string/pref_title_mensa_subscreen">
+
+        <PreferenceCategory app:title="@string/pref_cat_colors">
+
+            <com.rarepebble.colorpicker.ColorPreference
+                app:colorpicker_showAlpha="false"
+                app:defaultValue="#000000"
+                app:key="separator_mensa_color"
+                app:summary="@string/pref_desc_sep_mensa_color"
+                app:title="@string/pref_title_sep_mensa_color" />
+
+            <com.rarepebble.colorpicker.ColorPreference
+                app:colorpicker_showAlpha="false"
+                app:defaultValue="#7bad41"
+                app:key="soup_color"
+                app:summary="@string/pref_desc_soup_mensa_color"
+                app:title="@string/pref_title_soup_mensa_color" />
+
+            <com.rarepebble.colorpicker.ColorPreference
+                app:colorpicker_showAlpha="false"
+                app:defaultValue="#ea3838"
+                app:key="main_color"
+                app:summary="@string/pref_desc_main_mensa_color"
+                app:title="@string/pref_title_main_mensa_color" />
+
+            <com.rarepebble.colorpicker.ColorPreference
+                app:colorpicker_showAlpha="false"
+                app:defaultValue="#61dfed"
+                app:key="garnish_color"
+                app:summary="@string/pref_desc_garnish_mensa_color"
+                app:title="@string/pref_title_garnish_mensa_color" />
+
+            <com.rarepebble.colorpicker.ColorPreference
+                app:colorpicker_showAlpha="false"
+                app:defaultValue="#baac18"
+                app:key="desserts_color"
+                app:summary="@string/pref_desc_dessert_mensa_color"
+                app:title="@string/pref_title_dessert_mensa_color" />
+
+        </PreferenceCategory>
+
+    </PreferenceScreen>
+
+</PreferenceScreen>

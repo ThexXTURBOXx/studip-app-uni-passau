@@ -5,8 +5,8 @@
         android:enabled="true"
         android:icon="@drawable/ic_event_note_black"
         android:shortcutId="schedule_shortcut"
-        android:shortcutLongLabel="@string/schedule"
-        android:shortcutShortLabel="@string/schedule">
+        android:shortcutLongLabel="@string/pref_title_schedule_subscreen"
+        android:shortcutShortLabel="@string/pref_title_schedule_subscreen">
 
         <intent
             android:action="android.intent.action.VIEW"
@@ -22,8 +22,8 @@
         android:enabled="true"
         android:icon="@drawable/ic_restaurant_black"
         android:shortcutId="mensa_shortcut"
-        android:shortcutLongLabel="@string/mensa_plan"
-        android:shortcutShortLabel="@string/mensa_plan">
+        android:shortcutLongLabel="@string/pref_title_mensa_subscreen"
+        android:shortcutShortLabel="@string/pref_title_mensa_subscreen">
 
         <intent
             android:action="android.intent.action.VIEW"
