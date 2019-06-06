@@ -145,7 +145,7 @@ public class MensaActivity extends AppCompatActivity
         int days = Days.daysBetween(new DateTime().withDayOfWeek(DateTimeConstants.MONDAY)
                 .withZone(StudIPHelper.ZONE).toLocalDate(), dt.withZone(StudIPHelper.ZONE).toLocalDate()).getDays();
         if (days < 14 && days >= 0) {
-            this.dateTime = dt.withZone(StudIPHelper.ZONE);
+            this.dateTime = dt.withTime(0, 0, 0, 0).withZone(StudIPHelper.ZONE);
             dateView.setText(getDateString(this.dateTime));
             clearListItems();
             setToView(dateTime);
