@@ -1,6 +1,7 @@
 package studip_uni_passau.femtopedia.de.unipassaustudip.util;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -188,6 +189,17 @@ public class StudIPHelper {
             } else if (id == R.id.open_in_browser) {
                 Intent intent = new Intent("android.intent.action.VIEW", Uri.parse("https://studip.uni-passau.de/studip/index.php"));
                 activity.startActivity(intent);
+            } else if (id == R.id.nav_telegram_bot) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setMessage(R.string.dialog_telegram_desc)
+                        .setTitle(R.string.dialog_telegram_title);
+                builder.setPositiveButton(R.string.button_okay, (dialog, id1) -> {
+                    Intent intent = new Intent("android.intent.action.VIEW", Uri.parse("http://t.me/UniPassauBot"));
+                    activity.startActivity(intent);
+                }).setNegativeButton(R.string.button_cancel, (dialog, id1) -> {
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         }
         DrawerLayout drawer = activity.findViewById(R.id.drawer_layout);

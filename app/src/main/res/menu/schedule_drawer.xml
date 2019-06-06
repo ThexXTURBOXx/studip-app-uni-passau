@@ -34,4 +34,13 @@
         </menu>
     </item>
 
+    <item android:title="@string/cat_tools">
+        <menu>
+            <item
+                android:id="@+id/nav_telegram_bot"
+                android:icon="@drawable/ic_telegram_1"
+                android:title="@string/button_telegram_bot" />
+        </menu>
+    </item>
+
 </menu>

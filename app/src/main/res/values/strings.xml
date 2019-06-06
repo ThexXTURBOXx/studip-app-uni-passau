@@ -91,5 +91,11 @@
     <string name="pref_desc_data_sync_subscreen">Change the sync behavior of the App</string>
     <string name="pref_desc_mensa_subscreen">Customize the Mensa section</string>
     <string name="pref_desc_schedule_subscreen">Customize the Schedule section</string>
+    <string name="cat_tools">Other Useful Tools</string>
+    <string name="button_telegram_bot">Telegram Bot</string>
+    <string name="button_okay">Okay</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="dialog_telegram_desc">The bot is developed and maintained by another person. Please contact its developer for help on any issues!</string>
+    <string name="dialog_telegram_title">Telegram Bot</string>
 
 </resources>

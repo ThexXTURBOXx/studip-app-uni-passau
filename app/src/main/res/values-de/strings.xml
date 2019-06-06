@@ -87,5 +87,11 @@
     <string name="pref_desc_data_sync_subscreen">Synchronisationsverhalten der App ändern</string>
     <string name="pref_desc_mensa_subscreen">Anpassen des Mensabereichs</string>
     <string name="pref_desc_schedule_subscreen">Anpassen des Studenplans</string>
+    <string name="cat_tools">Andere nützliche Tools</string>
+    <string name="button_telegram_bot">Telegram Bot</string>
+    <string name="button_okay">Okay</string>
+    <string name="button_cancel">Abbrechen</string>
+    <string name="dialog_telegram_desc">Der Bot wird von einer anderen Person enwickelt und gewartet. Bitte kontaktieren Sie bei Problemen oder Fragen diese Person!</string>
+    <string name="dialog_telegram_title">Telegram Bot</string>
 
 </resources>
