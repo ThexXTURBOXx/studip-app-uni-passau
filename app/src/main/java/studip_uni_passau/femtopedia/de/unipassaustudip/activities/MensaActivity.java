@@ -61,7 +61,7 @@ public class MensaActivity extends AppCompatActivity
     private DateTime dateTime;
     private TextView dateView;
     private NavigationView navigationView;
-    private SwipeRefreshLayout swiperefresher;
+    private SwipeRefreshLayout swipeRefresher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +77,8 @@ public class MensaActivity extends AppCompatActivity
         ((StudIPApp) getApplicationContext()).setCurrentActivity(this);
         StudIPHelper.target = "mensa";
 
-        swiperefresher = findViewById(R.id.swiperefresh_mensa);
-        swiperefresher.setOnRefreshListener(this::updateData);
+        swipeRefresher = findViewById(R.id.swiperefresh_mensa);
+        swipeRefresher.setOnRefreshListener(this::updateData);
 
         ExpandableListView expListView = findViewById(R.id.mensacontent);
         prepareListData();
@@ -125,7 +125,7 @@ public class MensaActivity extends AppCompatActivity
         StudIPHelper.loadMensaPlan(this.getApplicationContext());
         updateMensaPlan();
         if (StudIPHelper.isNetworkAvailable(this) && PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("auto_sync", true)) {
-            swiperefresher.setRefreshing(true);
+            swipeRefresher.setRefreshing(true);
             CacheMensaPlan data = new CacheMensaPlan();
             data.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -133,11 +133,11 @@ public class MensaActivity extends AppCompatActivity
 
     private void updateData() {
         if (StudIPHelper.isNetworkAvailable(this)) {
-            swiperefresher.setRefreshing(true);
+            swipeRefresher.setRefreshing(true);
             CacheMensaPlan data = new CacheMensaPlan();
             data.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
-            swiperefresher.setRefreshing(false);
+            swipeRefresher.setRefreshing(false);
         }
     }
 
@@ -437,7 +437,7 @@ public class MensaActivity extends AppCompatActivity
             if (success == 0) {
                 StudIPHelper.updateMensaPlan(MensaActivity.this, StudIPHelper.mensaPlan);
                 updateMensaPlan();
-                swiperefresher.setRefreshing(false);
+                swipeRefresher.setRefreshing(false);
             } else if (success == 1) {
                 updateData();
             }

@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name" translatable="false">StudiPassau</string>
     <string name="load_activity_name">Loading Stud.IP Data&#8230;</string>
-    <string name="title_activity_schedule">Stud.IP Uni Passau</string>
+    <string name="title_activity_schedule">StudiPassau Schedule</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="studip_user_format">Stud.IP User</string>
@@ -11,7 +11,7 @@
     <string name="button_about">About this app</string>
     <string name="cat_misc">Miscellaneous</string>
     <string name="button_bugreport">Report a bug</string>
-    <string name="title_activity_settings">Stud.IP Uni Passau Settings</string>
+    <string name="title_activity_settings">StudiPassau Settings</string>
     <string name="pref_title_data_sync_subscreen">Synchronization</string>
     <string name="today">Today</string>
     <string name="monday">Monday</string>
@@ -50,7 +50,7 @@
     <string name="loading_user_data">Loading user data&#8230;</string>
     <string name="loading_user_pic">Loading profile picture&#8230;</string>
     <string name="open_in_browser">Open in Browser</string>
-    <string name="title_activity_about">About Stud.IP Uni Passau App</string>
+    <string name="title_activity_about">About StudiPassau App</string>
     <string name="about_string">Hello, Student!\n\nI\'m Nico Mexis, a student at the University of Passau, and I am developing this app.\nIf you encounter any bugs, feel free to contact me via email or click the \"Report a bug\" option in the drawer menu.\n\nHave a great day and see you soon,\nNico\n\nI do not assume liability for any error!</string>
     <string name="email">Email: nico.mexis@kabelmail.de</string>
     <string name="send_mail">Send Email&#8230;</string>
@@ -81,7 +81,7 @@
     <string name="version">Version: %1$s (%2$d)</string>
     <string name="load_more">Load more&#8230;</string>
     <string name="crash_subject" translatable="false">[BUG] Crash (reported by ACRA)</string>
-    <string name="crash_dialog_text">Stud.IP App has crashed!</string>
+    <string name="crash_dialog_text">StudiPassau has crashed!</string>
     <string name="crash_dialog_comment">Oops, looks like, the app has crashed&#8230; Would you like to send a bug report? That would be very kind of you ;) You could add a comment here:</string>
     <string name="bug_subject" translatable="false">[BUG] Bug</string>
     <string name="verifying_api">Verifying Access&#8230;</string>

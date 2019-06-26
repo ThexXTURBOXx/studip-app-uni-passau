@@ -3,6 +3,7 @@ package studip_uni_passau.femtopedia.de.unipassaustudip.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -21,11 +22,11 @@ public class StudIPPrefFragment extends PreferenceFragmentCompat implements
 
     @Override
     public void onCreatePreferences(Bundle bundle, String rootKey) {
-        setFragmentContainerId(R.id.fragment_container);
+        this.mFragmentContainerId = R.id.fragment_container;
         setPreferencesFromResource(R.xml.preferences, rootKey);
     }
 
-    public StudIPPrefFragment newInstance() {
+    private StudIPPrefFragment newInstance() {
         try {
             return this.getClass().newInstance();
         } catch (java.lang.InstantiationException | IllegalAccessException ie) {
@@ -41,7 +42,7 @@ public class StudIPPrefFragment extends PreferenceFragmentCompat implements
         args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, preferenceScreen.getKey());
         fragment.setArguments(args);
 
-        showFragment(fragment, TAG, true);
+        showFragment(fragment);
         return true;
     }
 
@@ -50,7 +51,9 @@ public class StudIPPrefFragment extends PreferenceFragmentCompat implements
         if (preference instanceof ColorPreference) {
             ColorPreferenceFragment f = ColorPreferenceFragment.newInstance(preference.getKey());
             f.setTargetFragment(this, 0);
-            f.show(getFragmentManager(), TAG);
+            if (getFragmentManager() != null) {
+                f.show(getFragmentManager(), TAG);
+            }
         } else {
             super.onDisplayPreferenceDialog(preference);
         }
@@ -61,18 +64,17 @@ public class StudIPPrefFragment extends PreferenceFragmentCompat implements
         return this;
     }
 
-    public void setFragmentContainerId(int fragmentContainerId) {
-        mFragmentContainerId = fragmentContainerId;
-    }
-
-    public void showFragment(Fragment fragment, String tag, boolean addToBackStack) {
+    private void showFragment(Fragment fragment) {
         if (mFragmentContainerId == 0)
             throw new Error("You must call setFragmentContainerId(int) in onCreatePreferences()!");
 
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(mFragmentContainerId, fragment, tag);
-        if (addToBackStack) transaction.addToBackStack(null);
-        transaction.commit();
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+            transaction.replace(mFragmentContainerId, fragment, TAG);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
     }
 
 }
