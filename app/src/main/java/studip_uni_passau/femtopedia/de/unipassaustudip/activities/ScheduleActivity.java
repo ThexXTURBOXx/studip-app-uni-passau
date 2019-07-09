@@ -1,9 +1,12 @@
 package studip_uni_passau.femtopedia.de.unipassaustudip.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ExpandableListView;
@@ -19,12 +22,19 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.navigation.NavigationView;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.DayViewDecorator;
+import com.prolificinteractive.materialcalendarview.DayViewFacade;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.threeten.bp.LocalDate;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -40,19 +50,20 @@ import oauth.signpost.exception.OAuthException;
 import studip_uni_passau.femtopedia.de.unipassaustudip.R;
 import studip_uni_passau.femtopedia.de.unipassaustudip.StudIPApp;
 import studip_uni_passau.femtopedia.de.unipassaustudip.api.ScheduledEvent;
-import studip_uni_passau.femtopedia.de.unipassaustudip.util.ExpandableListAdapter;
+import studip_uni_passau.femtopedia.de.unipassaustudip.util.ListScheduleAdapter;
 import studip_uni_passau.femtopedia.de.unipassaustudip.util.StudIPHelper;
 
 public class ScheduleActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, StudIPHelper.ProfilePicHolder {
+        implements NavigationView.OnNavigationItemSelectedListener, StudIPHelper.ProfilePicHolder,
+        OnDateSelectedListener {
 
-    private static int weeks = 0;
-    private ExpandableListAdapter listAdapter;
+    private ListScheduleAdapter listAdapter;
     private List<Object> listDataHeader;
     private List<List<Object>> listDataChild;
     private List<Integer> listDataColorsBg, listDataColorsText;
     private NavigationView navigationView;
-    private SwipeRefreshLayout swiperefresher;
+    private SwipeRefreshLayout swipeRefresher;
+    private MaterialCalendarView calendarView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,15 +80,30 @@ public class ScheduleActivity extends AppCompatActivity
 
         setContentView(R.layout.schedule);
 
-        swiperefresher = findViewById(R.id.swiperefresh_schedule);
-        swiperefresher.setOnRefreshListener(this::updateData);
+        calendarView = findViewById(R.id.calendarView);
+        calendarView.setOnDateChangedListener(this);
+        calendarView.addDecorator(new DayViewDecorator() {
+            @Override
+            public boolean shouldDecorate(CalendarDay day) {
+                return day.equals(CalendarDay.today());
+            }
+
+            @Override
+            public void decorate(DayViewFacade view) {
+                view.addSpan(new ForegroundColorSpan(Color.LTGRAY));
+            }
+        });
+
+        swipeRefresher = findViewById(R.id.swiperefresh_schedule);
+        swipeRefresher.setOnRefreshListener(this::updateData);
 
         ExpandableListView expListView = findViewById(R.id.schedulecontent);
         prepareListData();
-        listAdapter = new ExpandableListAdapter(this,
+        listAdapter = new ListScheduleAdapter(this,
                 listDataHeader, listDataChild, listDataColorsBg, listDataColorsText);
         expListView.setAdapter(listAdapter);
         expListView.setGroupIndicator(null);
+        selectDate(CalendarDay.today());
 
         updateDataFirst();
 
@@ -102,17 +128,39 @@ public class ScheduleActivity extends AppCompatActivity
         }
     }
 
+    public void selectDate(CalendarDay day) {
+        calendarView.setSelectedDate(day);
+        clearListItems();
+        LocalDate date = day.getDate();
+        int dow = date.getDayOfWeek().getValue();
+        int wk = (int) Math.floor(CalendarDay.today().getDate().until(date).getDays() / 7d);
+        int days = dow + wk * 7;
+        if (StudIPHelper.schedule != null) {
+            List<ScheduledEvent> list = StudIPHelper.schedule.get(days);
+            if (list != null) {
+                addToView(list);
+            }
+        }
+    }
+
+    @Override
+    public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+        if (selected) {
+            selectDate(date);
+        }
+    }
+
     public void setProfilePic() {
         ((CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView)).setImageBitmap(StudIPHelper.profile_pic);
     }
 
     private void updateDataFirst() {
-        if (swiperefresher.isRefreshing())
+        if (swipeRefresher.isRefreshing())
             return;
         StudIPHelper.loadSchedule(this.getApplicationContext());
-        updateSchedule();
+        selectDate(CalendarDay.today());
         if (StudIPHelper.isNetworkAvailable(this) && PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("auto_sync", true)) {
-            swiperefresher.setRefreshing(true);
+            swipeRefresher.setRefreshing(true);
             CacheSchedule schedule = new CacheSchedule();
             schedule.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -120,12 +168,12 @@ public class ScheduleActivity extends AppCompatActivity
 
     private void updateData() {
         if (StudIPHelper.isNetworkAvailable(this)) {
-            swiperefresher.setRefreshing(true);
+            swipeRefresher.setRefreshing(true);
             CacheSchedule schedule = new CacheSchedule();
             schedule.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
-            swiperefresher.setRefreshing(false);
-            updateSchedule();
+            swipeRefresher.setRefreshing(false);
+            selectDate(calendarView.getSelectedDate());
         }
     }
 
@@ -145,11 +193,16 @@ public class ScheduleActivity extends AppCompatActivity
         listDataChild = new ArrayList<>();
     }
 
-    private void addListItem(Object title, List<Object> info, int colorBg, int colorText) {
-        listDataHeader.add(title);
+    private void addScheduleItem(String startStr, String endStr, String title, String room, String categories,
+                                 String description, int colorText, int colorBg) {
+        listDataHeader.add(new ListScheduleAdapter.ScheduleItem(startStr, room, title));
         listDataColorsBg.add(colorBg);
         listDataColorsText.add(colorText);
-        listDataChild.add(info);
+        if (categories == null) {
+            listDataChild.add(Arrays.asList(description, room, "Start: " + startStr, "End: " + endStr));
+        } else {
+            listDataChild.add(Arrays.asList(description, room, categories, "Start: " + startStr, "End: " + endStr));
+        }
 
         listAdapter.notifyDataSetChanged();
     }
@@ -198,22 +251,13 @@ public class ScheduleActivity extends AppCompatActivity
         return true;
     }
 
-    private void addToView(String day, @NonNull List<ScheduledEvent> list) {
-        if (!list.isEmpty()) {
-            int colorBg = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("separator_schedule_color", 0xFF000000);
-            addListItem(day, new ArrayList<>(), colorBg, StudIPHelper.contraColor(colorBg));
-        }
+    private void addToView(@NonNull List<ScheduledEvent> list) {
         for (ScheduledEvent se : list) {
-            List<Object> info = new ArrayList<>();
-            info.add(se.title);
-            info.add(se.room);
-            if (se.categories != null)
-                info.add(se.categories);
             DateTime start = new DateTime(se.start).withZone(StudIPHelper.ZONE);
             DateTime end = new DateTime(se.end).withZone(StudIPHelper.ZONE);
-            info.add(getString(R.string.start) + ": " + String.format(Locale.GERMANY, "%02d", start.getHourOfDay()) + ":" + String.format(Locale.GERMANY, "%02d", start.getMinuteOfHour()));
-            info.add(getString(R.string.end) + ": " + String.format(Locale.GERMANY, "%02d", end.getHourOfDay()) + ":" + String.format(Locale.GERMANY, "%02d", end.getMinuteOfHour()));
-            addListItem(se.description, info, se.color, StudIPHelper.contraColor(se.color));
+            String startStr = String.format(Locale.GERMANY, "%02d", start.getHourOfDay()) + ":" + String.format(Locale.GERMANY, "%02d", start.getMinuteOfHour());
+            String endStr = String.format(Locale.GERMANY, "%02d", end.getHourOfDay()) + ":" + String.format(Locale.GERMANY, "%02d", end.getMinuteOfHour());
+            addScheduleItem(startStr, endStr, se.title, se.room, se.categories, se.description, StudIPHelper.contraColor(se.color), se.color);
         }
     }
 
@@ -284,80 +328,6 @@ public class ScheduleActivity extends AppCompatActivity
         return eventss;
     }
 
-    private String getDateString(int day, int today, int week) {
-        return getDateString(day, today, week, -1);
-    }
-
-    private String getDateString(int day, int today, int week, int isToday) {
-        DateTime time = new DateTime().withZone(StudIPHelper.ZONE).plusDays((day < today ? day + 7 : day) - today).plusDays(7 * week);
-        StringBuilder sb = new StringBuilder();
-        if (isToday == 0)
-            sb = sb.append(getString(R.string.today)).append(", ");
-        else if (isToday == 1)
-            sb = sb.append(getString(R.string.tomorrow)).append(", ");
-        switch (day) {
-            case 1:
-                sb = sb.append(getString(R.string.monday));
-                break;
-            case 2:
-                sb = sb.append(getString(R.string.tuesday));
-                break;
-            case 3:
-                sb = sb.append(getString(R.string.wednesday));
-                break;
-            case 4:
-                sb = sb.append(getString(R.string.thursday));
-                break;
-            case 5:
-                sb = sb.append(getString(R.string.friday));
-                break;
-            case 6:
-                sb = sb.append(getString(R.string.saturday));
-                break;
-            case 7:
-                sb = sb.append(getString(R.string.sunday));
-                break;
-        }
-        return sb.append(", ").append(time.getDayOfMonth()).append(".").append(time.getMonthOfYear()).append(".").append(time.getYear()).toString();
-    }
-
-    void updateSchedule() {
-        if (StudIPHelper.schedule == null)
-            return;
-        clearListItems();
-        DateTime dt = new DateTime().withZone(StudIPHelper.ZONE);
-        int dow = dt.getDayOfWeek();
-        for (int wk = 0; wk <= weeks; wk++) {
-            for (int i = 0; i < 7; i++) {
-                int dows = (i + dow - 1) % 7 + 1;
-                int days = dows + wk * 7;
-                List<ScheduledEvent> list = StudIPHelper.schedule.get(days);
-                if (list != null) {
-                    if (days == dow)
-                        addToView(getDateString(dows, dow, wk, 0), list);
-                    else if (days == dow % 7 + 1)
-                        addToView(getDateString(dows, dow, wk, 1), list);
-                    else
-                        addToView(getDateString(dows, dow, wk), list);
-                }
-            }
-        }
-        int colorButton = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("load_more_color", 0xFF000000);
-        int colorButtonCon = StudIPHelper.contraColor(colorButton);
-        addListItem(new ExpandableListAdapter.ButtonPreset(
-                        getString(R.string.load_more), colorButtonCon, colorButton,
-                        (view) -> {
-                            if (!swiperefresher.isRefreshing()) {
-                                weeks++;
-                                if (weeks >= 4)
-                                    updateData();
-                                else
-                                    updateSchedule();
-                            }
-                        }),
-                new ArrayList<>(), colorButton, colorButtonCon);
-    }
-
     @SuppressWarnings({"staticFieldLeak"})
     public class CacheSchedule extends AsyncTask<Void, Void, Void> {
 
@@ -376,8 +346,8 @@ public class ScheduleActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            updateSchedule();
-            swiperefresher.setRefreshing(false);
+            selectDate(calendarView.getSelectedDate());
+            swipeRefresher.setRefreshing(false);
             super.onPostExecute(aVoid);
         }
     }
