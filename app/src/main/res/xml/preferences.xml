@@ -29,14 +29,6 @@
 
             <com.rarepebble.colorpicker.ColorPreference
                 app:colorpicker_showAlpha="false"
-                app:defaultValue="#000000"
-                app:iconSpaceReserved="false"
-                app:key="separator_schedule_color"
-                app:summary="@string/pref_desc_sep_schedule_color"
-                app:title="@string/pref_title_sep_schedule_color" />
-
-            <com.rarepebble.colorpicker.ColorPreference
-                app:colorpicker_showAlpha="false"
                 app:defaultValue="#339966"
                 app:iconSpaceReserved="false"
                 app:key="non_lecture_color"
@@ -51,13 +43,14 @@
                 app:summary="@string/pref_desc_notfoundlec_schedule_color"
                 app:title="@string/pref_title_notfoundlec_schedule_color" />
 
-            <com.rarepebble.colorpicker.ColorPreference
-                app:colorpicker_showAlpha="false"
-                app:defaultValue="#000000"
+            <SeekBarPreference
+                app:defaultValue="50"
                 app:iconSpaceReserved="false"
-                app:key="load_more_color"
-                app:summary="@string/pref_desc_loadmore_schedule_color"
-                app:title="@string/pref_title_loadmore_schedule_color" />
+                app:key="shade_factor_schedule"
+                app:min="0"
+                app:showSeekBarValue="true"
+                app:summary="@string/pref_desc_shade_factor_schedule"
+                app:title="@string/pref_title_shade_factor_schedule" />
 
         </PreferenceCategory>
 

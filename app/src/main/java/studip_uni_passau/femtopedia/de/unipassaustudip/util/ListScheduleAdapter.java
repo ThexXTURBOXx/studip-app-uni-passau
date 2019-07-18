@@ -96,18 +96,21 @@ public class ListScheduleAdapter extends BaseExpandableListAdapter {
                 TextView room = convertView.findViewById(R.id.lblRoom);
                 TextView info = convertView.findViewById(R.id.lblInfo);
 
+                int textColor = listDataColorsText.get(groupPosition);
+
                 clock.setText(item.clock);
+                clock.setTextColor(StudIPHelper.getComplementaryColor(listDataColorsBg.get(groupPosition)));
                 clock.setVisibility(View.VISIBLE);
 
                 room.setText(item.room);
+                room.setTextColor(textColor);
                 room.setVisibility(View.VISIBLE);
 
                 info.setText(item.info);
+                info.setTextColor(textColor);
                 info.setVisibility(View.VISIBLE);
-
-                //convertView.findViewById(R.id.lblListHeaderButton).setVisibility(View.GONE);
             }
-            //convertView.setBackgroundColor(listDataColorsBg.get(groupPosition));
+            convertView.findViewById(R.id.scheduleCard).setBackgroundColor(listDataColorsBg.get(groupPosition));
         }
         return convertView;
     }

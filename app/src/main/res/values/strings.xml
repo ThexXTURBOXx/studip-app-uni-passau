@@ -69,17 +69,12 @@
     <string name="pref_desc_garnish_mensa_color">The background color of Garnishes</string>
     <string name="pref_title_dessert_mensa_color">Desserts Color</string>
     <string name="pref_desc_dessert_mensa_color">The background color of Desserts</string>
-    <string name="pref_title_sep_schedule_color">Separator Color</string>
-    <string name="pref_desc_sep_schedule_color">The background color of the Day Separators</string>
     <string name="pref_title_nonlec_schedule_color">Non-Lecture Color</string>
     <string name="pref_desc_nonlec_schedule_color">The background color of Non-Lecture Events (Exams etc.)</string>
     <string name="pref_title_notfoundlec_schedule_color">Not-Found Lecture Color</string>
     <string name="pref_desc_notfoundlec_schedule_color">The background color of Lectures, that aren\'t in your regular Schedule</string>
-    <string name="pref_title_loadmore_schedule_color">Load More Color</string>
-    <string name="pref_desc_loadmore_schedule_color">The background color of the \"Load More&#8230;\"-Button</string>
     <string name="credits">View Credits</string>
     <string name="version">Version: %1$s (%2$d)</string>
-    <string name="load_more">Load more&#8230;</string>
     <string name="crash_subject" translatable="false">[BUG] Crash (reported by ACRA)</string>
     <string name="crash_dialog_text">StudiPassau has crashed!</string>
     <string name="crash_dialog_comment">Oops, looks like, the app has crashed&#8230; Would you like to send a bug report? That would be very kind of you ;) You could add a comment here:</string>
@@ -97,5 +92,7 @@
     <string name="button_cancel">Cancel</string>
     <string name="dialog_telegram_desc">The bot is developed and maintained by another person. Please contact its developer for help on any issues!</string>
     <string name="dialog_telegram_title">Telegram Bot</string>
+    <string name="pref_desc_shade_factor_schedule">Sets the brightness and saturation of the scheduled event cards (0: Black, 100: Full Color)</string>
+    <string name="pref_title_shade_factor_schedule">Shade Factor</string>
 
 </resources>

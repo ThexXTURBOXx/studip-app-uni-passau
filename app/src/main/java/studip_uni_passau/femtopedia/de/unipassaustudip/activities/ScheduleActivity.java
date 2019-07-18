@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ExpandableListView;
@@ -199,9 +198,11 @@ public class ScheduleActivity extends AppCompatActivity
         listDataColorsBg.add(colorBg);
         listDataColorsText.add(colorText);
         if (categories == null) {
-            listDataChild.add(Arrays.asList(description, room, "Start: " + startStr, "End: " + endStr));
+            listDataChild.add(Arrays.asList(description, room, getString(R.string.start) + ": " + startStr,
+                    getString(R.string.end) + ": " + endStr));
         } else {
-            listDataChild.add(Arrays.asList(description, room, categories, "Start: " + startStr, "End: " + endStr));
+            listDataChild.add(Arrays.asList(description, room, categories, getString(R.string.start) + ": " + startStr,
+                    getString(R.string.end) + ": " + endStr));
         }
 
         listAdapter.notifyDataSetChanged();
@@ -257,7 +258,9 @@ public class ScheduleActivity extends AppCompatActivity
             DateTime end = new DateTime(se.end).withZone(StudIPHelper.ZONE);
             String startStr = String.format(Locale.GERMANY, "%02d", start.getHourOfDay()) + ":" + String.format(Locale.GERMANY, "%02d", start.getMinuteOfHour());
             String endStr = String.format(Locale.GERMANY, "%02d", end.getHourOfDay()) + ":" + String.format(Locale.GERMANY, "%02d", end.getMinuteOfHour());
-            addScheduleItem(startStr, endStr, se.title, se.room, se.categories, se.description, StudIPHelper.contraColor(se.color), se.color);
+            int color = StudIPHelper.shadeColor(se.color, PreferenceManager.getDefaultSharedPreferences(this)
+                    .getInt("shade_factor_schedule", 50) / 100f);
+            addScheduleItem(startStr, endStr, se.title, se.room, se.categories, se.description, StudIPHelper.contraColor(color), color);
         }
     }
 

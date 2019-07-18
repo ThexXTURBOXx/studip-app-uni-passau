@@ -230,11 +230,30 @@ public class StudIPHelper {
         return flag;
     }
 
+    public static int getComplementaryColor(int color) {
+        return Color.rgb(255 - Color.red(color),
+                255 - Color.green(color),
+                255 - Color.blue(color));
+    }
+
+    public static double getLuminance(int color) {
+        return getLuminance(color, 0.299d, 0.587d, 0.114d);
+    }
+
+    public static double getLuminance(int color, double r, double g, double b) {
+        return r * (double) Color.red(color) +
+                g * (double) Color.green(color) +
+                b * (double) Color.blue(color);
+    }
+
     public static int contraColor(int color) {
-        double lum = 0.299d * (double) Color.red(color) +
-                0.587d * (double) Color.green(color) +
-                0.114d * (double) Color.blue(color);
-        return lum > 128 ? Color.BLACK : Color.WHITE;
+        return getLuminance(color) > 128 ? Color.BLACK : Color.WHITE;
+    }
+
+    public static int shadeColor(int color, double shadeFactor) {
+        return Color.rgb((int) (Color.red(color) * shadeFactor),
+                (int) (Color.green(color) * shadeFactor),
+                (int) (Color.blue(color) * shadeFactor));
     }
 
     public interface ProfilePicHolder {

@@ -67,17 +67,12 @@
     <string name="pref_desc_garnish_mensa_color">Die Hintergrundfarbe der Beilagen</string>
     <string name="pref_title_dessert_mensa_color">Nachspeisen-Farbe</string>
     <string name="pref_desc_dessert_mensa_color">Die Hintergrundfarbe der Nachspeisen</string>
-    <string name="pref_title_sep_schedule_color">Datums-Farbe</string>
-    <string name="pref_desc_sep_schedule_color">Die Hintergrundfarbe der jeweiligen Tage</string>
     <string name="pref_title_nonlec_schedule_color">Nicht-Vorlesungs-Farbe</string>
     <string name="pref_desc_nonlec_schedule_color">Die Hintergrundfarbe der Nicht-Vorlesungen (Klausuren etc.)</string>
     <string name="pref_title_notfoundlec_schedule_color">Nicht gefundene Vorlesungs-Farbe</string>
     <string name="pref_desc_notfoundlec_schedule_color">Die Hintergrundfarbe der nicht gefundenen Vorlesungen</string>
-    <string name="pref_title_loadmore_schedule_color">\"Mehr laden\"-Button Farbe</string>
-    <string name="pref_desc_loadmore_schedule_color">Die Hintergrundfarbe des \"Mehr laden&#8230;\"-Buttons</string>
     <string name="credits">Quellen ansehen</string>
     <string name="version">Version: %1$s (%2$d)</string>
-    <string name="load_more">Mehr laden&#8230;</string>
     <string name="crash_dialog_text">StudiPassau ist abgestürzt!</string>
     <string name="crash_dialog_comment">Oops, sieht so aus, als wäre die App abgestürzt&#8230; Willst du eine Fehlermeldung senden? Das wäre ziemlich nett von dir ;) Du kannst hier einen Kommentar hinzufügen:</string>
     <string name="verifying_api">Zugriff überprüfen&#8230;</string>
@@ -93,5 +88,7 @@
     <string name="button_cancel">Abbrechen</string>
     <string name="dialog_telegram_desc">Der Bot wird von einer anderen Person entwickelt und gewartet. Bitte kontaktieren Sie bei Problemen oder Fragen diese Person!</string>
     <string name="dialog_telegram_title">Telegram Bot</string>
+    <string name="pref_desc_shade_factor_schedule">Regelt die Helligkeit und Sättigung der Events im Stundenplan (0: Schwarz, 100: Volle Farbe)</string>
+    <string name="pref_title_shade_factor_schedule">SL-Faktor</string>
 
 </resources>

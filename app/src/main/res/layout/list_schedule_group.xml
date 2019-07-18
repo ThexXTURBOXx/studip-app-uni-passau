@@ -13,10 +13,10 @@
         android:layout_marginTop="5dip"
         android:layout_marginRight="5dip"
         android:layout_marginBottom="5dip"
-        android:backgroundTint="@color/colorBackgroundDarkLighter"
-        app:cardCornerRadius="4dp">
+        app:cardCornerRadius="5dp">
 
         <LinearLayout
+            android:id="@+id/scheduleCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
