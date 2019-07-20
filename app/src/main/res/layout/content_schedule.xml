@@ -10,9 +10,12 @@
 
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
         android:id="@+id/calendarView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="170dp"
         android:background="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:mcv_calendarMode="week"
         app:mcv_selectionColor="@color/colorAccent"
         app:mcv_showOtherDates="all" />
@@ -21,13 +24,15 @@
         android:id="@+id/swiperefresh_schedule"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="170dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/calendarView">
 
         <ExpandableListView
             android:id="@+id/schedulecontent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="170dp" />
+            android:layout_height="wrap_content" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

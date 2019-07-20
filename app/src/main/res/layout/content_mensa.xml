@@ -8,7 +8,7 @@
     tools:context="studip_uni_passau.femtopedia.de.unipassaustudip.activities.MensaActivity"
     tools:showIn="@layout/app_bar_mensa">
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/dateView"
         android:layout_width="wrap_content"
         android:layout_height="36dp"
