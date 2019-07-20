@@ -1,5 +1,7 @@
 language: android
+sudo: required
 jdk: oraclejdk8
+dist: trusty
 
 env:
   global:
@@ -8,6 +10,7 @@ env:
 android:
   components:
     - tools
+    - platform-tools
     - build-tools-28.0.3
     - android-28
     - extra-android-support
@@ -21,6 +24,7 @@ android:
     - '.+'
 
 before_install:
+  - touch $HOME/.android/repositories.cfg
   - mkdir "$ANDROID_HOME/licenses" || true
   - echo "d56f5187479451eabf01fb78af6dfcb131a6481e" >> "$ANDROID_HOME/licenses/android-sdk-license"
   - echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" >> "$ANDROID_HOME/licenses/android-sdk-license"
@@ -35,6 +39,7 @@ cache:
   directories:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
+    - $HOME/.android/build-cache
 
 before_script:
   - echo no | android create avd --force -n test -t android-$EMULATOR_API --abi armeabi-v7a
@@ -44,3 +49,5 @@ before_script:
 
 script:
   - ./gradlew build connectedCheck
+  - ./gradlew clean build
+  - ./gradlew test
