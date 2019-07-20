@@ -3,6 +3,8 @@ package studip_uni_passau.femtopedia.de.unipassaustudip.activities;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,6 +48,7 @@ import okhttp3.ResponseBody;
 import studip_uni_passau.femtopedia.de.unipassaustudip.R;
 import studip_uni_passau.femtopedia.de.unipassaustudip.StudIPApp;
 import studip_uni_passau.femtopedia.de.unipassaustudip.api.MensaPlan;
+import studip_uni_passau.femtopedia.de.unipassaustudip.util.AnimatingRefreshButtonManager;
 import studip_uni_passau.femtopedia.de.unipassaustudip.util.ExpandableListAdapter;
 import studip_uni_passau.femtopedia.de.unipassaustudip.util.StudIPHelper;
 
@@ -62,6 +65,7 @@ public class MensaActivity extends AppCompatActivity
     private TextView dateView;
     private NavigationView navigationView;
     private SwipeRefreshLayout swipeRefresher;
+    private AnimatingRefreshButtonManager refreshManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +129,7 @@ public class MensaActivity extends AppCompatActivity
         StudIPHelper.loadMensaPlan(this.getApplicationContext());
         updateMensaPlan();
         if (StudIPHelper.isNetworkAvailable(this) && PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("auto_sync", true)) {
-            swipeRefresher.setRefreshing(true);
+            startUpdateAnimation();
             CacheMensaPlan data = new CacheMensaPlan();
             data.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -133,12 +137,26 @@ public class MensaActivity extends AppCompatActivity
 
     private void updateData() {
         if (StudIPHelper.isNetworkAvailable(this)) {
-            swipeRefresher.setRefreshing(true);
+            startUpdateAnimation();
             CacheMensaPlan data = new CacheMensaPlan();
             data.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
-            swipeRefresher.setRefreshing(false);
+            stopUpdateAnimation();
         }
+    }
+
+    private void startUpdateAnimation() {
+        swipeRefresher.setRefreshing(true);
+        new Handler(Looper.getMainLooper()).post(() -> {
+            if (refreshManager != null)
+                refreshManager.onRefreshBeginning();
+        });
+    }
+
+    private void stopUpdateAnimation() {
+        swipeRefresher.setRefreshing(false);
+        if (refreshManager != null)
+            refreshManager.onRefreshComplete();
     }
 
     private void setDate(DateTime dt) {
@@ -198,6 +216,11 @@ public class MensaActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.app_bar_refresh, menu);
+        refreshManager = new AnimatingRefreshButtonManager(this, menu.findItem(R.id.action_refresh_bar));
+        if (swipeRefresher.isRefreshing())
+            refreshManager.onRefreshBeginning();
+        else
+            refreshManager.onRefreshComplete();
         return true;
     }
 
@@ -437,7 +460,7 @@ public class MensaActivity extends AppCompatActivity
             if (success == 0) {
                 StudIPHelper.updateMensaPlan(MensaActivity.this, StudIPHelper.mensaPlan);
                 updateMensaPlan();
-                swipeRefresher.setRefreshing(false);
+                stopUpdateAnimation();
             } else if (success == 1) {
                 updateData();
             }

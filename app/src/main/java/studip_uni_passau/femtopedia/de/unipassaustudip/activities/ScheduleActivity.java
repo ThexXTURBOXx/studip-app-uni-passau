@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
@@ -49,6 +51,7 @@ import oauth.signpost.exception.OAuthException;
 import studip_uni_passau.femtopedia.de.unipassaustudip.R;
 import studip_uni_passau.femtopedia.de.unipassaustudip.StudIPApp;
 import studip_uni_passau.femtopedia.de.unipassaustudip.api.ScheduledEvent;
+import studip_uni_passau.femtopedia.de.unipassaustudip.util.AnimatingRefreshButtonManager;
 import studip_uni_passau.femtopedia.de.unipassaustudip.util.ListScheduleAdapter;
 import studip_uni_passau.femtopedia.de.unipassaustudip.util.StudIPHelper;
 
@@ -63,6 +66,7 @@ public class ScheduleActivity extends AppCompatActivity
     private NavigationView navigationView;
     private SwipeRefreshLayout swipeRefresher;
     private MaterialCalendarView calendarView;
+    private AnimatingRefreshButtonManager refreshManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,7 +163,7 @@ public class ScheduleActivity extends AppCompatActivity
         StudIPHelper.loadSchedule(this.getApplicationContext());
         selectDate(CalendarDay.today());
         if (StudIPHelper.isNetworkAvailable(this) && PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("auto_sync", true)) {
-            swipeRefresher.setRefreshing(true);
+            startUpdateAnimation();
             CacheSchedule schedule = new CacheSchedule();
             schedule.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -167,13 +171,27 @@ public class ScheduleActivity extends AppCompatActivity
 
     private void updateData() {
         if (StudIPHelper.isNetworkAvailable(this)) {
-            swipeRefresher.setRefreshing(true);
+            startUpdateAnimation();
             CacheSchedule schedule = new CacheSchedule();
             schedule.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
-            swipeRefresher.setRefreshing(false);
+            stopUpdateAnimation();
             selectDate(calendarView.getSelectedDate());
         }
+    }
+
+    private void startUpdateAnimation() {
+        swipeRefresher.setRefreshing(true);
+        new Handler(Looper.getMainLooper()).post(() -> {
+            if (refreshManager != null)
+                refreshManager.onRefreshBeginning();
+        });
+    }
+
+    private void stopUpdateAnimation() {
+        swipeRefresher.setRefreshing(false);
+        if (refreshManager != null)
+            refreshManager.onRefreshComplete();
     }
 
     private void clearListItems() {
@@ -221,6 +239,11 @@ public class ScheduleActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.app_bar_refresh, menu);
+        refreshManager = new AnimatingRefreshButtonManager(this, menu.findItem(R.id.action_refresh_bar));
+        if (swipeRefresher.isRefreshing())
+            refreshManager.onRefreshBeginning();
+        else
+            refreshManager.onRefreshComplete();
         return true;
     }
 
@@ -350,7 +373,7 @@ public class ScheduleActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Void aVoid) {
             selectDate(calendarView.getSelectedDate());
-            swipeRefresher.setRefreshing(false);
+            stopUpdateAnimation();
             super.onPostExecute(aVoid);
         }
     }

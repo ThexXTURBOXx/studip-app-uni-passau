@@ -51,8 +51,6 @@ public class ListScheduleAdapter extends BaseExpandableListAdapter {
             if (data instanceof String) {
                 convertView = infalInflater.inflate(R.layout.list_schedule_item, null);
                 TextView txtListChild = convertView.findViewById(R.id.lblListItem);
-                //txtListChild.setTextColor(listDataColorsText.get(groupPosition));
-                //convertView.setBackgroundColor(listDataColorsBg.get(groupPosition));
                 txtListChild.setText((String) data);
             }
         }
