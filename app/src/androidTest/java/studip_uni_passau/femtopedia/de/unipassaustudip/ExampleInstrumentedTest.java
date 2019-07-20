@@ -2,11 +2,11 @@ package studip_uni_passau.femtopedia.de.unipassaustudip;
 
 import android.content.Context;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
 
