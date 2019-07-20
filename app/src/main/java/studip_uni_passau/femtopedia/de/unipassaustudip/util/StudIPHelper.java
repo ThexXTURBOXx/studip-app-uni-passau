@@ -200,6 +200,12 @@ public class StudIPHelper {
                 });
                 AlertDialog dialog = builder.create();
                 dialog.show();
+            } else if (id == R.id.nav_share) {
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, activity.getString(R.string.share_subject));
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, activity.getString(R.string.share_body));
+                activity.startActivity(Intent.createChooser(sharingIntent, activity.getString(R.string.share_via)));
             }
         }
         DrawerLayout drawer = activity.findViewById(R.id.drawer_layout);

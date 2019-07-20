@@ -90,5 +90,9 @@
     <string name="dialog_telegram_title">Telegram Bot</string>
     <string name="pref_desc_shade_factor_schedule">Regelt die Helligkeit und Sättigung der Events im Stundenplan (0: Schwarz, 100: Volle Farbe)</string>
     <string name="pref_title_shade_factor_schedule">SL-Faktor</string>
+    <string name="button_share">Teilen&#8230;</string>
+    <string name="share_subject">StudiPassau App</string>
+    <string name="share_body">Hey, schau dir das mal an! Es gibt eine App \"StudiPassau\", die dir hilft, deine Vorlesungen besser zu managen:\nhttp://femtopedia.de/studip/index.php</string>
+    <string name="share_via">Teilen via&#8230;</string>
 
 </resources>

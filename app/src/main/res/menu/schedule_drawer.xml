@@ -28,6 +28,10 @@
                 android:icon="@drawable/ic_bug_report"
                 android:title="@string/button_bugreport" />
             <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_share"
+                android:title="@string/button_share" />
+            <item
                 android:id="@+id/nav_about"
                 android:icon="@drawable/ic_info_outline"
                 android:title="@string/button_about" />

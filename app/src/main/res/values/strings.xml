@@ -94,5 +94,9 @@
     <string name="dialog_telegram_title">Telegram Bot</string>
     <string name="pref_desc_shade_factor_schedule">Sets the brightness and saturation of the scheduled event cards (0: Black, 100: Full Color)</string>
     <string name="pref_title_shade_factor_schedule">Shade Factor</string>
+    <string name="button_share">Share&#8230;</string>
+    <string name="share_subject">StudiPassau App</string>
+    <string name="share_body">Hey, check this out! There is an app called \"StudiPassau\", which helps you manage your lectures easier:\nhttp://femtopedia.de/studip/index.php</string>
+    <string name="share_via">Share via&#8230;</string>
 
 </resources>
