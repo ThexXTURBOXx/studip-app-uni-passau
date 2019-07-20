@@ -2,7 +2,9 @@ package studip_uni_passau.femtopedia.de.unipassaustudip.activities;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -11,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -41,16 +44,15 @@ public class AboutActivity extends AppCompatActivity
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(StudIPHelper.current_user.getUsername());
         if (StudIPHelper.profile_pic != null)
             setProfilePic();
-        CircleImageView civ = findViewById(R.id.nico_image);
-        civ.setImageResource(R.drawable.nico);
-        civ.setBorderColor(0xffffffff);
-        civ.setBorderWidth(15);
         ((TextView) findViewById(R.id.version_text)).setText(getString(R.string.version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
-        ((TextView) findViewById(R.id.about_text)).setText(getString(R.string.about_string));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            ((AppCompatTextView) findViewById(R.id.about_text)).setJustificationMode(Layout.JUSTIFICATION_MODE_INTER_WORD);
+        }
 
         findViewById(R.id.button_email_me).setOnClickListener((v) -> {
             final Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "nico.mexis@kabelmail.de", null));
-            emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Stud.IP App Feedback");
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Stud.IP App Feedback");
             startActivity(Intent.createChooser(emailIntent, getString(R.string.send_mail)));
         });
 
