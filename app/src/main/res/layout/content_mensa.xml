@@ -17,9 +17,10 @@
         android:gravity="center"
         android:textSize="20sp"
         app:layout_constraintEnd_toStartOf="@+id/next_date"
-        app:layout_constraintStart_toEndOf="@+id/previous_date" />
+        app:layout_constraintStart_toEndOf="@+id/previous_date"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swiperefresh_mensa"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,6 +39,8 @@
         android:layout_height="36dp"
         android:background="@color/colorBackgroundDark"
         android:onClick="onClickButtonDatePrev"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_keyboard_arrow_left" />
 
     <androidx.appcompat.widget.AppCompatImageButton
@@ -47,6 +50,7 @@
         android:background="@color/colorBackgroundDark"
         android:onClick="onClickButtonDateNext"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_keyboard_arrow_right" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

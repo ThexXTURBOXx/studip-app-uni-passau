@@ -7,10 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.LinearLayoutCompat;
 
 import java.util.List;
 
@@ -54,8 +55,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         if (infalInflater != null) {
             if (data instanceof String) {
                 convertView = infalInflater.inflate(R.layout.list_item, null);
-                TextView txtListChild = convertView
-                        .findViewById(R.id.lblListItem);
+                AppCompatTextView txtListChild = convertView.findViewById(R.id.lblListItem);
                 txtListChild.setTextColor(listDataColorsText.get(groupPosition));
                 convertView.setBackgroundColor(listDataColorsBg.get(groupPosition));
                 txtListChild.setText((String) getChild(groupPosition, childPosition));
@@ -65,14 +65,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 if (((List) data).get(0) instanceof Integer) {
                     convertView = infalInflater.inflate(R.layout.list_image_item, null);
                     convertView.setBackgroundColor(listDataColorsBg.get(groupPosition));
-                    LinearLayout ll = convertView.findViewById(R.id.imageViewFoodPp);
+                    LinearLayoutCompat ll = convertView.findViewById(R.id.imageViewFoodPp);
                     int c = 0;
                     for (int i : (List<Integer>) data) {
-                        ImageView iv = new ImageView(context);
+                        AppCompatImageView iv = new AppCompatImageView(context);
                         iv.setPadding(c == 0 ? 125 : 0, 20, 0, 20);
                         iv.setImageResource(i);
                         iv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 100));
-                        iv.setScaleType(ImageView.ScaleType.FIT_XY);
+                        iv.setScaleType(AppCompatImageView.ScaleType.FIT_XY);
                         iv.setAdjustViewBounds(true);
                         ll.addView(iv);
                         c++;
@@ -116,14 +116,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         if (convertView != null) {
             Object group = getGroup(groupPosition);
             if (group instanceof String) {
-                TextView lblListHeader = convertView.findViewById(R.id.lblListHeaderText);
+                AppCompatTextView lblListHeader = convertView.findViewById(R.id.lblListHeaderText);
                 lblListHeader.setTypeface(null, Typeface.BOLD);
                 lblListHeader.setText((String) group);
                 lblListHeader.setTextColor(listDataColorsText.get(groupPosition));
                 lblListHeader.setVisibility(View.VISIBLE);
                 convertView.findViewById(R.id.lblListHeaderButton).setVisibility(View.GONE);
             } else if (group instanceof ButtonPreset) {
-                Button lblListHeader = convertView.findViewById(R.id.lblListHeaderButton);
+                AppCompatButton lblListHeader = convertView.findViewById(R.id.lblListHeaderButton);
                 lblListHeader.setVisibility(View.VISIBLE);
                 lblListHeader.setText(((ButtonPreset) group).text);
                 lblListHeader.setBackgroundColor(((ButtonPreset) group).bgColor);

@@ -6,7 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.TextView;
+
+import androidx.appcompat.widget.AppCompatTextView;
 
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class ListScheduleAdapter extends BaseExpandableListAdapter {
         if (infalInflater != null) {
             if (data instanceof String) {
                 convertView = infalInflater.inflate(R.layout.list_schedule_item, null);
-                TextView txtListChild = convertView.findViewById(R.id.lblListItem);
+                AppCompatTextView txtListChild = convertView.findViewById(R.id.lblListItem);
                 txtListChild.setText((String) data);
             }
         }
@@ -90,9 +91,9 @@ public class ListScheduleAdapter extends BaseExpandableListAdapter {
             Object group = getGroup(groupPosition);
             if (group instanceof ScheduleItem) {
                 ScheduleItem item = (ScheduleItem) group;
-                TextView clock = convertView.findViewById(R.id.lblClock);
-                TextView room = convertView.findViewById(R.id.lblRoom);
-                TextView info = convertView.findViewById(R.id.lblInfo);
+                AppCompatTextView clock = convertView.findViewById(R.id.lblClock);
+                AppCompatTextView room = convertView.findViewById(R.id.lblRoom);
+                AppCompatTextView info = convertView.findViewById(R.id.lblInfo);
 
                 int textColor = listDataColorsText.get(groupPosition);
 

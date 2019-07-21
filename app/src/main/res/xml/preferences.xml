@@ -7,7 +7,7 @@
         app:summary="@string/pref_desc_data_sync_subscreen"
         app:title="@string/pref_title_data_sync_subscreen">
 
-        <SwitchPreference
+        <SwitchPreferenceCompat
             app:defaultValue="true"
             app:iconSpaceReserved="false"
             app:key="auto_sync"
