@@ -17,12 +17,6 @@ buildscript {
 
 allprojects {
     repositories {
-        maven {
-            url 'http://femtopedia.de/maven'
-        }
-        maven {
-            url 'https://jitpack.io'
-        }
         google()
         jcenter()
     }

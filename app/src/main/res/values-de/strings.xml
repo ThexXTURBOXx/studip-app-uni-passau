@@ -54,9 +54,11 @@
     <string name="source">Quellcode auf GitHub</string>
     <string name="unknown">Unbekannt</string>
     <string name="pref_cat_colors">Farben</string>
-    <string name="pref_title_data_sync_subscreen">Synchronisation</string>
+    <string name="pref_cat_data_sync">Synchronisation</string>
     <string name="pref_title_auto_sync">Auto Sync</string>
-    <string name="pref_desc_auto_sync">Synchronisiert automatisch, wenn du den Stundenplan oder den Mensaplan aufrufst.</string>
+    <string name="pref_desc_auto_sync">Synchronisiert automatisch, wenn du den Stundenplan oder den Mensaplan aufrufst</string>
+    <string name="pref_title_theme_mode">Thema</string>
+    <string name="pref_desc_theme_mode">Speichert, ob und wann der dunkle/helle Modus verwendet werden soll (Benötigt Neustart)</string>
     <string name="pref_title_sep_mensa_color">Mahlzeiten-Farbe</string>
     <string name="pref_desc_sep_mensa_color">Die Hintergrundfarbe der Mahlzeitkategorien</string>
     <string name="pref_title_soup_mensa_color">Suppen-Farbe</string>
@@ -79,7 +81,9 @@
     <string name="login_warning_normal">Ein Browser sollte gerade geöffnet sein. Falls nicht, schreib mir bitte eine E-Mail:\n\nstudipapp@femtopedia.de</string>
     <string name="login_warning_no_internet">Bitte stelle eine Internetverbindung her und starte die App neu.</string>
     <string name="action_refresh">Aktualisieren&#8230;</string>
-    <string name="pref_desc_data_sync_subscreen">Synchronisationsverhalten der App ändern</string>
+    <string name="pref_desc_general_subscreen">Allgemeines Verhalten der App</string>
+    <string name="pref_title_general_subscreen">Allgemein</string>
+    <string name="pref_cat_general">Allgemein</string>
     <string name="pref_desc_mensa_subscreen">Anpassen des Mensabereichs</string>
     <string name="pref_desc_schedule_subscreen">Anpassen des Studenplans</string>
     <string name="cat_tools">Andere nützliche Tools</string>
@@ -88,11 +92,15 @@
     <string name="button_cancel">Abbrechen</string>
     <string name="dialog_telegram_desc">Der Bot wird von einer anderen Person entwickelt und gewartet. Bitte kontaktieren Sie bei Problemen oder Fragen diese Person!</string>
     <string name="dialog_telegram_title">Telegram Bot</string>
-    <string name="pref_desc_shade_factor_schedule">Regelt die Helligkeit und Sättigung der Events im Stundenplan (0: Schwarz, 100: Volle Farbe)</string>
-    <string name="pref_title_shade_factor_schedule">SL-Faktor</string>
+    <string name="pref_desc_shade_factor_schedule">Regelt die Transparenz der Events im Stundenplan</string>
+    <string name="pref_title_shade_factor_schedule">Transparenz</string>
     <string name="button_share">Teilen&#8230;</string>
     <string name="share_subject">StudiPassau App</string>
     <string name="share_body">Hey, schau dir das mal an! Es gibt eine App \"StudiPassau\", die dir hilft, deine Vorlesungen besser zu managen:\nhttp://femtopedia.de/studip/index.php</string>
     <string name="share_via">Teilen via&#8230;</string>
+    <string name="theme_mode_follow">System Standard verwenden</string>
+    <string name="theme_mode_battery">Automatischer Batterieschoner</string>
+    <string name="theme_mode_light">Immer hell</string>
+    <string name="theme_mode_dark">Immer dunkel</string>
 
 </resources>

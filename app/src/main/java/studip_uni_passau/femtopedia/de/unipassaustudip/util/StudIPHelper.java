@@ -256,10 +256,11 @@ public class StudIPHelper {
         return getLuminance(color) > 128 ? Color.BLACK : Color.WHITE;
     }
 
-    public static int shadeColor(int color, double shadeFactor) {
-        return Color.rgb((int) (Color.red(color) * shadeFactor),
-                (int) (Color.green(color) * shadeFactor),
-                (int) (Color.blue(color) * shadeFactor));
+    public static int transpColor(int transparency, int color) {
+        return Color.argb(transparency,
+                Color.red(color),
+                Color.green(color),
+                Color.blue(color));
     }
 
     public interface ProfilePicHolder {

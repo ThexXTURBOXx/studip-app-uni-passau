@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:checkableBehavior="single"
     tools:showIn="navigation_view">
 
     <item
         android:id="@+id/nav_schedule"
+        android:checkable="true"
         android:icon="@drawable/ic_event_note"
         android:title="@string/pref_title_schedule_subscreen" />
 
     <item
         android:id="@+id/nav_mensa"
+        android:checkable="true"
         android:icon="@drawable/ic_restaurant"
         android:title="@string/pref_title_mensa_subscreen" />
 
@@ -33,6 +36,7 @@
                 android:title="@string/button_share" />
             <item
                 android:id="@+id/nav_about"
+                android:checkable="true"
                 android:icon="@drawable/ic_info_outline"
                 android:title="@string/button_about" />
         </menu>

@@ -5,4 +5,5 @@
     android:contentDescription="@string/action_refresh"
     android:paddingLeft="12dp"
     android:paddingRight="12dp"
-    android:src="@drawable/ic_sync_white" />
+    android:src="@drawable/ic_sync"
+    android:tint="@color/colorAppBarCompl" />

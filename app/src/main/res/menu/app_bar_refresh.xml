@@ -4,8 +4,9 @@
 
     <item
         android:id="@+id/action_refresh_bar"
-        android:icon="@drawable/ic_sync_white"
+        android:icon="@drawable/ic_sync"
         android:title="@string/action_refresh"
+        app:iconTint="@color/colorAppBarCompl"
         app:showAsAction="ifRoom" />
 
 </menu>

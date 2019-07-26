@@ -39,7 +39,7 @@ public class AboutActivity extends AppCompatActivity
 
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.getMenu().getItem(2).getSubMenu().getItem(3).setChecked(true);
+        navigationView.getMenu().findItem(R.id.nav_about).setChecked(true);
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(StudIPHelper.current_user.getName().getFormatted());
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(StudIPHelper.current_user.getUsername());
         if (StudIPHelper.profile_pic != null)

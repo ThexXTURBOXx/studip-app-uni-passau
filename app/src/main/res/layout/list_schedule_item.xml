@@ -14,6 +14,7 @@
         android:paddingEnd="?android:attr/expandableListPreferredChildPaddingLeft"
         android:paddingRight="?android:attr/expandableListPreferredChildPaddingLeft"
         android:paddingBottom="5dp"
+        android:textColor="@color/colorTextSecondary"
         android:textSize="17sp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

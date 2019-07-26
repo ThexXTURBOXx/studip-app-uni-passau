@@ -2,7 +2,9 @@ package studip_uni_passau.femtopedia.de.unipassaustudip;
 
 import android.app.Activity;
 import android.content.Context;
+import android.preference.PreferenceManager;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.multidex.MultiDexApplication;
 
 import org.acra.ACRA;
@@ -20,6 +22,14 @@ public class StudIPApp extends MultiDexApplication {
 
     private Activity currentActivity = null;
     private Activity currentTopActivity = null;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        AppCompatDelegate.setDefaultNightMode(
+                Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                        .getString("theme_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM + "")));
+    }
 
     public Activity getCurrentActivity() {
         return this.currentActivity;

@@ -21,6 +21,8 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_schedule"
+        app:itemIconTint="@drawable/drawer_color"
+        app:itemTextColor="@drawable/drawer_color"
         app:menu="@menu/schedule_drawer" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -1,18 +1,40 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceScreen
-        app:icon="@drawable/ic_sync"
-        app:key="data_sync_subscreen"
+        app:icon="@drawable/ic_tune"
+        app:iconTint="@color/colorCompl"
+        app:key="data_general_subscreen"
         app:persistent="false"
-        app:summary="@string/pref_desc_data_sync_subscreen"
-        app:title="@string/pref_title_data_sync_subscreen">
+        app:summary="@string/pref_desc_general_subscreen"
+        app:title="@string/pref_title_general_subscreen">
 
-        <SwitchPreferenceCompat
-            app:defaultValue="true"
+        <PreferenceCategory
             app:iconSpaceReserved="false"
-            app:key="auto_sync"
-            app:summary="@string/pref_desc_auto_sync"
-            app:title="@string/pref_title_auto_sync" />
+            app:title="@string/pref_cat_general">
+
+            <ListPreference
+                app:defaultValue="-1"
+                app:entries="@array/theme_mode_entries"
+                app:entryValues="@array/theme_mode_data"
+                app:iconSpaceReserved="false"
+                app:key="theme_mode"
+                app:summary="@string/pref_desc_theme_mode"
+                app:title="@string/pref_title_theme_mode" />
+
+        </PreferenceCategory>
+
+        <PreferenceCategory
+            app:iconSpaceReserved="false"
+            app:title="@string/pref_cat_data_sync">
+
+            <SwitchPreferenceCompat
+                app:defaultValue="true"
+                app:iconSpaceReserved="false"
+                app:key="auto_sync"
+                app:summary="@string/pref_desc_auto_sync"
+                app:title="@string/pref_title_auto_sync" />
+
+        </PreferenceCategory>
 
     </PreferenceScreen>
 

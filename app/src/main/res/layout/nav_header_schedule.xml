@@ -23,12 +23,14 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:text="@string/studip_user_format"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/colorTextPrimary" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/usernameel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/studip_username" />
+        android:text="@string/studip_username"
+        android:textColor="@color/colorTextSecondary" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

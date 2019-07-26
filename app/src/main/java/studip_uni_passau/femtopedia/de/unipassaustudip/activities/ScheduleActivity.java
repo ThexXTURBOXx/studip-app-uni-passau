@@ -1,7 +1,6 @@
 package studip_uni_passau.femtopedia.de.unipassaustudip.activities;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +17,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -93,7 +93,7 @@ public class ScheduleActivity extends AppCompatActivity
 
             @Override
             public void decorate(DayViewFacade view) {
-                view.addSpan(new ForegroundColorSpan(Color.LTGRAY));
+                view.addSpan(new ForegroundColorSpan(ContextCompat.getColor(ScheduleActivity.this, R.color.colorDark)));
             }
         });
 
@@ -112,7 +112,7 @@ public class ScheduleActivity extends AppCompatActivity
 
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.getMenu().getItem(0).setChecked(true);
+        navigationView.getMenu().findItem(R.id.nav_schedule).setChecked(true);
 
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(StudIPHelper.current_user.getName().getFormatted());
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(StudIPHelper.current_user.getUsername());
@@ -281,8 +281,8 @@ public class ScheduleActivity extends AppCompatActivity
             DateTime end = new DateTime(se.end).withZone(StudIPHelper.ZONE);
             String startStr = String.format(Locale.GERMANY, "%02d", start.getHourOfDay()) + ":" + String.format(Locale.GERMANY, "%02d", start.getMinuteOfHour());
             String endStr = String.format(Locale.GERMANY, "%02d", end.getHourOfDay()) + ":" + String.format(Locale.GERMANY, "%02d", end.getMinuteOfHour());
-            int color = StudIPHelper.shadeColor(se.color, PreferenceManager.getDefaultSharedPreferences(this)
-                    .getInt("shade_factor_schedule", 50) / 100f);
+            int color = StudIPHelper.transpColor((int) (PreferenceManager.getDefaultSharedPreferences(this)
+                    .getInt("shade_factor_schedule", 50) * 2.55f), se.color);
             addScheduleItem(startStr, endStr, se.title, se.room, se.categories, se.description, StudIPHelper.contraColor(color), color);
         }
     }

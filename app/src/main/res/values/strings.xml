@@ -12,7 +12,7 @@
     <string name="cat_misc">Miscellaneous</string>
     <string name="button_bugreport">Report a bug</string>
     <string name="title_activity_settings">StudiPassau Settings</string>
-    <string name="pref_title_data_sync_subscreen">Synchronization</string>
+    <string name="pref_cat_data_sync">Synchronization</string>
     <string name="today">Today</string>
     <string name="monday">Monday</string>
     <string name="tuesday">Tuesday</string>
@@ -56,9 +56,14 @@
     <string name="send_mail">Send Email&#8230;</string>
     <string name="source">View Source on GitHub</string>
     <string name="unknown">Unknown</string>
+    <string name="pref_desc_general_subscreen">The App\'s general behavior</string>
+    <string name="pref_title_general_subscreen">General</string>
+    <string name="pref_cat_general">General</string>
     <string name="pref_cat_colors">Colors</string>
     <string name="pref_title_auto_sync">Auto Sync</string>
     <string name="pref_desc_auto_sync">Automatically synchronizes, when you open a supported activity</string>
+    <string name="pref_title_theme_mode">Theme Mode</string>
+    <string name="pref_desc_theme_mode">Sets, whether and when to use the Dark/Light mode (requires restart)</string>
     <string name="pref_title_sep_mensa_color">Food Separator Color</string>
     <string name="pref_desc_sep_mensa_color">The background color of the Food Category Separators</string>
     <string name="pref_title_soup_mensa_color">Soups Color</string>
@@ -83,7 +88,6 @@
     <string name="login_warning_normal">A Browser should be open right now. If it\'s not, please consult me:\n\nstudipapp@femtopedia.de</string>
     <string name="login_warning_no_internet">Please enable your internet connection and restart the app.</string>
     <string name="action_refresh">Refresh&#8230;</string>
-    <string name="pref_desc_data_sync_subscreen">Change the sync behavior of the App</string>
     <string name="pref_desc_mensa_subscreen">Customize the Mensa section</string>
     <string name="pref_desc_schedule_subscreen">Customize the Schedule section</string>
     <string name="cat_tools">Other Useful Tools</string>
@@ -92,11 +96,15 @@
     <string name="button_cancel">Cancel</string>
     <string name="dialog_telegram_desc">The bot is developed and maintained by another person. Please contact its developer for help on any issues!</string>
     <string name="dialog_telegram_title">Telegram Bot</string>
-    <string name="pref_desc_shade_factor_schedule">Sets the brightness and saturation of the scheduled event cards (0: Black, 100: Full Color)</string>
-    <string name="pref_title_shade_factor_schedule">Shade Factor</string>
+    <string name="pref_desc_shade_factor_schedule">Sets the transparency of the scheduled event cards</string>
+    <string name="pref_title_shade_factor_schedule">Transparency</string>
     <string name="button_share">Share&#8230;</string>
     <string name="share_subject">StudiPassau App</string>
     <string name="share_body">Hey, check this out! There is an app called \"StudiPassau\", which helps you manage your lectures easier:\nhttp://femtopedia.de/studip/index.php</string>
     <string name="share_via">Share via&#8230;</string>
+    <string name="theme_mode_follow">Use system default</string>
+    <string name="theme_mode_battery">Set by Battery Saver</string>
+    <string name="theme_mode_light">Always Light</string>
+    <string name="theme_mode_dark">Always Dark</string>
 
 </resources>
