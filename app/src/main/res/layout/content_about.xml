@@ -36,7 +36,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nico_image" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <androidx.appcompat.widget.TintAppCompatButton
         android:id="@+id/button_email_me"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -52,11 +52,12 @@
         android:textColor="@color/colorTextPrimary"
         app:drawableStartCompat="@drawable/ic_mail_outline"
         app:drawableTint="@color/colorTextPrimary"
+        app:drawableTintCompat="@color/colorTextPrimary"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/about_text" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <androidx.appcompat.widget.TintAppCompatButton
         android:id="@+id/button_source"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -72,11 +73,12 @@
         android:textColor="@color/colorTextPrimary"
         app:drawableStartCompat="@drawable/ic_github"
         app:drawableTint="@color/colorTextPrimary"
+        app:drawableTintCompat="@color/colorTextPrimary"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/button_email_me" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <androidx.appcompat.widget.TintAppCompatButton
         android:id="@+id/button_credits"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -92,6 +94,7 @@
         android:textColor="@color/colorTextPrimary"
         app:drawableStartCompat="@drawable/ic_library_books"
         app:drawableTint="@color/colorTextPrimary"
+        app:drawableTintCompat="@color/colorTextPrimary"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/button_source" />
