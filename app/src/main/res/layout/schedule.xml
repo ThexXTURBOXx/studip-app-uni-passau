@@ -23,6 +23,6 @@
         app:headerLayout="@layout/nav_header_schedule"
         app:itemIconTint="@drawable/drawer_color"
         app:itemTextColor="@drawable/drawer_color"
-        app:menu="@menu/schedule_drawer" />
+        app:menu="@menu/nav_drawer" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

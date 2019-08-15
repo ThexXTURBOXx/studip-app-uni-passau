@@ -61,7 +61,7 @@ import studip_uni_passau.femtopedia.de.unipassaustudip.util.StudIPHelper;
 
 public class ScheduleActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, StudIPHelper.ProfilePicHolder,
-        OnDateSelectedListener {
+        OnDateSelectedListener, StudIPHelper.NavigationDrawerActivity {
 
     private ListScheduleAdapter listAdapter;
     private List<Object> listDataHeader;
@@ -129,7 +129,7 @@ public class ScheduleActivity extends AppCompatActivity
 
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.getMenu().findItem(R.id.nav_schedule).setChecked(true);
+        setActive();
 
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(StudIPHelper.current_user.getName().getFormatted());
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(StudIPHelper.current_user.getUsername());
@@ -146,6 +146,12 @@ public class ScheduleActivity extends AppCompatActivity
             actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
             drawerToggle.syncState();
         }
+    }
+
+    @Override
+    public void setActive() {
+        if (navigationView != null)
+            navigationView.getMenu().findItem(R.id.nav_schedule).setChecked(true);
     }
 
     private void enableDays() {

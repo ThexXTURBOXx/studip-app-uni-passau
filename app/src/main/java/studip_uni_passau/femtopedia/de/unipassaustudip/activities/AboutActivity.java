@@ -27,7 +27,8 @@ import studip_uni_passau.femtopedia.de.unipassaustudip.StudIPApp;
 import studip_uni_passau.femtopedia.de.unipassaustudip.util.StudIPHelper;
 
 public class AboutActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, StudIPHelper.ProfilePicHolder {
+        implements NavigationView.OnNavigationItemSelectedListener, StudIPHelper.ProfilePicHolder,
+        StudIPHelper.NavigationDrawerActivity {
 
     private NavigationView navigationView;
 
@@ -39,7 +40,7 @@ public class AboutActivity extends AppCompatActivity
 
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.getMenu().findItem(R.id.nav_about).setChecked(true);
+        setActive();
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(StudIPHelper.current_user.getName().getFormatted());
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(StudIPHelper.current_user.getUsername());
         if (StudIPHelper.profile_pic != null)
@@ -75,6 +76,12 @@ public class AboutActivity extends AppCompatActivity
             actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
             drawerToggle.syncState();
         }
+    }
+
+    @Override
+    public void setActive() {
+        if (navigationView != null)
+            navigationView.getMenu().findItem(R.id.nav_about).setChecked(true);
     }
 
     public void setProfilePic() {

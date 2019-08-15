@@ -13,6 +13,7 @@ import android.net.Uri;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -265,6 +266,10 @@ public class StudIPHelper {
 
     public interface ProfilePicHolder {
         void setProfilePic();
+    }
+
+    public interface NavigationDrawerActivity {
+        void setActive();
     }
 
 }

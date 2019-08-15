@@ -53,7 +53,8 @@ import studip_uni_passau.femtopedia.de.unipassaustudip.util.ExpandableListAdapte
 import studip_uni_passau.femtopedia.de.unipassaustudip.util.StudIPHelper;
 
 public class MensaActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, StudIPHelper.ProfilePicHolder {
+        implements NavigationView.OnNavigationItemSelectedListener, StudIPHelper.ProfilePicHolder,
+        StudIPHelper.NavigationDrawerActivity {
 
     private static final LocalDateTime JAN_1_1970 = new LocalDateTime(1970, 1, 1, 0, 0);
     public static String mensaUrl = "https://www.stwno.de/infomax/daten-extern/csv/UNI-P/";
@@ -98,7 +99,7 @@ public class MensaActivity extends AppCompatActivity
 
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.getMenu().findItem(R.id.nav_mensa).setChecked(true);
+        setActive();
 
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(StudIPHelper.current_user.getName().getFormatted());
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(StudIPHelper.current_user.getUsername());
@@ -115,6 +116,12 @@ public class MensaActivity extends AppCompatActivity
             actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
             drawerToggle.syncState();
         }
+    }
+
+    @Override
+    public void setActive() {
+        if (navigationView != null)
+            navigationView.getMenu().findItem(R.id.nav_mensa).setChecked(true);
     }
 
     private long getMillis(DateTime dt) {

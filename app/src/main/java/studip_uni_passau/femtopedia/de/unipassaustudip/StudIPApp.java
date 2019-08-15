@@ -12,6 +12,8 @@ import org.acra.annotation.AcraCore;
 import org.acra.annotation.AcraDialog;
 import org.acra.annotation.AcraMailSender;
 
+import studip_uni_passau.femtopedia.de.unipassaustudip.util.StudIPHelper;
+
 @AcraCore(buildConfigClass = BuildConfig.class)
 @AcraMailSender(mailTo = "studipapp@femtopedia.de",
         resSubject = R.string.crash_subject,
@@ -44,6 +46,9 @@ public class StudIPApp extends MultiDexApplication {
             this.currentTopActivity = null;
         }
         this.currentActivity = currentActivity;
+        if (this.currentActivity instanceof StudIPHelper.NavigationDrawerActivity) {
+            ((StudIPHelper.NavigationDrawerActivity) this.currentActivity).setActive();
+        }
     }
 
     public void setCurrentTopActivity(Activity currentTopActivity) {
@@ -51,6 +56,12 @@ public class StudIPApp extends MultiDexApplication {
             this.currentTopActivity.finish();
         }
         this.currentTopActivity = currentTopActivity;
+        if (this.currentActivity instanceof StudIPHelper.NavigationDrawerActivity) {
+            ((StudIPHelper.NavigationDrawerActivity) this.currentActivity).setActive();
+        }
+        if (this.currentTopActivity instanceof StudIPHelper.NavigationDrawerActivity) {
+            ((StudIPHelper.NavigationDrawerActivity) this.currentTopActivity).setActive();
+        }
     }
 
     @Override
