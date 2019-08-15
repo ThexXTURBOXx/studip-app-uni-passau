@@ -2,12 +2,14 @@ package studip_uni_passau.femtopedia.de.unipassaustudip.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.content.ContextCompat;
 
 import java.util.List;
 
@@ -97,8 +99,11 @@ public class ListScheduleAdapter extends BaseExpandableListAdapter {
 
                 int textColor = listDataColorsText.get(groupPosition);
 
+                float alpha = PreferenceManager.getDefaultSharedPreferences(context).getInt("shade_factor_schedule", 50) * 2.55f;
                 clock.setText(item.clock);
-                clock.setTextColor(StudIPHelper.getComplementaryColor(listDataColorsBg.get(groupPosition)));
+                clock.setTextColor(StudIPHelper.getComplementaryColor(
+                        StudIPHelper.resultingTranspColor(ContextCompat.getColor(context,
+                                R.color.colorBackground), listDataColorsBg.get(groupPosition), alpha)));
                 clock.setVisibility(View.VISIBLE);
 
                 room.setText(item.room);

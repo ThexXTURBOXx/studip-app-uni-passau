@@ -13,7 +13,6 @@ import android.net.Uri;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -262,6 +261,14 @@ public class StudIPHelper {
                 Color.red(color),
                 Color.green(color),
                 Color.blue(color));
+    }
+
+    public static int resultingTranspColor(int background, int overlay, float alpha) {
+        float opacity = alpha / 255f;
+        float compOpacity = 1f - opacity;
+        return Color.rgb((int) (Color.red(overlay) * opacity + Color.red(background) * compOpacity),
+                (int) (Color.green(overlay) * opacity + Color.green(background) * compOpacity),
+                (int) (Color.blue(overlay) * opacity + Color.blue(background) * compOpacity));
     }
 
     public interface ProfilePicHolder {

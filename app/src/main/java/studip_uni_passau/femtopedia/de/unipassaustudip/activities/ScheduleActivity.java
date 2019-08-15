@@ -34,6 +34,7 @@ import org.joda.time.Days;
 import org.threeten.bp.DayOfWeek;
 import org.threeten.bp.Instant;
 import org.threeten.bp.LocalDate;
+import org.threeten.bp.ZoneId;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -157,12 +158,13 @@ public class ScheduleActivity extends AppCompatActivity
     private void enableDays() {
         if (disableDayDecorator != null)
             calendarView.removeDecorator(disableDayDecorator);
-        List<CalendarDay> enabledDays = Arrays.asList(CalendarDay.today());
+        List<CalendarDay> enabledDays = new ArrayList<>();
+        enabledDays.add(CalendarDay.today());
         if (StudIPHelper.schedule != null) {
             for (List<ScheduledEvent> events : StudIPHelper.schedule.values()) {
                 if (events != null && !events.isEmpty()) {
                     enabledDays.add(CalendarDay.from(LocalDate.from(
-                            Instant.ofEpochMilli(events.get(0).start))));
+                            Instant.ofEpochMilli(events.get(0).start).atZone(ZoneId.systemDefault()))));
                 }
             }
         }
@@ -320,9 +322,11 @@ public class ScheduleActivity extends AppCompatActivity
             DateTime end = new DateTime(se.end).withZone(StudIPHelper.ZONE);
             String startStr = String.format(Locale.GERMANY, "%02d", start.getHourOfDay()) + ":" + String.format(Locale.GERMANY, "%02d", start.getMinuteOfHour());
             String endStr = String.format(Locale.GERMANY, "%02d", end.getHourOfDay()) + ":" + String.format(Locale.GERMANY, "%02d", end.getMinuteOfHour());
-            int color = StudIPHelper.transpColor((int) (PreferenceManager.getDefaultSharedPreferences(this)
-                    .getInt("shade_factor_schedule", 50) * 2.55f), se.color);
-            addScheduleItem(startStr, endStr, se.title, se.room, se.categories, se.description, StudIPHelper.contraColor(color), color);
+            float alpha = PreferenceManager.getDefaultSharedPreferences(this).getInt("shade_factor_schedule", 50) * 2.55f;
+            int color = StudIPHelper.transpColor((int) alpha, se.color);
+            addScheduleItem(startStr, endStr, se.title, se.room, se.categories, se.description,
+                    StudIPHelper.contraColor(StudIPHelper.resultingTranspColor(ContextCompat.getColor(this,
+                            R.color.colorBackground), color, alpha)), color);
         }
     }
 
