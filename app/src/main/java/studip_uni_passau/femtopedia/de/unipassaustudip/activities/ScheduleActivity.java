@@ -31,9 +31,12 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.threeten.bp.DayOfWeek;
+import org.threeten.bp.Instant;
 import org.threeten.bp.LocalDate;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -52,6 +55,7 @@ import studip_uni_passau.femtopedia.de.unipassaustudip.R;
 import studip_uni_passau.femtopedia.de.unipassaustudip.StudIPApp;
 import studip_uni_passau.femtopedia.de.unipassaustudip.api.ScheduledEvent;
 import studip_uni_passau.femtopedia.de.unipassaustudip.util.AnimatingRefreshButtonManager;
+import studip_uni_passau.femtopedia.de.unipassaustudip.util.DayFilterDecorator;
 import studip_uni_passau.femtopedia.de.unipassaustudip.util.ListScheduleAdapter;
 import studip_uni_passau.femtopedia.de.unipassaustudip.util.StudIPHelper;
 
@@ -67,6 +71,7 @@ public class ScheduleActivity extends AppCompatActivity
     private SwipeRefreshLayout swipeRefresher;
     private MaterialCalendarView calendarView;
     private AnimatingRefreshButtonManager refreshManager;
+    private DayViewDecorator disableDayDecorator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +89,16 @@ public class ScheduleActivity extends AppCompatActivity
         setContentView(R.layout.schedule);
 
         calendarView = findViewById(R.id.calendarView);
+        DayOfWeek dayOfWeek = DayOfWeek.from(calendarView.getCurrentDate().getDate());
+        try {
+            Field f = MaterialCalendarView.class.getDeclaredField("firstDayOfWeek");
+            f.setAccessible(true);
+            f.set(calendarView, DayOfWeek.from(CalendarDay.today().getDate()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (dayOfWeek != calendarView.getFirstDayOfWeek())
+            calendarView.goToNext();
         calendarView.setOnDateChangedListener(this);
         calendarView.addDecorator(new DayViewDecorator() {
             @Override
@@ -96,6 +111,8 @@ public class ScheduleActivity extends AppCompatActivity
                 view.addSpan(new ForegroundColorSpan(ContextCompat.getColor(ScheduleActivity.this, R.color.colorDark)));
             }
         });
+        calendarView.setShowOtherDates(MaterialCalendarView.SHOW_NONE);
+        enableDays();
 
         swipeRefresher = findViewById(R.id.swiperefresh_schedule);
         swipeRefresher.setOnRefreshListener(this::updateData);
@@ -129,6 +146,22 @@ public class ScheduleActivity extends AppCompatActivity
             actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
             drawerToggle.syncState();
         }
+    }
+
+    private void enableDays() {
+        if (disableDayDecorator != null)
+            calendarView.removeDecorator(disableDayDecorator);
+        List<CalendarDay> enabledDays = Arrays.asList(CalendarDay.today());
+        if (StudIPHelper.schedule != null) {
+            for (List<ScheduledEvent> events : StudIPHelper.schedule.values()) {
+                if (events != null && !events.isEmpty()) {
+                    enabledDays.add(CalendarDay.from(LocalDate.from(
+                            Instant.ofEpochMilli(events.get(0).start))));
+                }
+            }
+        }
+        disableDayDecorator = new DayFilterDecorator(enabledDays);
+        calendarView.addDecorator(disableDayDecorator);
     }
 
     public void selectDate(CalendarDay day) {
@@ -374,6 +407,7 @@ public class ScheduleActivity extends AppCompatActivity
         protected void onPostExecute(Void aVoid) {
             selectDate(calendarView.getSelectedDate());
             stopUpdateAnimation();
+            enableDays();
             super.onPostExecute(aVoid);
         }
     }

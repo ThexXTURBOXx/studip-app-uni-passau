@@ -18,7 +18,10 @@
         app:layout_constraintTop_toTopOf="parent"
         app:mcv_calendarMode="week"
         app:mcv_dateTextAppearance="@style/StudiPassauTheme.Calendar.Date"
+        app:mcv_firstDayOfWeek="monday"
         app:mcv_headerTextAppearance="@style/StudiPassauTheme.Calendar.Header"
+        app:mcv_leftArrow="@drawable/ic_keyboard_arrow_left_white"
+        app:mcv_rightArrow="@drawable/ic_keyboard_arrow_right_white"
         app:mcv_selectionColor="@color/colorAccent"
         app:mcv_showOtherDates="all"
         app:mcv_weekDayTextAppearance="@style/StudiPassauTheme.Calendar.WeekDay" />

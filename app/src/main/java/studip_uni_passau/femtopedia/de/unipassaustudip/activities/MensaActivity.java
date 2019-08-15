@@ -359,46 +359,50 @@ public class MensaActivity extends AppCompatActivity
                     food = new MensaPlan.Food();
                     continue;
                 }
-                food = new MensaPlan.Food();
-                String[] cols = s.split(";");
-                food.name = cols[3];
-                food.properties = new ArrayList<>();
-                parseProperties(food, cols[4]);
                 try {
-                    food.price_stud = Double.parseDouble(cols[6].replace(",", "."));
-                    food.price_bed = Double.parseDouble(cols[7].replace(",", "."));
-                    food.price_guest = Double.parseDouble(cols[8].replace(",", "."));
-                } catch (NumberFormatException e) {
-                    food.name = food.name + "," + cols[4];
-                    food.properties.clear();
-                    parseProperties(food, cols[5]);
+                    food = new MensaPlan.Food();
+                    String[] cols = s.split(";");
+                    food.name = cols[3];
+                    food.properties = new ArrayList<>();
+                    parseProperties(food, cols[4]);
                     try {
-                        food.price_stud = Double.parseDouble(cols[7].replace(",", "."));
-                        food.price_bed = Double.parseDouble(cols[8].replace(",", "."));
-                        food.price_guest = Double.parseDouble(cols[9].replace(",", "."));
-                    } catch (NumberFormatException e1) {
-                        e1.printStackTrace();
-                        food.price_stud = 0;
-                        food.price_bed = 0;
-                        food.price_guest = 0;
+                        food.price_stud = Double.parseDouble(cols[6].replace(",", "."));
+                        food.price_bed = Double.parseDouble(cols[7].replace(",", "."));
+                        food.price_guest = Double.parseDouble(cols[8].replace(",", "."));
+                    } catch (NumberFormatException e) {
+                        food.name = food.name + "," + cols[4];
+                        food.properties.clear();
+                        parseProperties(food, cols[5]);
+                        try {
+                            food.price_stud = Double.parseDouble(cols[7].replace(",", "."));
+                            food.price_bed = Double.parseDouble(cols[8].replace(",", "."));
+                            food.price_guest = Double.parseDouble(cols[9].replace(",", "."));
+                        } catch (NumberFormatException e1) {
+                            e1.printStackTrace();
+                            food.price_stud = 0;
+                            food.price_bed = 0;
+                            food.price_guest = 0;
+                        }
                     }
-                }
-                if (!cols[0].equals(time)) {
-                    if (!time.equals("")) {
-                        dt = formatter.parseDateTime(time).withZone(StudIPHelper.ZONE);
-                        dayMenus.put(getMillis(dt.withTime(0, 0, 0, 0)), menu);
-                        menu = new MensaPlan.DayMenu();
+                    if (!cols[0].equals(time)) {
+                        if (!time.equals("")) {
+                            dt = formatter.parseDateTime(time).withZone(StudIPHelper.ZONE);
+                            dayMenus.put(getMillis(dt.withTime(0, 0, 0, 0)), menu);
+                            menu = new MensaPlan.DayMenu();
+                        }
+                        time = cols[0];
                     }
-                    time = cols[0];
+                    if (cols[2].startsWith("Suppe"))
+                        menu.soups.add(food);
+                    else if (cols[2].startsWith("HG"))
+                        menu.mains.add(food);
+                    else if (cols[2].startsWith("B"))
+                        menu.garnishes.add(food);
+                    else if (cols[2].startsWith("N"))
+                        menu.desserts.add(food);
+                } catch (Throwable t) {
+                    t.printStackTrace();
                 }
-                if (cols[2].startsWith("Suppe"))
-                    menu.soups.add(food);
-                else if (cols[2].startsWith("HG"))
-                    menu.mains.add(food);
-                else if (cols[2].startsWith("B"))
-                    menu.garnishes.add(food);
-                else if (cols[2].startsWith("N"))
-                    menu.desserts.add(food);
             }
             if (!time.equals("")) {
                 dt = formatter.parseDateTime(time).withZone(StudIPHelper.ZONE);
