@@ -58,6 +58,48 @@
         app:layout_constraintTop_toBottomOf="@+id/about_text" />
 
     <androidx.appcompat.widget.TintAppCompatButton
+        android:id="@+id/button_news"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:drawablePadding="10dp"
+        android:gravity="start|center_vertical"
+        android:text="@string/news"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="@color/colorTextPrimary"
+        app:drawableStartCompat="@drawable/ic_update"
+        app:drawableTint="@color/colorTextPrimary"
+        app:drawableTintCompat="@color/colorTextPrimary"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/button_email_me" />
+
+    <androidx.appcompat.widget.TintAppCompatButton
+        android:id="@+id/button_translate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:drawablePadding="10dp"
+        android:gravity="start|center_vertical"
+        android:text="@string/translate"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="@color/colorTextPrimary"
+        app:drawableStartCompat="@drawable/ic_translate"
+        app:drawableTint="@color/colorTextPrimary"
+        app:drawableTintCompat="@color/colorTextPrimary"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/button_news" />
+
+    <androidx.appcompat.widget.TintAppCompatButton
         android:id="@+id/button_source"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -76,7 +118,7 @@
         app:drawableTintCompat="@color/colorTextPrimary"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@+id/button_email_me" />
+        app:layout_constraintTop_toBottomOf="@+id/button_translate" />
 
     <androidx.appcompat.widget.TintAppCompatButton
         android:id="@+id/button_credits"
