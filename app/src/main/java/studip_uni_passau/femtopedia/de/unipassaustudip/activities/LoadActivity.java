@@ -20,9 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
-import com.github.javiersantos.appupdater.AppUpdater;
-import com.github.javiersantos.appupdater.enums.UpdateFrom;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,7 +42,6 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
     private VerifyTask verifyTask = null;
     private View mProgressView;
     private TextView loadingStatus;
-    private boolean loggedIn = false, checkedForUpdates = false;
     private String oAuthVerifier = null;
     private File oAuthDataFile;
 
@@ -58,15 +54,6 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
             getSupportActionBar().setTitle(R.string.load_activity_name);
 
         setContentView(R.layout.activity_load);
-
-        AppUpdater updater = new AppUpdater(this)
-                .setUpdateFrom(UpdateFrom.JSON)
-                .setUpdateJSON("http://femtopedia.de/studip/version.json")
-                .setOnFinish((v, i) -> {
-                    checkedForUpdates = true;
-                    tryIntentChange();
-                });
-        updater.start();
 
         //Delete Legacy Data
         File cookieDir = new File(getApplicationContext().getFilesDir(), "/cookies");
@@ -141,23 +128,21 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
     }
 
-    private void tryIntentChange() {
-        if (loggedIn && checkedForUpdates) {
-            Intent intent;
-            if (StudIPHelper.target != null) {
-                switch (StudIPHelper.target) {
-                    case "mensa":
-                        intent = new Intent(LoadActivity.this, MensaActivity.class);
-                        break;
-                    default:
-                        intent = new Intent(LoadActivity.this, ScheduleActivity.class);
-                        break;
-                }
-            } else {
-                intent = new Intent(LoadActivity.this, ScheduleActivity.class);
+    private void proceed() {
+        Intent intent;
+        if (StudIPHelper.target != null) {
+            switch (StudIPHelper.target) {
+                case "mensa":
+                    intent = new Intent(LoadActivity.this, MensaActivity.class);
+                    break;
+                default:
+                    intent = new Intent(LoadActivity.this, ScheduleActivity.class);
+                    break;
             }
-            startActivity(intent);
+        } else {
+            intent = new Intent(LoadActivity.this, ScheduleActivity.class);
         }
+        startActivity(intent);
     }
 
 
@@ -293,8 +278,7 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
                 }
                 CacheCurrentUserPic pic = new CacheCurrentUserPic(false);
                 pic.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, StudIPHelper.current_user.getAvatar_original());
-                loggedIn = true;
-                tryIntentChange();
+                proceed();
             }
             super.onPostExecute(user);
         }
