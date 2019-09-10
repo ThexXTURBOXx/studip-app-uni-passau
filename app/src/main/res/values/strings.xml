@@ -108,7 +108,7 @@
     <string name="theme_mode_dark">Always Dark</string>
     <string name="news">What\'s new?</string>
     <string name="dialog_news_title">What\'s new?</string>
-    <string name="dialog_news_desc">What\'s new in this update:\n- This dialog is new\n- Added Dark and Light Mode\n- The Schedule got a big overhaul and rewrite and now has a completely new look\n- Fixed About Screen\n- Added Translate button\n- Added Share button\n- Added more animations\n- Fixed more Mensa plan errors\n- Fixed some colors\n- Fixed Navigation Drawer Hierarchy\n\nWhat\'s planned for the next update:\n- Rewrite and overhaul of the Mensa plan (If you have any desires: Write me an email with pictures, text or so on)\n- Include credits in app\n- Maybe add Horizontal scroll to Schedule?\n- Switch to OpenMensa API\n- Add Crosslink to iMensa App</string>
+    <string name="dialog_news_desc">What\'s new in this update:\n- This dialog is new\n- Added Dark and Light Mode\n- The Schedule got a big overhaul and rewrite and now has a completely new look\n- Fixed About Screen\n- Added Translate button\n- Added Share button\n- Added more animations\n- Fixed more Mensa plan errors\n- Fixed some colors\n- Fixed Navigation Drawer Hierarchy\n- Big size optimizations\n\nWhat\'s planned for the next update:\n- Rewrite and overhaul of the Mensa plan (If you have any desires: Write me an email with pictures, text or so on)\n- Include credits in app\n- Maybe add Horizontal scroll to Schedule?\n- Switch to OpenMensa API\n- Add Crosslink to iMensa App</string>
     <string name="translate">Help with translation</string>
 
 </resources>
