@@ -311,6 +311,8 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
                 Intent intent = new Intent(((StudIPApp) getApplication()).getCurrentActivity(),
                         LoadActivity.class);
                 startActivity(intent);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Error fetching Profile Picture...");
             } finally {
                 try {
                     if (response != null)

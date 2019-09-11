@@ -30,8 +30,8 @@ android {
         applicationId 'studip_uni_passau.femtopedia.de.unipassaustudip'
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 10
-        versionName '0.3'
+        versionCode 11
+        versionName '0.3.1'
         buildConfigString 'CONSUMER_KEY', (buildProperties.secrets['consumer_key'] | buildProperties.debug['consumer_key']).string
         buildConfigString 'CONSUMER_KEY_SECRET', (buildProperties.secrets['consumer_key_secret'] | buildProperties.debug['consumer_key_secret']).string
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
@@ -40,8 +40,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

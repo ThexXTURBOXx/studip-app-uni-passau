@@ -281,7 +281,7 @@ public class ScheduleActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.app_bar_refresh, menu);
         refreshManager = new AnimatingRefreshButtonManager(this, menu.findItem(R.id.action_refresh_bar));
-        if (swipeRefresher.isRefreshing())
+        if (swipeRefresher != null && swipeRefresher.isRefreshing())
             refreshManager.onRefreshBeginning();
         else
             refreshManager.onRefreshComplete();
