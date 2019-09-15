@@ -31,13 +31,11 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
-import org.threeten.bp.DayOfWeek;
 import org.threeten.bp.Instant;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.ZoneId;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -90,16 +88,6 @@ public class ScheduleActivity extends AppCompatActivity
         setContentView(R.layout.schedule);
 
         calendarView = findViewById(R.id.calendarView);
-        DayOfWeek dayOfWeek = DayOfWeek.from(calendarView.getCurrentDate().getDate());
-        try {
-            Field f = MaterialCalendarView.class.getDeclaredField("firstDayOfWeek");
-            f.setAccessible(true);
-            f.set(calendarView, DayOfWeek.from(CalendarDay.today().getDate()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (dayOfWeek != calendarView.getFirstDayOfWeek())
-            calendarView.goToNext();
         calendarView.setOnDateChangedListener(this);
         calendarView.addDecorator(new DayViewDecorator() {
             @Override
@@ -113,6 +101,10 @@ public class ScheduleActivity extends AppCompatActivity
             }
         });
         calendarView.setShowOtherDates(MaterialCalendarView.SHOW_NONE);
+        calendarView.state().edit()
+                .setMinimumDate(LocalDate.now())
+                .setMaximumDate(LocalDate.now().plusDays(21))
+                .commit();
         enableDays();
 
         swipeRefresher = findViewById(R.id.swiperefresh_schedule);
@@ -207,6 +199,8 @@ public class ScheduleActivity extends AppCompatActivity
             startUpdateAnimation();
             CacheSchedule schedule = new CacheSchedule();
             schedule.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            enableDays();
         }
     }
 
