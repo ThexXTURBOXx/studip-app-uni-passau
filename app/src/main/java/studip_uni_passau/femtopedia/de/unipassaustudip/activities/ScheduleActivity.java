@@ -160,7 +160,7 @@ public class ScheduleActivity extends AppCompatActivity
                 }
             }
         }
-        disableDayDecorator = new DayFilterDecorator(enabledDays);
+        disableDayDecorator = new DayFilterDecorator(this, enabledDays);
         calendarView.addDecorator(disableDayDecorator);
     }
 

@@ -12,4 +12,5 @@
     <color name="colorGradientCenter">#009688</color>
     <color name="colorGradientBottom">#00695C</color>
     <color name="colorAppBarCompl">#FFFFFF</color>
+    <color name="colorGrey">#777777</color>
 </resources>
