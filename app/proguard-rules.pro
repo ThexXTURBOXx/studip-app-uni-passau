@@ -19,3 +19,6 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep class de.femtopedia.studip.json.** { *; }
+-keep class studip_uni_passau.femtopedia.de.unipassaustudip.api.** { *; }
