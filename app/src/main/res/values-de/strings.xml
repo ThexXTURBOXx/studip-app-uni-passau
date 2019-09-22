@@ -102,9 +102,6 @@
     <string name="theme_mode_battery">Automatischer Batterieschoner</string>
     <string name="theme_mode_light">Immer hell</string>
     <string name="theme_mode_dark">Immer dunkel</string>
-    <string name="news">Was ist neu?</string>
-    <string name="dialog_news_title">Was ist neu?</string>
-    <string name="dialog_news_desc">Was in diesem Update neu ist:\n- Dieser Dialog ist neu\n- Dunkles und helles Thema hinzugefügt\n- Der Stundenplan hat einen komplett neuen Look\n- \"Über diese App\"-Fehler behoben\n- \"Übersetzen\"-Button hinzugefügt\n- \"Teilen\"-Button hinzugefügt\n- Mehr Animationen hinzugefügt\n- Noch mehr Mensaplan-Fehler behoben\n- Ein paar Farben verbessert\n- Navigationsmenü-Hierarchie repariert\n- Viele Speicheroptimierungen\n\nWas für das nächste Update geplant ist:\n- Mensaplan neu schreiben und neues Design erschaffen (bei Vorschlägen: Gerne eine Email schreiben, auch gerne mit Bild vom Vorschlag)\n- Quellen in der App hinzufügen\n- Eventuell horizontales Scrolling im Stundenplan hinzufügen?\n- Zu OpenMensa API umziehen\n- Crosslink zur iMensa App hinzufügen</string>
     <string name="translate">Helfe beim Übersetzen</string>
 
 </resources>

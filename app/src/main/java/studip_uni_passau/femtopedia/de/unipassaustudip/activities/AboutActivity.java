@@ -12,7 +12,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.Toolbar;
@@ -66,16 +65,6 @@ public class AboutActivity extends AppCompatActivity
         findViewById(R.id.button_credits).setOnClickListener((v) -> {
             Intent intent = new Intent("android.intent.action.VIEW", Uri.parse("https://github.com/ThexXTURBOXx/studip-app-uni-passau/blob/master/README.md#credits"));
             startActivity(intent);
-        });
-
-        findViewById(R.id.button_news).setOnClickListener((v) -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.dialog_news_desc)
-                    .setTitle(R.string.dialog_news_title)
-                    .setPositiveButton(R.string.button_okay, (dialog, id1) -> {
-                    });
-            AlertDialog dialog = builder.create();
-            dialog.show();
         });
 
         findViewById(R.id.button_translate).setOnClickListener((v) -> {
