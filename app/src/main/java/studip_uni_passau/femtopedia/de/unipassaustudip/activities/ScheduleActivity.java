@@ -103,7 +103,7 @@ public class ScheduleActivity extends AppCompatActivity
         calendarView.setShowOtherDates(MaterialCalendarView.SHOW_NONE);
         calendarView.state().edit()
                 .setMinimumDate(LocalDate.now())
-                .setMaximumDate(LocalDate.now().plusDays(21))
+                .setMaximumDate(LocalDate.now().plusDays(15))
                 .commit();
         enableDays();
 
