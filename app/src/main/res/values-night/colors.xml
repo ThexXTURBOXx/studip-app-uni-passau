@@ -8,4 +8,5 @@
     <color name="colorTextPrimary">#ffffff</color>
     <color name="colorTextSecondary">#c2c2c2</color>
     <color name="colorGrey">#888888</color>
+    <color name="colorBoxTransp">#424242</color>
 </resources>

@@ -99,11 +99,11 @@ public class ListScheduleAdapter extends BaseExpandableListAdapter {
 
                 int textColor = listDataColorsText.get(groupPosition);
 
-                float alpha = PreferenceManager.getDefaultSharedPreferences(context).getInt("shade_factor_schedule", 50) * 2.55f;
+                float alpha = PreferenceManager.getDefaultSharedPreferences(context).getInt("transp_factor_schedule", 80) * 2.55f;
                 clock.setText(item.clock);
                 clock.setTextColor(StudIPHelper.getComplementaryColor(
                         StudIPHelper.resultingTranspColor(ContextCompat.getColor(context,
-                                R.color.colorBackground), listDataColorsBg.get(groupPosition), alpha)));
+                                R.color.colorBoxTransp), listDataColorsBg.get(groupPosition), alpha)));
                 clock.setVisibility(View.VISIBLE);
 
                 room.setText(item.room);

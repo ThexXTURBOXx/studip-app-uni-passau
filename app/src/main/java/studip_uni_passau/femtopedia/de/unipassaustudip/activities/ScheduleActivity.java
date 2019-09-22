@@ -316,7 +316,7 @@ public class ScheduleActivity extends AppCompatActivity
             DateTime end = new DateTime(se.end).withZone(StudIPHelper.ZONE);
             String startStr = String.format(Locale.GERMANY, "%02d", start.getHourOfDay()) + ":" + String.format(Locale.GERMANY, "%02d", start.getMinuteOfHour());
             String endStr = String.format(Locale.GERMANY, "%02d", end.getHourOfDay()) + ":" + String.format(Locale.GERMANY, "%02d", end.getMinuteOfHour());
-            float alpha = PreferenceManager.getDefaultSharedPreferences(this).getInt("shade_factor_schedule", 50) * 2.55f;
+            float alpha = PreferenceManager.getDefaultSharedPreferences(this).getInt("transp_factor_schedule", 80) * 2.55f;
             int color = StudIPHelper.transpColor((int) alpha, se.color);
             addScheduleItem(startStr, endStr, se.title, se.room, se.categories, se.description,
                     StudIPHelper.contraColor(StudIPHelper.resultingTranspColor(ContextCompat.getColor(this,
