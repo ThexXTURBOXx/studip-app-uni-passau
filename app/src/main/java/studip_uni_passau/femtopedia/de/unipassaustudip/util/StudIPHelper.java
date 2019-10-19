@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.util.Base64;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
@@ -32,7 +33,6 @@ import java.util.Map;
 
 import de.femtopedia.studip.StudIPAPI;
 import de.femtopedia.studip.json.User;
-import studip_uni_passau.femtopedia.de.unipassaustudip.BuildConfig;
 import studip_uni_passau.femtopedia.de.unipassaustudip.R;
 import studip_uni_passau.femtopedia.de.unipassaustudip.StudIPApp;
 import studip_uni_passau.femtopedia.de.unipassaustudip.activities.AboutActivity;
@@ -41,6 +41,7 @@ import studip_uni_passau.femtopedia.de.unipassaustudip.activities.ScheduleActivi
 import studip_uni_passau.femtopedia.de.unipassaustudip.activities.SettingsActivity;
 import studip_uni_passau.femtopedia.de.unipassaustudip.api.MensaPlan;
 import studip_uni_passau.femtopedia.de.unipassaustudip.api.ScheduledEvent;
+import studip_uni_passau.femtopedia.de.unipassaustudip.natives.OAuthValues;
 
 /**
  * Created by Nico Mexis on 22.10.2018.
@@ -49,8 +50,8 @@ import studip_uni_passau.femtopedia.de.unipassaustudip.api.ScheduledEvent;
 public class StudIPHelper {
 
     public static final DateTimeZone ZONE = DateTimeZone.forID("Europe/Berlin");
-    private static final String CONSUMER_KEY = BuildConfig.CONSUMER_KEY;
-    private static final String CONSUMER_SECRET = BuildConfig.CONSUMER_KEY_SECRET;
+    private static final String CONSUMER_KEY = new String(Base64.decode(OAuthValues.getConsumerKey(), Base64.DEFAULT));
+    private static final String CONSUMER_SECRET = new String(Base64.decode(OAuthValues.getConsumerSecret(), Base64.DEFAULT));
     public static String target = null;
 
     public static StudIPAPI api = null;
