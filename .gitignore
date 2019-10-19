@@ -61,3 +61,5 @@ fastlane/readme.md
 app/release/
 
 secrets\.properties
+
+app/.cxx/
