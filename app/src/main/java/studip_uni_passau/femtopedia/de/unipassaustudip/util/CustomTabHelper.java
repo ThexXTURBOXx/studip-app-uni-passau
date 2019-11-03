@@ -115,6 +115,7 @@ public class CustomTabHelper {
         activity.unbindService(connection);
         client = null;
         customTabsSession = null;
+        connection = null;
     }
 
     private String getPackageNameToUse(Context context) {

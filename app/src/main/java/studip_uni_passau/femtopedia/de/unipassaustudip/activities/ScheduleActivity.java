@@ -105,7 +105,6 @@ public class ScheduleActivity extends AppCompatActivity
                 .setMinimumDate(LocalDate.now())
                 .setMaximumDate(LocalDate.now().plusDays(15))
                 .commit();
-        enableDays();
 
         swipeRefresher = findViewById(R.id.swiperefresh_schedule);
         swipeRefresher.setOnRefreshListener(this::updateData);
@@ -199,9 +198,8 @@ public class ScheduleActivity extends AppCompatActivity
             startUpdateAnimation();
             CacheSchedule schedule = new CacheSchedule();
             schedule.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            enableDays();
         }
+        enableDays();
     }
 
     private void updateData() {
@@ -216,7 +214,8 @@ public class ScheduleActivity extends AppCompatActivity
     }
 
     private void startUpdateAnimation() {
-        swipeRefresher.setRefreshing(true);
+        if (swipeRefresher != null)
+            swipeRefresher.setRefreshing(true);
         new Handler(Looper.getMainLooper()).post(() -> {
             if (refreshManager != null)
                 refreshManager.onRefreshBeginning();
@@ -224,7 +223,8 @@ public class ScheduleActivity extends AppCompatActivity
     }
 
     private void stopUpdateAnimation() {
-        swipeRefresher.setRefreshing(false);
+        if (swipeRefresher != null)
+            swipeRefresher.setRefreshing(false);
         if (refreshManager != null)
             refreshManager.onRefreshComplete();
     }

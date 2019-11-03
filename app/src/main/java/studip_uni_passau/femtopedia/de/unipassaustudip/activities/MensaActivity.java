@@ -153,7 +153,8 @@ public class MensaActivity extends AppCompatActivity
     }
 
     private void startUpdateAnimation() {
-        swipeRefresher.setRefreshing(true);
+        if (swipeRefresher != null)
+            swipeRefresher.setRefreshing(true);
         new Handler(Looper.getMainLooper()).post(() -> {
             if (refreshManager != null)
                 refreshManager.onRefreshBeginning();
@@ -161,7 +162,8 @@ public class MensaActivity extends AppCompatActivity
     }
 
     private void stopUpdateAnimation() {
-        swipeRefresher.setRefreshing(false);
+        if (swipeRefresher != null)
+            swipeRefresher.setRefreshing(false);
         if (refreshManager != null)
             refreshManager.onRefreshComplete();
     }
@@ -224,7 +226,7 @@ public class MensaActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.app_bar_refresh, menu);
         refreshManager = new AnimatingRefreshButtonManager(this, menu.findItem(R.id.action_refresh_bar));
-        if (swipeRefresher.isRefreshing())
+        if (swipeRefresher != null && swipeRefresher.isRefreshing())
             refreshManager.onRefreshBeginning();
         else
             refreshManager.onRefreshComplete();
