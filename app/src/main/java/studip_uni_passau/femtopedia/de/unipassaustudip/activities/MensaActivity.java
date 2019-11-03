@@ -93,7 +93,11 @@ public class MensaActivity extends AppCompatActivity
         expListView.setGroupIndicator(null);
 
         dateView = findViewById(R.id.dateView);
-        setDate(new DateTime().withTime(0, 0, 0, 0).withZone(StudIPHelper.ZONE));
+        DateTime now = new DateTime().withZone(StudIPHelper.ZONE);
+        if (now.getHourOfDay() >= PreferenceManager.getDefaultSharedPreferences(this)
+                .getInt("mensa_close_time", 15))
+            now = now.plusDays(1);
+        setDate(now.withTime(0, 0, 0, 0));
 
         updateDataFirst();
 
