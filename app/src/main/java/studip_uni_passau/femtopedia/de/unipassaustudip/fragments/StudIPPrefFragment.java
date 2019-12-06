@@ -2,6 +2,7 @@ package studip_uni_passau.femtopedia.de.unipassaustudip.fragments;
 
 import android.os.Bundle;
 
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -13,6 +14,8 @@ import com.rarepebble.colorpicker.ColorPreference;
 import com.rarepebble.colorpicker.ColorPreferenceFragment;
 
 import studip_uni_passau.femtopedia.de.unipassaustudip.R;
+import studip_uni_passau.femtopedia.de.unipassaustudip.preference.time.TimePreference;
+import studip_uni_passau.femtopedia.de.unipassaustudip.preference.time.TimePreferenceDialogFragmentCompat;
 
 public class StudIPPrefFragment extends PreferenceFragmentCompat implements
         PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
@@ -53,6 +56,13 @@ public class StudIPPrefFragment extends PreferenceFragmentCompat implements
             f.setTargetFragment(this, 0);
             if (getFragmentManager() != null) {
                 f.show(getFragmentManager(), TAG);
+            }
+        } else if (preference instanceof TimePreference) {
+            DialogFragment dialogFragment = TimePreferenceDialogFragmentCompat.newInstance(preference.getKey());
+            dialogFragment.setTargetFragment(this, 0);
+            if (this.getFragmentManager() != null) {
+                dialogFragment.show(this.getFragmentManager(), "android.support.v7.preference" +
+                        ".PreferenceFragment.DIALOG");
             }
         } else {
             super.onDisplayPreferenceDialog(preference);

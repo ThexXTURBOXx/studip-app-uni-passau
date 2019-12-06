@@ -87,6 +87,19 @@
 
         <PreferenceCategory
             app:iconSpaceReserved="false"
+            app:title="@string/pref_cat_general">
+
+            <studip_uni_passau.femtopedia.de.unipassaustudip.preference.time.TimePreference
+                app:defaultValue="900"
+                app:iconSpaceReserved="false"
+                app:key="mensa_closing_time"
+                app:summary="@string/pref_desc_close_mensa_color"
+                app:title="@string/pref_title_close_mensa_color" />
+
+        </PreferenceCategory>
+
+        <PreferenceCategory
+            app:iconSpaceReserved="false"
             app:title="@string/pref_cat_colors">
 
             <com.rarepebble.colorpicker.ColorPreference

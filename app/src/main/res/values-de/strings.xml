@@ -59,6 +59,8 @@
     <string name="pref_desc_auto_sync">Synchronisiert automatisch, wenn du den Stundenplan oder den Mensaplan aufrufst</string>
     <string name="pref_title_theme_mode">Thema</string>
     <string name="pref_desc_theme_mode">Speichert, ob und wann der dunkle/helle Modus verwendet werden soll (Benötigt Neustart)</string>
+    <string name="pref_title_close_mensa_color">Mensa Schließzeit</string>
+    <string name="pref_desc_close_mensa_color">Setzt den Zeitpunkt, ab dem der Mensaplan den nächsten Tag anzeigen soll</string>
     <string name="pref_title_sep_mensa_color">Mahlzeiten-Farbe</string>
     <string name="pref_desc_sep_mensa_color">Die Hintergrundfarbe der Mahlzeitkategorien</string>
     <string name="pref_title_soup_mensa_color">Suppen-Farbe</string>

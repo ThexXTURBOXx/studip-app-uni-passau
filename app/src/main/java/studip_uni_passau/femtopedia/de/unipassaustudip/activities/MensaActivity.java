@@ -94,8 +94,8 @@ public class MensaActivity extends AppCompatActivity
 
         dateView = findViewById(R.id.dateView);
         DateTime now = new DateTime().withZone(StudIPHelper.ZONE);
-        if (now.getHourOfDay() >= PreferenceManager.getDefaultSharedPreferences(this)
-                .getInt("mensa_close_time", 15))
+        if (now.getMinuteOfDay() >= PreferenceManager.getDefaultSharedPreferences(this)
+                .getInt("mensa_closing_time", 900))
             now = now.plusDays(1);
         setDate(now.withTime(0, 0, 0, 0));
 
