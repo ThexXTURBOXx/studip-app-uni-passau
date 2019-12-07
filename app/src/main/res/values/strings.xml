@@ -13,14 +13,6 @@
     <string name="button_bugreport">Report a bug</string>
     <string name="title_activity_settings">StudiPassau Settings</string>
     <string name="pref_cat_data_sync">Synchronization</string>
-    <string name="today">Today</string>
-    <string name="monday">Monday</string>
-    <string name="tuesday">Tuesday</string>
-    <string name="wednesday">Wednesday</string>
-    <string name="thursday">Thursday</string>
-    <string name="friday">Friday</string>
-    <string name="saturday">Saturday</string>
-    <string name="sunday">Sunday</string>
     <string name="pref_title_schedule_subscreen">Schedule</string>
     <string name="pref_title_mensa_subscreen">Mensa menu</string>
     <string name="title_activity_mensa">Mensa menu Uni Passau</string>
@@ -46,7 +38,6 @@
     <string name="students">Students</string>
     <string name="guests">Guests</string>
     <string name="servants">Servants</string>
-    <string name="tomorrow">Tomorrow</string>
     <string name="loading_user_data">Loading user data&#8230;</string>
     <string name="loading_user_pic">Loading profile picture&#8230;</string>
     <string name="open_in_browser">Open in Browser</string>

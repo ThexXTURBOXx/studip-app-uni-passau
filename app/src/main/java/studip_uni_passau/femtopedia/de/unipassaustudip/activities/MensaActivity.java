@@ -116,7 +116,7 @@ public class MensaActivity extends AppCompatActivity
                 .commit();
         if (PreferenceManager.getDefaultSharedPreferences(this)
                 .getBoolean("mensa_closing_time_active", true)) {
-            if (getMinuteOfDay(now) >= PreferenceManager.getDefaultSharedPreferences(this)
+            if (now.getHour() * 60 + now.getMinute() >= PreferenceManager.getDefaultSharedPreferences(this)
                     .getInt("mensa_closing_time", 900)) {
                 now = now.plusDays(1);
                 if (dateView.getFirstDayOfWeek().getValue() == now.getDayOfWeek().getValue()) {
@@ -147,10 +147,6 @@ public class MensaActivity extends AppCompatActivity
             actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
             drawerToggle.syncState();
         }
-    }
-
-    private int getMinuteOfDay(ZonedDateTime time) {
-        return time.getHour() * 60 + time.getMinute();
     }
 
     @Override

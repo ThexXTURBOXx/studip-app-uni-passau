@@ -10,14 +10,6 @@
     <string name="cat_misc">Verschiedenes</string>
     <string name="button_bugreport">Einen Fehler melden</string>
     <string name="title_activity_settings">StudiPassau Einstellungen</string>
-    <string name="today">Heute</string>
-    <string name="monday">Montag</string>
-    <string name="tuesday">Dienstag</string>
-    <string name="wednesday">Mittwoch</string>
-    <string name="thursday">Donnerstag</string>
-    <string name="friday">Freitag</string>
-    <string name="saturday">Samstag</string>
-    <string name="sunday">Sonntag</string>
     <string name="pref_title_schedule_subscreen">Stundenplan</string>
     <string name="pref_title_mensa_subscreen">Mensaplan</string>
     <string name="title_activity_mensa">Mensaplan Uni Passau</string>
@@ -43,7 +35,6 @@
     <string name="garnishes">Beilagen</string>
     <string name="mains">Hauptgerichte</string>
     <string name="soup">Suppen</string>
-    <string name="tomorrow">Morgen</string>
     <string name="loading_user_data">Lade Benutzerdaten&#8230;</string>
     <string name="loading_user_pic">Lade Profilbild&#8230;</string>
     <string name="open_in_browser">In Browser öffnen</string>
