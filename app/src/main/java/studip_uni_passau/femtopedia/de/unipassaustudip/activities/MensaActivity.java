@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
+import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
@@ -17,19 +17,23 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.navigation.NavigationView;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.DayViewDecorator;
+import com.prolificinteractive.materialcalendarview.DayViewFacade;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeConstants;
-import org.joda.time.Days;
-import org.joda.time.Duration;
-import org.joda.time.LocalDateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import org.threeten.bp.DayOfWeek;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
+import org.threeten.bp.temporal.WeekFields;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,16 +58,15 @@ import studip_uni_passau.femtopedia.de.unipassaustudip.util.StudIPHelper;
 
 public class MensaActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, StudIPHelper.ProfilePicHolder,
-        StudIPHelper.NavigationDrawerActivity {
+        StudIPHelper.NavigationDrawerActivity, OnDateSelectedListener {
 
-    private static final LocalDateTime JAN_1_1970 = new LocalDateTime(1970, 1, 1, 0, 0);
-    public static String mensaUrl = "https://www.stwno.de/infomax/daten-extern/csv/UNI-P/";
+    private static final DateTimeFormatter DATE_PATTERN = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    private static final String MENSA_URL = "https://www.stwno.de/infomax/daten-extern/csv/UNI-P/";
     private ExpandableListAdapter listAdapter;
     private List<Object> listDataHeader;
     private List<List<Object>> listDataChild;
     private List<Integer> listDataColorsBg, listDataColorsText;
-    private DateTime dateTime;
-    private TextView dateView;
+    private MaterialCalendarView dateView;
     private NavigationView navigationView;
     private SwipeRefreshLayout swipeRefresher;
     private AnimatingRefreshButtonManager refreshManager;
@@ -93,15 +96,31 @@ public class MensaActivity extends AppCompatActivity
         expListView.setGroupIndicator(null);
 
         dateView = findViewById(R.id.dateView);
-        DateTime now = new DateTime().withZone(StudIPHelper.ZONE);
-        if (androidx.preference.PreferenceManager.getDefaultSharedPreferences(this)
+        dateView.addDecorator(new DayViewDecorator() {
+            @Override
+            public boolean shouldDecorate(CalendarDay day) {
+                return day.equals(CalendarDay.today());
+            }
+
+            @Override
+            public void decorate(DayViewFacade view) {
+                view.addSpan(new ForegroundColorSpan(ContextCompat.getColor(MensaActivity.this, R.color.colorDark)));
+            }
+        });
+        dateView.setOnDateChangedListener(this);
+        dateView.state().edit()
+                .setMinimumDate(LocalDate.now().with(DayOfWeek.MONDAY))
+                .setMaximumDate(LocalDate.now().plusDays(7).with(DayOfWeek.SUNDAY))
+                .commit();
+        LocalDateTime now = LocalDateTime.now();
+        if (PreferenceManager.getDefaultSharedPreferences(this)
                 .getBoolean("mensa_closing_time_active", true)) {
-            if (now.getMinuteOfDay() >= PreferenceManager.getDefaultSharedPreferences(this)
+            if (getMinuteOfDay(now) >= PreferenceManager.getDefaultSharedPreferences(this)
                     .getInt("mensa_closing_time", 900)) {
                 now = now.plusDays(1);
             }
         }
-        setDate(now.withTime(0, 0, 0, 0));
+        setDate(CalendarDay.from(now.toLocalDate()));
 
         updateDataFirst();
 
@@ -126,14 +145,21 @@ public class MensaActivity extends AppCompatActivity
         }
     }
 
+    private int getMinuteOfDay(LocalDateTime time) {
+        return time.getHour() * 60 + time.getMinute();
+    }
+
     @Override
     public void setActive() {
         if (navigationView != null)
             navigationView.getMenu().findItem(R.id.nav_mensa).setChecked(true);
     }
 
-    private long getMillis(DateTime dt) {
-        return new Duration(JAN_1_1970.toDateTime(StudIPHelper.ZONE), dt.withZone(StudIPHelper.ZONE)).getMillis();
+    @Override
+    public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+        if (selected) {
+            setDate(date);
+        }
     }
 
     public void setProfilePic() {
@@ -176,15 +202,10 @@ public class MensaActivity extends AppCompatActivity
             refreshManager.onRefreshComplete();
     }
 
-    private void setDate(DateTime dt) {
-        int days = Days.daysBetween(new DateTime().withDayOfWeek(DateTimeConstants.MONDAY)
-                .withZone(StudIPHelper.ZONE).toLocalDate(), dt.withZone(StudIPHelper.ZONE).toLocalDate()).getDays();
-        if (days < 14 && days >= 0) {
-            this.dateTime = dt.withTime(0, 0, 0, 0).withZone(StudIPHelper.ZONE);
-            dateView.setText(getDateString(this.dateTime));
-            clearListItems();
-            setToView(dateTime);
-        }
+    private void setDate(CalendarDay calendarDay) {
+        dateView.setSelectedDate(calendarDay);
+        clearListItems();
+        setToView(calendarDay);
     }
 
     private void prepareListData() {
@@ -220,14 +241,6 @@ public class MensaActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-    }
-
-    public void onClickButtonDatePrev(View v) {
-        setDate(dateTime.minusDays(1));
-    }
-
-    public void onClickButtonDateNext(View v) {
-        setDate(dateTime.plusDays(1));
     }
 
     @Override
@@ -266,10 +279,10 @@ public class MensaActivity extends AppCompatActivity
         return true;
     }
 
-    private void setToView(DateTime dt) {
+    private void setToView(CalendarDay dt) {
         if (StudIPHelper.mensaPlan == null)
             return;
-        MensaPlan.DayMenu menu = StudIPHelper.mensaPlan.menu.get(getMillis(dt));
+        MensaPlan.DayMenu menu = StudIPHelper.mensaPlan.menu.get(dt.getDate().toEpochDay());
         if (menu != null) {
             int separatorColor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getInt("separator_mensa_color", 0xFF000000);
             int separatorColorCon = StudIPHelper.contraColor(separatorColor);
@@ -321,44 +334,8 @@ public class MensaActivity extends AppCompatActivity
         addListItem(f.name, info, colorBg, colorText);
     }
 
-    private String getDateString(DateTime time) {
-        int day = time.getDayOfWeek();
-        int rr = Days.daysBetween(new DateTime().withZone(StudIPHelper.ZONE).toLocalDate(),
-                time.toLocalDate()).getDays();
-        StringBuilder sb = new StringBuilder();
-        if (rr == 0)
-            sb = sb.append(getString(R.string.today)).append(", ");
-        else if (rr == 1)
-            sb = sb.append(getString(R.string.tomorrow)).append(", ");
-        switch (day) {
-            case 1:
-                sb = sb.append(getString(R.string.monday));
-                break;
-            case 2:
-                sb = sb.append(getString(R.string.tuesday));
-                break;
-            case 3:
-                sb = sb.append(getString(R.string.wednesday));
-                break;
-            case 4:
-                sb = sb.append(getString(R.string.thursday));
-                break;
-            case 5:
-                sb = sb.append(getString(R.string.friday));
-                break;
-            case 6:
-                sb = sb.append(getString(R.string.saturday));
-                break;
-            case 7:
-                sb = sb.append(getString(R.string.sunday));
-                break;
-        }
-        return sb.append(", ").append(time.getDayOfMonth()).append(".").append(time.getMonthOfYear()).append(".").append(time.getYear()).toString();
-    }
-
     @SuppressWarnings({"useSparseArrays", "StringContatenationInLoop"})
     public Map<Long, MensaPlan.DayMenu> parseMensaPlan(CustomAccessHttpResponse csv) {
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd.MM.yyyy");
         Map<Long, MensaPlan.DayMenu> dayMenus = new HashMap<>();
         InputStream content = null;
         try {
@@ -370,7 +347,7 @@ public class MensaActivity extends AppCompatActivity
             MensaPlan.Food food = null;
             MensaPlan.DayMenu menu = new MensaPlan.DayMenu();
             String time = "";
-            DateTime dt;
+            CalendarDay dt;
             for (String s : OAuthClient.readLines(content, "Cp1252")) {
                 if (food == null) {
                     food = new MensaPlan.Food();
@@ -403,8 +380,8 @@ public class MensaActivity extends AppCompatActivity
                     }
                     if (!cols[0].equals(time)) {
                         if (!time.equals("")) {
-                            dt = formatter.parseDateTime(time).withZone(StudIPHelper.ZONE);
-                            dayMenus.put(getMillis(dt.withTime(0, 0, 0, 0)), menu);
+                            dt = CalendarDay.from(LocalDate.parse(time, DATE_PATTERN));
+                            dayMenus.put(dt.getDate().toEpochDay(), menu);
                             menu = new MensaPlan.DayMenu();
                         }
                         time = cols[0];
@@ -422,8 +399,8 @@ public class MensaActivity extends AppCompatActivity
                 }
             }
             if (!time.equals("")) {
-                dt = formatter.parseDateTime(time).withZone(StudIPHelper.ZONE);
-                dayMenus.put(getMillis(dt.withTime(0, 0, 0, 0)), menu);
+                dt = CalendarDay.from(LocalDate.parse(time, DATE_PATTERN));
+                dayMenus.put(dt.getDate().toEpochDay(), menu);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -451,7 +428,7 @@ public class MensaActivity extends AppCompatActivity
         if (StudIPHelper.mensaPlan == null)
             return;
         clearListItems();
-        setToView(dateTime.withTime(0, 0, 0, 0).withZone(StudIPHelper.ZONE));
+        setToView(dateView.getSelectedDate());
     }
 
     @SuppressWarnings("StaticFieldLeak")
@@ -460,12 +437,13 @@ public class MensaActivity extends AppCompatActivity
         @Override
         protected Integer doInBackground(Void... url) {
             try {
-                int week = new DateTime().withZone(StudIPHelper.ZONE).getWeekOfWeekyear();
-                int next_week = new DateTime().withZone(StudIPHelper.ZONE).plusDays(7).getWeekOfWeekyear();
+                LocalDate date = LocalDate.now();
+                int week = date.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
+                int next_week = date.plusDays(7).get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
                 if (StudIPHelper.mensaPlan == null)
                     StudIPHelper.mensaPlan = new MensaPlan();
-                StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.api.getOAuthClient().get(mensaUrl + week + ".csv")));
-                StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.api.getOAuthClient().get(mensaUrl + (next_week) + ".csv")));
+                StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.api.getOAuthClient().get(MENSA_URL + week + ".csv")));
+                StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.api.getOAuthClient().get(MENSA_URL + (next_week) + ".csv")));
             } catch (IllegalAccessException | OAuthException e) {
                 Intent intent = new Intent(MensaActivity.this, LoadActivity.class);
                 startActivity(intent);

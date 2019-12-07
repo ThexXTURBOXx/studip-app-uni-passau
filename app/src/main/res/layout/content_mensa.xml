@@ -8,52 +8,37 @@
     tools:context="studip_uni_passau.femtopedia.de.unipassaustudip.activities.MensaActivity"
     tools:showIn="@layout/app_bar_mensa">
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
         android:id="@+id/dateView"
-        android:layout_width="wrap_content"
-        android:layout_height="36dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:gravity="center"
-        android:textColor="@color/colorTextSecondary"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toStartOf="@+id/next_date"
-        app:layout_constraintStart_toEndOf="@+id/previous_date"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_width="0dp"
+        android:layout_height="170dp"
+        android:background="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:mcv_calendarMode="week"
+        app:mcv_dateTextAppearance="@style/StudiPassauTheme.Calendar.Date"
+        app:mcv_headerTextAppearance="@style/StudiPassauTheme.Calendar.Header"
+        app:mcv_leftArrow="@drawable/ic_keyboard_arrow_left_white"
+        app:mcv_rightArrow="@drawable/ic_keyboard_arrow_right_white"
+        app:mcv_selectionColor="@color/colorAccent"
+        app:mcv_showOtherDates="all"
+        app:mcv_weekDayTextAppearance="@style/StudiPassauTheme.Calendar.WeekDay" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swiperefresh_mensa"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="36dp"
+        android:paddingBottom="170dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dateView">
 
         <ExpandableListView
             android:id="@+id/mensacontent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/previous_date"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:background="@color/colorBackground"
-        android:onClick="onClickButtonDatePrev"
-        android:tint="@color/colorCompl"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_keyboard_arrow_left" />
-
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/next_date"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:background="@color/colorBackground"
-        android:onClick="onClickButtonDateNext"
-        android:tint="@color/colorCompl"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_keyboard_arrow_right" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
