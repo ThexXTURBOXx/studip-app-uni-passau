@@ -89,8 +89,17 @@
             app:iconSpaceReserved="false"
             app:title="@string/pref_cat_general">
 
+            <SwitchPreference
+                app:defaultValue="true"
+                app:disableDependentsState="false"
+                app:iconSpaceReserved="false"
+                app:key="mensa_closing_time_active"
+                app:summary="@string/pref_desc_close_mensa_active_color"
+                app:title="@string/pref_title_close_mensa_active_color" />
+
             <studip_uni_passau.femtopedia.de.unipassaustudip.preference.time.TimePreference
                 app:defaultValue="900"
+                app:dependency="mensa_closing_time_active"
                 app:iconSpaceReserved="false"
                 app:key="mensa_closing_time"
                 app:summary="@string/pref_desc_close_mensa_color"

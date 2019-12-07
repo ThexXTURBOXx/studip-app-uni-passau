@@ -94,9 +94,13 @@ public class MensaActivity extends AppCompatActivity
 
         dateView = findViewById(R.id.dateView);
         DateTime now = new DateTime().withZone(StudIPHelper.ZONE);
-        if (now.getMinuteOfDay() >= PreferenceManager.getDefaultSharedPreferences(this)
-                .getInt("mensa_closing_time", 900))
-            now = now.plusDays(1);
+        if (androidx.preference.PreferenceManager.getDefaultSharedPreferences(this)
+                .getBoolean("mensa_closing_time_active", true)) {
+            if (now.getMinuteOfDay() >= PreferenceManager.getDefaultSharedPreferences(this)
+                    .getInt("mensa_closing_time", 900)) {
+                now = now.plusDays(1);
+            }
+        }
         setDate(now.withTime(0, 0, 0, 0));
 
         updateDataFirst();

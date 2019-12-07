@@ -64,6 +64,8 @@
     <string name="pref_desc_auto_sync">Automatically synchronizes, when you open a supported activity</string>
     <string name="pref_title_theme_mode">Theme Mode</string>
     <string name="pref_desc_theme_mode">Sets, whether and when to use the Dark/Light mode (requires restart)</string>
+    <string name="pref_title_close_mensa_active_color">Enable Mensa closing time</string>
+    <string name="pref_desc_close_mensa_active_color">Sets whether the mensa plan should show the next day after a set time</string>
     <string name="pref_title_close_mensa_color">Mensa closing time</string>
     <string name="pref_desc_close_mensa_color">Sets the time when the mensa plan should show the next day\'s menu</string>
     <string name="pref_title_sep_mensa_color">Food Separator Color</string>
