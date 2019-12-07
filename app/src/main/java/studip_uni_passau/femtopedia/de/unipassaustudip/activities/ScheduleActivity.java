@@ -29,11 +29,12 @@ import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
-import org.joda.time.DateTime;
-import org.joda.time.Days;
+import org.threeten.bp.Duration;
 import org.threeten.bp.Instant;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.ZoneId;
+import org.threeten.bp.ZonedDateTime;
+import org.threeten.bp.temporal.ChronoUnit;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -312,10 +313,10 @@ public class ScheduleActivity extends AppCompatActivity
 
     private void addToView(@NonNull List<ScheduledEvent> list) {
         for (ScheduledEvent se : list) {
-            DateTime start = new DateTime(se.start).withZone(StudIPHelper.ZONE);
-            DateTime end = new DateTime(se.end).withZone(StudIPHelper.ZONE);
-            String startStr = String.format(Locale.GERMANY, "%02d", start.getHourOfDay()) + ":" + String.format(Locale.GERMANY, "%02d", start.getMinuteOfHour());
-            String endStr = String.format(Locale.GERMANY, "%02d", end.getHourOfDay()) + ":" + String.format(Locale.GERMANY, "%02d", end.getMinuteOfHour());
+            ZonedDateTime start = ZonedDateTime.ofInstant(Instant.ofEpochMilli(se.start), StudIPHelper.ZONE);
+            ZonedDateTime end = ZonedDateTime.ofInstant(Instant.ofEpochMilli(se.end), StudIPHelper.ZONE);
+            String startStr = String.format(Locale.GERMANY, "%02d", start.getHour()) + ":" + String.format(Locale.GERMANY, "%02d", start.getMinute());
+            String endStr = String.format(Locale.GERMANY, "%02d", end.getHour()) + ":" + String.format(Locale.GERMANY, "%02d", end.getMinute());
             float alpha = PreferenceManager.getDefaultSharedPreferences(this).getInt("transp_factor_schedule", 80) * 2.55f;
             int color = StudIPHelper.transpColor((int) alpha, se.color);
             addScheduleItem(startStr, endStr, se.title, se.room, se.categories, se.description,
@@ -339,17 +340,18 @@ public class ScheduleActivity extends AppCompatActivity
 
     private List<ScheduledEvent> compareDay(Map<String, ScheduledCourse> courses, List<Event> events, int day, int week) {
         List<ScheduledEvent> eventss = new ArrayList<>();
-        DateTime now = new DateTime().withZone(StudIPHelper.ZONE).plusDays(1 + week * 7).withTime(0, 0, 0, 0);
+        ZonedDateTime now = ZonedDateTime.now(StudIPHelper.ZONE).truncatedTo(ChronoUnit.DAYS).withEarlierOffsetAtOverlap()
+                .plusDays(1 + week * 7).toLocalDate().atStartOfDay(StudIPHelper.ZONE);
         for (Event event : events) {
             boolean flag = false;
-            DateTime time = new DateTime(event.getStart() * 1000).withZone(StudIPHelper.ZONE);
-            if (time.getDayOfWeek() != (day - 1) % 7 + 1 || time.isBefore(now.minusDays(1).minusSeconds(1)) ||
-                    Days.daysBetween(now, new DateTime(time).withTime(1, 0, 0, 0).withZone(StudIPHelper.ZONE)).getDays() >= 6)
+            ZonedDateTime time = ZonedDateTime.ofInstant(Instant.ofEpochMilli(event.getStart() * 1000), StudIPHelper.ZONE);
+            if (time.getDayOfWeek().getValue() != (day - 1) % 7 + 1 || time.isBefore(now.minusDays(1).minusSeconds(1)) ||
+                    Duration.between(now, time.withHour(1)).toDays() >= 6)
                 continue;
-            DateTime dd = new DateTime(event.getEnd() * 1000).withZone(StudIPHelper.ZONE);
+            ZonedDateTime dd = ZonedDateTime.ofInstant(Instant.ofEpochMilli(event.getEnd() * 1000), StudIPHelper.ZONE);
             ScheduledEvent se = new ScheduledEvent();
-            se.start = time.getMillis();
-            se.end = dd.getMillis();
+            se.start = time.toInstant().toEpochMilli();
+            se.end = dd.toInstant().toEpochMilli();
             se.title = event.getTitle();
             se.canceled = event.getCanceled();
             se.room = event.getRoom();
@@ -361,9 +363,9 @@ public class ScheduleActivity extends AppCompatActivity
             if (courses != null) {
                 for (Map.Entry<String, ScheduledCourse> s : courses.entrySet()) {
                     if (event.getCourse().replaceFirst("/studip/api.php/course/", "").equals(s.getKey().split("-")[0])) {
-                        String time1 = String.format(Locale.GERMANY, "%02d", time.getHourOfDay()) + String.format(Locale.GERMANY, "%02d", time.getMinuteOfHour());
+                        String time1 = String.format(Locale.GERMANY, "%02d", time.getHour()) + String.format(Locale.GERMANY, "%02d", time.getMinute());
                         if (Integer.parseInt(time1) == s.getValue().getStart()) {
-                            String time2 = String.format(Locale.GERMANY, "%02d", dd.getHourOfDay()) + String.format(Locale.GERMANY, "%02d", dd.getMinuteOfHour());
+                            String time2 = String.format(Locale.GERMANY, "%02d", dd.getHour()) + String.format(Locale.GERMANY, "%02d", dd.getMinute());
                             if (Integer.parseInt(time2) == s.getValue().getEnd()) {
                                 flag = true;
                                 se.description = s.getValue().getContent();

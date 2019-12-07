@@ -31,7 +31,7 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import org.threeten.bp.DayOfWeek;
 import org.threeten.bp.LocalDate;
-import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.ZonedDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
 import org.threeten.bp.temporal.WeekFields;
 
@@ -95,6 +95,7 @@ public class MensaActivity extends AppCompatActivity
         expListView.setAdapter(listAdapter);
         expListView.setGroupIndicator(null);
 
+        ZonedDateTime now = ZonedDateTime.now(StudIPHelper.ZONE);
         dateView = findViewById(R.id.dateView);
         dateView.addDecorator(new DayViewDecorator() {
             @Override
@@ -108,16 +109,19 @@ public class MensaActivity extends AppCompatActivity
             }
         });
         dateView.setOnDateChangedListener(this);
+        dateView.setShowOtherDates(MaterialCalendarView.SHOW_NONE);
         dateView.state().edit()
-                .setMinimumDate(LocalDate.now().with(DayOfWeek.MONDAY))
-                .setMaximumDate(LocalDate.now().plusDays(7).with(DayOfWeek.SUNDAY))
+                .setMinimumDate(now.toLocalDate().with(DayOfWeek.MONDAY))
+                .setMaximumDate(now.toLocalDate().plusDays(7).with(DayOfWeek.SUNDAY))
                 .commit();
-        LocalDateTime now = LocalDateTime.now();
         if (PreferenceManager.getDefaultSharedPreferences(this)
                 .getBoolean("mensa_closing_time_active", true)) {
             if (getMinuteOfDay(now) >= PreferenceManager.getDefaultSharedPreferences(this)
                     .getInt("mensa_closing_time", 900)) {
                 now = now.plusDays(1);
+                if (dateView.getFirstDayOfWeek().getValue() == now.getDayOfWeek().getValue()) {
+                    dateView.goToNext();
+                }
             }
         }
         setDate(CalendarDay.from(now.toLocalDate()));
@@ -145,7 +149,7 @@ public class MensaActivity extends AppCompatActivity
         }
     }
 
-    private int getMinuteOfDay(LocalDateTime time) {
+    private int getMinuteOfDay(ZonedDateTime time) {
         return time.getHour() * 60 + time.getMinute();
     }
 
@@ -437,7 +441,7 @@ public class MensaActivity extends AppCompatActivity
         @Override
         protected Integer doInBackground(Void... url) {
             try {
-                LocalDate date = LocalDate.now();
+                ZonedDateTime date = ZonedDateTime.now(StudIPHelper.ZONE);
                 int week = date.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
                 int next_week = date.plusDays(7).get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
                 if (StudIPHelper.mensaPlan == null)

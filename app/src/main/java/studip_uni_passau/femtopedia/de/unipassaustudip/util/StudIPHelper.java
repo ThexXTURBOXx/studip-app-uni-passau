@@ -19,7 +19,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
-import org.joda.time.DateTimeZone;
+import org.threeten.bp.ZoneId;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -49,7 +49,7 @@ import studip_uni_passau.femtopedia.de.unipassaustudip.natives.OAuthValues;
 
 public class StudIPHelper {
 
-    public static final DateTimeZone ZONE = DateTimeZone.forID("Europe/Berlin");
+    public static final ZoneId ZONE = ZoneId.of("UTC+1");
     private static final String CONSUMER_KEY = new String(Base64.decode(OAuthValues.getConsumerKey(), Base64.DEFAULT));
     private static final String CONSUMER_SECRET = new String(Base64.decode(OAuthValues.getConsumerSecret(), Base64.DEFAULT));
     public static String target = null;
