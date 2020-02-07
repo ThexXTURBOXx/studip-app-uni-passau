@@ -11,6 +11,7 @@ import oauth.signpost.exception.OAuthException;
 import studip_uni_passau.femtopedia.de.unipassaustudip.R;
 import studip_uni_passau.femtopedia.de.unipassaustudip.StudIPApp;
 import studip_uni_passau.femtopedia.de.unipassaustudip.util.CustomTabHelper;
+import studip_uni_passau.femtopedia.de.unipassaustudip.util.SentryUtil;
 import studip_uni_passau.femtopedia.de.unipassaustudip.util.StudIPHelper;
 
 public class LoginActivity extends AppCompatActivity {
@@ -40,9 +41,10 @@ public class LoginActivity extends AppCompatActivity {
         protected String doInBackground(Void... params) {
             if (StudIPHelper.isNetworkAvailable(LoginActivity.this)) {
                 try {
-                    return StudIPHelper.api.getAuthorizationUrl("studipassau://oauth_callback");
+                    return StudIPHelper.getApi().getAuthorizationUrl("studipassau://oauth_callback");
                 } catch (OAuthException e) {
                     e.printStackTrace();
+                    SentryUtil.logError(e);
                 }
             } else {
                 return "";

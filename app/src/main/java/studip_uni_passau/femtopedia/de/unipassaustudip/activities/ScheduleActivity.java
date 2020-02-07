@@ -77,7 +77,7 @@ public class ScheduleActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (StudIPHelper.current_user == null) {
+        if (StudIPHelper.getCurrentUser() == null) {
             Intent intent = new Intent(ScheduleActivity.this, LoadActivity.class);
             startActivity(intent);
             return;
@@ -124,11 +124,12 @@ public class ScheduleActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         setActive();
 
-        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(StudIPHelper.current_user.getName().getFormatted());
-        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(StudIPHelper.current_user.getUsername());
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(StudIPHelper.getCurrentUser().getName().getFormatted());
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(StudIPHelper.getCurrentUser().getUsername());
 
-        if (StudIPHelper.profile_pic != null)
+        if (StudIPHelper.getProfilePic() != null) {
             setProfilePic();
+        }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBar actionbar = getSupportActionBar();
@@ -187,7 +188,7 @@ public class ScheduleActivity extends AppCompatActivity
     }
 
     public void setProfilePic() {
-        ((CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView)).setImageBitmap(StudIPHelper.profile_pic);
+        ((CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView)).setImageBitmap(StudIPHelper.getProfilePic());
     }
 
     private void updateDataFirst() {
@@ -327,7 +328,7 @@ public class ScheduleActivity extends AppCompatActivity
 
     @SuppressWarnings("UseSparseArrays")
     private Map<Integer, List<ScheduledEvent>> compareSchedule(Schedule schedule) throws IllegalAccessException, IOException, OAuthException {
-        Events events = StudIPHelper.api.getData("user/" + StudIPHelper.current_user.getUser_id() + "/events?limit=10000", Events.class);
+        Events events = StudIPHelper.getApi().getData("user/" + StudIPHelper.getCurrentUser().getUser_id() + "/events?limit=10000", Events.class);
         Map<Integer, List<ScheduledEvent>> sched = new HashMap<>();
         for (int i = 0; i <= 4; i++) {
             for (int d = 0; d < 7; d++) {
@@ -377,7 +378,7 @@ public class ScheduleActivity extends AppCompatActivity
             }
             if (!flag) {
                 try {
-                    Course c = StudIPHelper.api.getCourse(event.getCourse().replaceFirst("/studip/api.php/course/", ""));
+                    Course c = StudIPHelper.getApi().getCourse(event.getCourse().replaceFirst("/studip/api.php/course/", ""));
                     se.description = c.getNumber() + " " + c.getTitle();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -399,7 +400,7 @@ public class ScheduleActivity extends AppCompatActivity
         @Override
         protected Void doInBackground(Void... url) {
             try {
-                StudIPHelper.updateSchedule(getApplicationContext(), compareSchedule(StudIPHelper.api.getSchedule(StudIPHelper.current_user.getUser_id())));
+                StudIPHelper.updateSchedule(getApplicationContext(), compareSchedule(StudIPHelper.getApi().getSchedule(StudIPHelper.getCurrentUser().getUser_id())));
             } catch (IllegalAccessException | OAuthException e) {
                 Intent intent = new Intent(ScheduleActivity.this, LoadActivity.class);
                 startActivity(intent);

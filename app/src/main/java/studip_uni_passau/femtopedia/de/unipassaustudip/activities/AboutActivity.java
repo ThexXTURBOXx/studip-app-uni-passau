@@ -41,10 +41,11 @@ public class AboutActivity extends AppCompatActivity
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         setActive();
-        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(StudIPHelper.current_user.getName().getFormatted());
-        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(StudIPHelper.current_user.getUsername());
-        if (StudIPHelper.profile_pic != null)
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(StudIPHelper.getCurrentUser().getName().getFormatted());
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(StudIPHelper.getCurrentUser().getUsername());
+        if (StudIPHelper.getProfilePic() != null) {
             setProfilePic();
+        }
         ((TextView) findViewById(R.id.version_text)).setText(getString(R.string.version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -90,7 +91,7 @@ public class AboutActivity extends AppCompatActivity
     }
 
     public void setProfilePic() {
-        ((CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView)).setImageBitmap(StudIPHelper.profile_pic);
+        ((CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView)).setImageBitmap(StudIPHelper.getProfilePic());
     }
 
     @Override

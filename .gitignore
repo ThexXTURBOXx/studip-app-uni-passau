@@ -63,3 +63,5 @@ app/release/
 secrets\.properties
 
 app/.cxx/
+
+sentry.properties

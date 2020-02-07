@@ -54,6 +54,7 @@ import studip_uni_passau.femtopedia.de.unipassaustudip.StudIPApp;
 import studip_uni_passau.femtopedia.de.unipassaustudip.api.MensaPlan;
 import studip_uni_passau.femtopedia.de.unipassaustudip.util.AnimatingRefreshButtonManager;
 import studip_uni_passau.femtopedia.de.unipassaustudip.util.ExpandableListAdapter;
+import studip_uni_passau.femtopedia.de.unipassaustudip.util.SentryUtil;
 import studip_uni_passau.femtopedia.de.unipassaustudip.util.StudIPHelper;
 
 public class MensaActivity extends AppCompatActivity
@@ -75,7 +76,7 @@ public class MensaActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (StudIPHelper.current_user == null) {
+        if (StudIPHelper.getCurrentUser() == null) {
             Intent intent = new Intent(MensaActivity.this, LoadActivity.class);
             startActivity(intent);
             return;
@@ -132,11 +133,12 @@ public class MensaActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         setActive();
 
-        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(StudIPHelper.current_user.getName().getFormatted());
-        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(StudIPHelper.current_user.getUsername());
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nameofcurrentuser)).setText(StudIPHelper.getCurrentUser().getName().getFormatted());
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.usernameel)).setText(StudIPHelper.getCurrentUser().getUsername());
 
-        if (StudIPHelper.profile_pic != null)
+        if (StudIPHelper.getProfilePic() != null) {
             setProfilePic();
+        }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBar actionbar = getSupportActionBar();
@@ -163,7 +165,7 @@ public class MensaActivity extends AppCompatActivity
     }
 
     public void setProfilePic() {
-        ((CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView)).setImageBitmap(StudIPHelper.profile_pic);
+        ((CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView)).setImageBitmap(StudIPHelper.getProfilePic());
     }
 
     private void updateDataFirst() {
@@ -373,6 +375,7 @@ public class MensaActivity extends AppCompatActivity
                             food.price_guest = Double.parseDouble(cols[9].replace(",", "."));
                         } catch (NumberFormatException e1) {
                             e1.printStackTrace();
+                            SentryUtil.logError(e1);
                             food.price_stud = 0;
                             food.price_bed = 0;
                             food.price_guest = 0;
@@ -396,6 +399,7 @@ public class MensaActivity extends AppCompatActivity
                         menu.desserts.add(food);
                 } catch (Throwable t) {
                     t.printStackTrace();
+                    SentryUtil.logError(t);
                 }
             }
             if (!time.equals("")) {
@@ -442,8 +446,8 @@ public class MensaActivity extends AppCompatActivity
                 int next_week = date.plusDays(7).get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
                 if (StudIPHelper.mensaPlan == null)
                     StudIPHelper.mensaPlan = new MensaPlan();
-                StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.api.getOAuthClient().get(MENSA_URL + week + ".csv")));
-                StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.api.getOAuthClient().get(MENSA_URL + (next_week) + ".csv")));
+                StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.getApi().getOAuthClient().get(MENSA_URL + week + ".csv")));
+                StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.getApi().getOAuthClient().get(MENSA_URL + (next_week) + ".csv")));
             } catch (IllegalAccessException | OAuthException e) {
                 Intent intent = new Intent(MensaActivity.this, LoadActivity.class);
                 startActivity(intent);

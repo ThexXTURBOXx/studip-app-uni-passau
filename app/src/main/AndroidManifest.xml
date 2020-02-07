@@ -14,6 +14,11 @@
         android:roundIcon="@mipmap/studip_round"
         android:supportsRtl="true"
         android:theme="@style/StudiPassauTheme">
+
+        <meta-data
+            android:name="io.sentry.dsn"
+            android:value="https://419fb6a71c2340cca7b45f4258e540a6@sentry.io/2319178" />
+
         <activity
             android:name=".activities.LoginActivity"
             android:label="@string/app_name"

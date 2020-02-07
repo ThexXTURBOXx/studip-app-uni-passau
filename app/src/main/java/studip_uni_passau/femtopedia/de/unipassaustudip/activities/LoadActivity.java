@@ -186,11 +186,11 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
                 boolean internetAvailable = StudIPHelper.isNetworkAvailable(LoadActivity.this);
                 StudIPHelper.constructAPI(internetAvailable, oAuthVerifier != null);
                 if (oAuthVerifier != null && internetAvailable) {
-                    StudIPHelper.api.verifyAccess(oAuthVerifier);
+                    StudIPHelper.getApi().verifyAccess(oAuthVerifier);
                 } else {
                     OAuthData saveData = StudIPHelper.loadFromFile(oAuthDataFile, OAuthData.class);
                     if (saveData != null) {
-                        StudIPHelper.api.getOAuthClient().setToken(saveData.accessToken, saveData.accessTokenSecret);
+                        StudIPHelper.getApi().getOAuthClient().setToken(saveData.accessToken, saveData.accessTokenSecret);
                     } else {
                         return LoadingState.WRONG_CREDENTIALS;
                     }
@@ -198,7 +198,7 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
                 if (!internetAvailable) {
                     return LoadingState.OFFLINE;
                 }
-                if (!StudIPHelper.api.getOAuthClient().isSessionValid()) {
+                if (!StudIPHelper.getApi().getOAuthClient().isSessionValid()) {
                     return LoadingState.WRONG_CREDENTIALS;
                 }
             } catch (OAuthException e) {
@@ -217,7 +217,7 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
 
             switch (success) {
                 case SUCCESS:
-                    String[] token = StudIPHelper.api.getOAuthClient().getToken();
+                    String[] token = StudIPHelper.getApi().getOAuthClient().getToken();
                     StudIPHelper.saveToFile(oAuthDataFile, new OAuthData(token[0], token[1]));
                     //No break here
                 case OFFLINE:
@@ -247,7 +247,7 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
 
         CacheCurrentUserData() {
             loadingStatus.setText(getString(R.string.loading_user_data));
-            StudIPHelper.current_user = StudIPHelper.loadFromFile(new File(getApplicationContext().getFilesDir(), "user.json"), User.class);
+            StudIPHelper.setCurrentUser(StudIPHelper.loadFromFile(new File(getApplicationContext().getFilesDir(), "user.json"), User.class));
         }
 
         @Override
@@ -255,7 +255,7 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
             if (!StudIPHelper.isNetworkAvailable(LoadActivity.this))
                 return null;
             try {
-                return StudIPHelper.api.getCurrentUserData();
+                return StudIPHelper.getApi().getCurrentUserData();
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException | OAuthException e) {
@@ -268,16 +268,16 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
 
         @Override
         protected void onPostExecute(User user) {
-            if (user == null && StudIPHelper.current_user == null) {
+            if (user == null && StudIPHelper.getCurrentUser() == null) {
                 CacheCurrentUserData data = new CacheCurrentUserData();
                 data.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else {
                 if (user != null) {
-                    StudIPHelper.current_user = user;
-                    StudIPHelper.saveToFile(new File(getApplicationContext().getFilesDir(), "user.json"), StudIPHelper.current_user);
+                    StudIPHelper.setCurrentUser(user);
+                    StudIPHelper.saveToFile(new File(getApplicationContext().getFilesDir(), "user.json"), StudIPHelper.getCurrentUser());
                 }
                 CacheCurrentUserPic pic = new CacheCurrentUserPic(false);
-                pic.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, StudIPHelper.current_user.getAvatar_original());
+                pic.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, StudIPHelper.getCurrentUser().getAvatar_original());
                 proceed();
             }
             super.onPostExecute(user);
@@ -299,7 +299,7 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
             CustomAccessHttpResponse response = null;
             InputStream instream = null;
             try {
-                response = StudIPHelper.api.getOAuthClient().get(url[0]);
+                response = StudIPHelper.getApi().getOAuthClient().get(url[0]);
                 ResponseBody body = response.getResponse().body();
                 if (body != null) {
                     instream = body.byteStream();
@@ -330,7 +330,7 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap == null) {
                 CacheCurrentUserPic data = new CacheCurrentUserPic(true);
-                data.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, StudIPHelper.current_user.getAvatar_original());
+                data.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, StudIPHelper.getCurrentUser().getAvatar_original());
             } else {
                 StudIPHelper.updatePic(bitmap, (StudIPApp) getApplication());
             }

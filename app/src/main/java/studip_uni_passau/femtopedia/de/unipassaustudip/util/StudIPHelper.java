@@ -54,9 +54,9 @@ public class StudIPHelper {
     private static final String CONSUMER_SECRET = new String(Base64.decode(OAuthValues.getConsumerSecret(), Base64.DEFAULT));
     public static String target = null;
 
-    public static StudIPAPI api = null;
-    public static User current_user = null;
-    public static Bitmap profile_pic = null;
+    private static StudIPAPI api = null;
+    private static User currentUser = null;
+    private static Bitmap profilePic = null;
 
     public static Map<Integer, List<ScheduledEvent>> schedule = null;
     public static MensaPlan mensaPlan = new MensaPlan();
@@ -81,7 +81,7 @@ public class StudIPHelper {
     }
 
     public static void updatePic(Bitmap profile_pic, StudIPApp application) {
-        StudIPHelper.profile_pic = profile_pic;
+        StudIPHelper.profilePic = profile_pic;
         Activity a = application.getCurrentActivity();
         if (a instanceof ProfilePicHolder)
             ((ProfilePicHolder) a).setProfilePic();
@@ -115,6 +115,7 @@ public class StudIPHelper {
             e.printStackTrace();
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
+            SentryUtil.logError(e);
             if (!file.delete()) {
                 file.deleteOnExit();
             } else {
@@ -132,6 +133,7 @@ public class StudIPHelper {
             e.printStackTrace();
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
+            SentryUtil.logError(e);
             if (!file.delete()) {
                 file.deleteOnExit();
             } else {
@@ -270,6 +272,27 @@ public class StudIPHelper {
         return Color.rgb((int) (Color.red(overlay) * opacity + Color.red(background) * compOpacity),
                 (int) (Color.green(overlay) * opacity + Color.green(background) * compOpacity),
                 (int) (Color.blue(overlay) * opacity + Color.blue(background) * compOpacity));
+    }
+
+    public static User getCurrentUser() {
+        return currentUser;
+    }
+
+    public static void setCurrentUser(User currentUser) {
+        StudIPHelper.currentUser = currentUser;
+        SentryUtil.setUser(currentUser.getName().getFormatted(), currentUser.getEmail());
+    }
+
+    public static Bitmap getProfilePic() {
+        return profilePic;
+    }
+
+    public static void setProfilePic(Bitmap profilePic) {
+        StudIPHelper.profilePic = profilePic;
+    }
+
+    public static StudIPAPI getApi() {
+        return api;
     }
 
     public interface ProfilePicHolder {

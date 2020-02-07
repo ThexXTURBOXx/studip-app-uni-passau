@@ -1,25 +1,13 @@
 package studip_uni_passau.femtopedia.de.unipassaustudip;
 
 import android.app.Activity;
-import android.content.Context;
 import android.preference.PreferenceManager;
 
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.multidex.MultiDexApplication;
 
-import org.acra.ACRA;
-import org.acra.annotation.AcraCore;
-import org.acra.annotation.AcraDialog;
-import org.acra.annotation.AcraMailSender;
-
 import studip_uni_passau.femtopedia.de.unipassaustudip.util.StudIPHelper;
 
-@AcraCore(buildConfigClass = BuildConfig.class)
-@AcraMailSender(mailTo = "studipapp@femtopedia.de",
-        resSubject = R.string.crash_subject,
-        reportAsFile = false)
-@AcraDialog(resText = R.string.crash_dialog_text,
-        resCommentPrompt = R.string.crash_dialog_comment)
 public class StudIPApp extends MultiDexApplication {
 
     private Activity currentActivity = null;
@@ -62,12 +50,6 @@ public class StudIPApp extends MultiDexApplication {
         if (this.currentTopActivity instanceof StudIPHelper.NavigationDrawerActivity) {
             ((StudIPHelper.NavigationDrawerActivity) this.currentTopActivity).setActive();
         }
-    }
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        ACRA.init(this);
     }
 
 }

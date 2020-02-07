@@ -182,6 +182,7 @@ public class CustomTabHelper {
             }
         } catch (RuntimeException e) {
             e.printStackTrace();
+            SentryUtil.logError(e);
         }
         return false;
     }
