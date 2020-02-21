@@ -280,7 +280,9 @@ public class StudIPHelper {
 
     public static void setCurrentUser(User currentUser) {
         StudIPHelper.currentUser = currentUser;
-        SentryUtil.setUser(currentUser.getName().getFormatted(), currentUser.getEmail());
+        if (currentUser != null) {
+            SentryUtil.setUser(currentUser.getName().getFormatted(), currentUser.getEmail());
+        }
     }
 
     public static Bitmap getProfilePic() {

@@ -20,7 +20,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_schedule"
+        app:headerLayout="@layout/nav_header"
         app:itemIconTint="@drawable/drawer_color"
         app:itemTextColor="@drawable/drawer_color"
         app:menu="@menu/nav_drawer" />
