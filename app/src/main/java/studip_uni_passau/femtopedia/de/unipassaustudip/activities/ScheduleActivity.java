@@ -342,7 +342,7 @@ public class ScheduleActivity extends AppCompatActivity
     private List<ScheduledEvent> compareDay(Map<String, ScheduledCourse> courses, List<Event> events, int day, int week) {
         List<ScheduledEvent> eventss = new ArrayList<>();
         ZonedDateTime now = ZonedDateTime.now(StudIPHelper.ZONE).truncatedTo(ChronoUnit.DAYS).withEarlierOffsetAtOverlap()
-                .plusDays(1 + week * 7).toLocalDate().atStartOfDay(StudIPHelper.ZONE);
+                .plusDays(1L + week * 7L).toLocalDate().atStartOfDay(StudIPHelper.ZONE);
         for (Event event : events) {
             boolean flag = false;
             ZonedDateTime time = ZonedDateTime.ofInstant(Instant.ofEpochMilli(event.getStart() * 1000), StudIPHelper.ZONE);

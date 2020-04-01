@@ -135,6 +135,9 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
                 case "mensa":
                     intent = new Intent(LoadActivity.this, MensaActivity.class);
                     break;
+                case "filelist":
+                    intent = new Intent(LoadActivity.this, FileListActivity.class);
+                    break;
                 default:
                     intent = new Intent(LoadActivity.this, ScheduleActivity.class);
                     break;

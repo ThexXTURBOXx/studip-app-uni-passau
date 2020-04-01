@@ -28,14 +28,17 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import de.femtopedia.studip.StudIPAPI;
+import de.femtopedia.studip.json.Folder;
 import de.femtopedia.studip.json.User;
 import studip_uni_passau.femtopedia.de.unipassaustudip.R;
 import studip_uni_passau.femtopedia.de.unipassaustudip.StudIPApp;
 import studip_uni_passau.femtopedia.de.unipassaustudip.activities.AboutActivity;
+import studip_uni_passau.femtopedia.de.unipassaustudip.activities.FileListActivity;
 import studip_uni_passau.femtopedia.de.unipassaustudip.activities.MensaActivity;
 import studip_uni_passau.femtopedia.de.unipassaustudip.activities.ScheduleActivity;
 import studip_uni_passau.femtopedia.de.unipassaustudip.activities.SettingsActivity;
@@ -60,6 +63,7 @@ public class StudIPHelper {
 
     public static Map<Integer, List<ScheduledEvent>> schedule = null;
     public static MensaPlan mensaPlan = new MensaPlan();
+    public static Map<String, Folder> folders = new HashMap<>();
 
     private static Gson gson = new GsonBuilder().enableComplexMapKeySerialization().disableHtmlEscaping().create();
     private static Type scheduleType = new TypeToken<Map<Integer, List<ScheduledEvent>>>() {
@@ -179,6 +183,9 @@ public class StudIPHelper {
             } else if (id == R.id.nav_mensa) {
                 Intent intent = new Intent(activity, MensaActivity.class);
                 activity.startActivity(intent);
+            } else if (id == R.id.nav_filelist) {
+                Intent intent = new Intent(activity, FileListActivity.class);
+                activity.startActivity(intent);
             } else if (id == R.id.nav_manage) {
                 Intent intent = new Intent(activity, SettingsActivity.class);
                 activity.startActivity(intent);
@@ -280,9 +287,9 @@ public class StudIPHelper {
 
     public static void setCurrentUser(User currentUser) {
         StudIPHelper.currentUser = currentUser;
-        if (currentUser != null) {
+        /*if (currentUser != null) {
             SentryUtil.setUser(currentUser.getName().getFormatted(), currentUser.getEmail());
-        }
+        }*/
     }
 
     public static Bitmap getProfilePic() {

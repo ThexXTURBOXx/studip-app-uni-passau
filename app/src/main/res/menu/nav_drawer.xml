@@ -16,6 +16,12 @@
         android:icon="@drawable/ic_restaurant"
         android:title="@string/pref_title_mensa_subscreen" />
 
+    <item
+        android:id="@+id/nav_filelist"
+        android:checkable="true"
+        android:icon="@drawable/ic_baseline_folder_open"
+        android:title="@string/pref_title_filelist_subscreen" />
+
     <item android:title="@string/cat_misc">
         <menu>
             <item
