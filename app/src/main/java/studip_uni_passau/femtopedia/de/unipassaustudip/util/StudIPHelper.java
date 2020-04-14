@@ -52,7 +52,7 @@ import studip_uni_passau.femtopedia.de.unipassaustudip.natives.OAuthValues;
 
 public class StudIPHelper {
 
-    public static final ZoneId ZONE = ZoneId.of("UTC+1");
+    public static final ZoneId ZONE = ZoneId.of("Europe/Berlin");
     private static final String CONSUMER_KEY = new String(Base64.decode(OAuthValues.getConsumerKey(), Base64.DEFAULT));
     private static final String CONSUMER_SECRET = new String(Base64.decode(OAuthValues.getConsumerSecret(), Base64.DEFAULT));
     public static String target = null;

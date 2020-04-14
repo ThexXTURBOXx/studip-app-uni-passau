@@ -80,13 +80,13 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.browser:browser:1.2.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.google.android.material:material:1.2.0-alpha05'
-    implementation 'de.femtopedia.studip:studip-uni-passau:1.8'
+    implementation 'com.google.android.material:material:1.2.0-alpha06'
+    implementation 'de.femtopedia.studip:studip-uni-passau:1.8.1'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.rarepebble:colorpicker:3.0.1'
     implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
     implementation 'com.jakewharton.threetenabp:threetenabp:1.2.3'
-    implementation 'io.sentry:sentry-android:2.0.2'
+    implementation 'io.sentry:sentry-android:2.1.0-alpha.2'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
 }

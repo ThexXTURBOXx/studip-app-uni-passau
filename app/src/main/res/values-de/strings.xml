@@ -70,8 +70,6 @@
     <string name="pref_desc_notfoundlec_schedule_color">Die Hintergrundfarbe der nicht gefundenen Vorlesungen</string>
     <string name="credits">Quellen ansehen</string>
     <string name="version">Version: %1$s (%2$d)</string>
-    <string name="crash_dialog_text">StudiPassau ist abgestürzt!</string>
-    <string name="crash_dialog_comment">Oops, sieht so aus, als wäre die App abgestürzt&#8230; Willst du eine Fehlermeldung senden? Das wäre ziemlich nett von dir ;) Du kannst hier einen Kommentar hinzufügen:</string>
     <string name="verifying_api">Zugriff überprüfen&#8230;</string>
     <string name="login_warning_normal">Ein Browser sollte gerade geöffnet sein. Falls nicht, schreib mir bitte eine E-Mail:\n\nstudipapp@femtopedia.de</string>
     <string name="login_warning_no_internet">Bitte stelle eine Internetverbindung her und starte die App neu.</string>

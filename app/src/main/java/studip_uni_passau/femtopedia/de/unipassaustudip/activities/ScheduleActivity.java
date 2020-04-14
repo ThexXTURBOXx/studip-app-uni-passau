@@ -345,14 +345,14 @@ public class ScheduleActivity extends AppCompatActivity
                 .plusDays(1L + week * 7L).toLocalDate().atStartOfDay(StudIPHelper.ZONE);
         for (Event event : events) {
             boolean flag = false;
-            ZonedDateTime time = ZonedDateTime.ofInstant(Instant.ofEpochMilli(event.getStart() * 1000), StudIPHelper.ZONE);
-            if (time.getDayOfWeek().getValue() != (day - 1) % 7 + 1 || time.isBefore(now.minusDays(1).minusSeconds(1)) ||
-                    Duration.between(now, time.withHour(1)).toDays() >= 6)
+            ZonedDateTime start = ZonedDateTime.ofInstant(Instant.ofEpochMilli(event.getStart() * 1000), StudIPHelper.ZONE);
+            if (start.getDayOfWeek().getValue() != (day - 1) % 7 + 1 || start.isBefore(now.minusDays(1).minusSeconds(1)) ||
+                    Duration.between(now, start.withHour(1)).toDays() >= 6)
                 continue;
-            ZonedDateTime dd = ZonedDateTime.ofInstant(Instant.ofEpochMilli(event.getEnd() * 1000), StudIPHelper.ZONE);
+            ZonedDateTime end = ZonedDateTime.ofInstant(Instant.ofEpochMilli(event.getEnd() * 1000), StudIPHelper.ZONE);
             ScheduledEvent se = new ScheduledEvent();
-            se.start = time.toInstant().toEpochMilli();
-            se.end = dd.toInstant().toEpochMilli();
+            se.start = start.toInstant().toEpochMilli();
+            se.end = end.toInstant().toEpochMilli();
             se.title = event.getTitle();
             se.canceled = event.getCanceled();
             se.room = event.getRoom();
@@ -364,13 +364,13 @@ public class ScheduleActivity extends AppCompatActivity
             if (courses != null) {
                 for (Map.Entry<String, ScheduledCourse> s : courses.entrySet()) {
                     if (event.getCourse().replaceFirst("/studip/api.php/course/", "").equals(s.getKey().split("-")[0])) {
-                        String time1 = String.format(Locale.GERMANY, "%02d", time.getHour()) + String.format(Locale.GERMANY, "%02d", time.getMinute());
+                        String time1 = String.format(Locale.GERMANY, "%02d", start.getHour()) + String.format(Locale.GERMANY, "%02d", start.getMinute());
                         if (Integer.parseInt(time1) == s.getValue().getStart()) {
-                            String time2 = String.format(Locale.GERMANY, "%02d", dd.getHour()) + String.format(Locale.GERMANY, "%02d", dd.getMinute());
+                            String time2 = String.format(Locale.GERMANY, "%02d", end.getHour()) + String.format(Locale.GERMANY, "%02d", end.getMinute());
                             if (Integer.parseInt(time2) == s.getValue().getEnd()) {
                                 flag = true;
                                 se.description = s.getValue().getContent();
-                                se.color = (int) Long.parseLong("ff" + s.getValue().getColor().replaceFirst("#", ""), 16);
+                                se.color = (int) s.getValue().getColor().getColor();
                             }
                         }
                     }
