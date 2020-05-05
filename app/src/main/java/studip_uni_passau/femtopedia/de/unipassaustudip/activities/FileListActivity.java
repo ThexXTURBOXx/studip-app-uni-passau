@@ -41,6 +41,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import de.femtopedia.studip.json.Course;
@@ -124,13 +125,6 @@ public class FileListActivity extends AppCompatActivity
             actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
             drawerToggle.syncState();
         }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setPositiveButton(R.string.button_okay, (dialog, id) -> {
-        }).setTitle(R.string.beta_title)
-                .setMessage(R.string.beta_desc)
-                .create()
-                .show();
     }
 
     @Override
@@ -302,7 +296,21 @@ public class FileListActivity extends AppCompatActivity
     public void setToView(Folder folder) {
         stopUpdateAnimation();
         clearListItems();
+        Iterator<SubFolder> folders = folder.getSubfolders().iterator();
+        while (folders.hasNext()) {
+            SubFolder next = folders.next();
+            if (next == null || next.getName() == null) {
+                folders.remove();
+            }
+        }
         Collections.sort(folder.getSubfolders(), (f1, f2) -> f1.getName().compareTo(f2.getName()));
+        Iterator<SubFile> files = folder.getFile_refs().iterator();
+        while (files.hasNext()) {
+            SubFile next = files.next();
+            if (next == null || next.getName() == null) {
+                files.remove();
+            }
+        }
         Collections.sort(folder.getFile_refs(), (f1, f2) -> Long.compare(f1.getChdate(), f2.getChdate()));
         for (SubFolder f : folder.getSubfolders()) {
             listDataHeader.add(new SubContent(f));

@@ -99,7 +99,5 @@
     <string name="pref_title_filelist_subscreen">Dateien</string>
     <string name="title_activity_filelist">StudiPassau Dateien</string>
     <string name="error_no_file">null</string>
-    <string name="beta_title">Beta Feature</string>
-    <string name="beta_desc">Achtung! Dieses Feature ist noch in Entwicklung. Einige Sachen könnten eventuell noch nicht ganz funktionieren.</string>
 
 </resources>

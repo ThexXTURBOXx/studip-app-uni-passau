@@ -103,7 +103,5 @@
     <string name="title_activity_filelist">StudiPassau Files</string>
     <string name="error_no_file">null</string>
     <string name="format_course_title" translatable="false">%1$s %2$s</string>
-    <string name="beta_title">Beta Feature</string>
-    <string name="beta_desc">Warning! This is a beta feature. Some things may not work as expected.</string>
 
 </resources>
