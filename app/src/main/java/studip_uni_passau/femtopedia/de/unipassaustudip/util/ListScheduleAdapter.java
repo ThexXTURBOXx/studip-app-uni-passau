@@ -106,9 +106,13 @@ public class ListScheduleAdapter extends BaseExpandableListAdapter {
                                 R.color.colorBoxTransp), listDataColorsBg.get(groupPosition), alpha)));
                 clock.setVisibility(View.VISIBLE);
 
-                room.setText(item.room);
-                room.setTextColor(textColor);
-                room.setVisibility(View.VISIBLE);
+                if (item.room == null) {
+                    room.setVisibility(View.GONE);
+                } else {
+                    room.setText(item.room);
+                    room.setTextColor(textColor);
+                    room.setVisibility(View.VISIBLE);
+                }
 
                 info.setText(item.info);
                 info.setTextColor(textColor);

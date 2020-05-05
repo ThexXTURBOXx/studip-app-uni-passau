@@ -38,7 +38,6 @@ import org.threeten.bp.temporal.ChronoUnit;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -56,6 +55,7 @@ import studip_uni_passau.femtopedia.de.unipassaustudip.StudIPApp;
 import studip_uni_passau.femtopedia.de.unipassaustudip.api.ScheduledEvent;
 import studip_uni_passau.femtopedia.de.unipassaustudip.util.AnimatingRefreshButtonManager;
 import studip_uni_passau.femtopedia.de.unipassaustudip.util.DayFilterDecorator;
+import studip_uni_passau.femtopedia.de.unipassaustudip.util.Helper;
 import studip_uni_passau.femtopedia.de.unipassaustudip.util.ListScheduleAdapter;
 import studip_uni_passau.femtopedia.de.unipassaustudip.util.StudIPHelper;
 
@@ -252,13 +252,9 @@ public class ScheduleActivity extends AppCompatActivity
         listDataHeader.add(new ListScheduleAdapter.ScheduleItem(startStr, room, title));
         listDataColorsBg.add(colorBg);
         listDataColorsText.add(colorText);
-        if (categories == null) {
-            listDataChild.add(Arrays.asList(description, room, getString(R.string.start) + ": " + startStr,
-                    getString(R.string.end) + ": " + endStr));
-        } else {
-            listDataChild.add(Arrays.asList(description, room, categories, getString(R.string.start) + ": " + startStr,
-                    getString(R.string.end) + ": " + endStr));
-        }
+        listDataChild.add(Helper.asNonNullList(description, room, categories,
+                getString(R.string.start) + ": " + startStr,
+                getString(R.string.end) + ": " + endStr));
 
         listAdapter.notifyDataSetChanged();
     }
@@ -356,6 +352,9 @@ public class ScheduleActivity extends AppCompatActivity
             se.title = event.getTitle();
             se.canceled = event.getCanceled();
             se.room = event.getRoom();
+            if (se.room.isEmpty()) {
+                se.room = null;
+            }
             se.course = event.getCourse();
             if (!event.getCategories().equals("Sitzung")) {
                 se.categories = event.getCategories();

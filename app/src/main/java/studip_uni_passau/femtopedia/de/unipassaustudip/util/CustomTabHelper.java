@@ -36,6 +36,7 @@ public class CustomTabHelper {
 
     private boolean warmupWhenReady = false;
     private boolean mayLaunchWhenReady = false;
+    private boolean isBound = false;
 
     CustomTabHelper(Activity activity, Uri uri) {
         this.activity = activity;
@@ -102,17 +103,24 @@ public class CustomTabHelper {
                 unbindCustomTabsService();
             }
         };
-        boolean ok = CustomTabsClient.bindCustomTabsService(activity, getPackageNameToUse(activity), connection);
-        if (!ok) {
-            connection = null;
+        String packName = getPackageNameToUse(activity);
+        if (packName == null) {
+            Intent intent = new Intent("android.intent.action.VIEW", uri);
+            activity.startActivity(intent);
+        } else {
+            boolean ok = CustomTabsClient.bindCustomTabsService(activity, packName, connection);
+            if (ok) {
+                isBound = true;
+            } else {
+                connection = null;
+            }
         }
     }
 
     public void unbindCustomTabsService() {
-        if (connection == null) {
-            return;
+        if (connection != null && isBound) {
+            activity.unbindService(connection);
         }
-        activity.unbindService(connection);
         client = null;
         customTabsSession = null;
         connection = null;

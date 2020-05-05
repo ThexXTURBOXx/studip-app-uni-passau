@@ -30,8 +30,9 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void finish() {
         super.finish();
-        if (this.tabHelper != null)
+        if (this.tabHelper != null) {
             this.tabHelper.unbindCustomTabsService();
+        }
     }
 
     @SuppressWarnings({"StaticFieldLeak"})
