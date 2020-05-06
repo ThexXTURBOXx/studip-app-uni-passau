@@ -78,12 +78,6 @@ public class StudIPHelper {
         }
     }
 
-    public static CustomTabHelper authenticate(Activity activity, String authorizeUrl) {
-        CustomTabHelper helper = new CustomTabHelper(activity, Uri.parse(authorizeUrl));
-        helper.show();
-        return helper;
-    }
-
     public static void updatePic(Bitmap profile_pic, StudIPApp application) {
         StudIPHelper.profilePic = profile_pic;
         Activity a = application.getCurrentActivity();

@@ -1,6 +1,7 @@
 package studip_uni_passau.femtopedia.de.unipassaustudip.activities;
 
 import android.content.Intent;
+import android.graphics.text.LineBreaker;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -48,7 +49,9 @@ public class AboutActivity extends AppCompatActivity
         }
         ((TextView) findViewById(R.id.version_text)).setText(getString(R.string.version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ((AppCompatTextView) findViewById(R.id.about_text)).setJustificationMode(LineBreaker.JUSTIFICATION_MODE_INTER_WORD);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             ((AppCompatTextView) findViewById(R.id.about_text)).setJustificationMode(Layout.JUSTIFICATION_MODE_INTER_WORD);
         }
 

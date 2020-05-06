@@ -91,6 +91,8 @@ dependencies {
     implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
     implementation 'com.jakewharton.threetenabp:threetenabp:1.2.4'
     implementation 'io.sentry:sentry-android:2.1.0-alpha.2'
+    implementation 'liou.rayyuan.chromecustomtabhelper:chrome-custom-tab-helper:1.1.2'
+
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
 }
