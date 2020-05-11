@@ -101,5 +101,7 @@
     <string name="error_no_file">null</string>
     <string name="browser_not_found">Kein Browser gefunden!</string>
     <string name="browser_not_found_desc">Kein kompatibler Browser gefunden!\nProbiere beispielsweise Google Chrome zu installieren.</string>
+    <string name="beta_title">Beta Feature</string>
+    <string name="beta_desc">Achtung! Dieses Feature ist noch in Entwicklung. Einige Sachen könnten eventuell noch nicht ganz funktionieren.</string>
 
 </resources>

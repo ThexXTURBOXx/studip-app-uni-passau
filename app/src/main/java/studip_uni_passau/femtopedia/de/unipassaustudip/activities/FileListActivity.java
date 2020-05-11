@@ -125,6 +125,12 @@ public class FileListActivity extends AppCompatActivity
             actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
             drawerToggle.syncState();
         }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setPositiveButton(R.string.button_okay, (dialog, id) -> {
+        }).setTitle(R.string.beta_title)
+                .setMessage(R.string.beta_desc)
+                .create()
+                .show();
     }
 
     @Override
