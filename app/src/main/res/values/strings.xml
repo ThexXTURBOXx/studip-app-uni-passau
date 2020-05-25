@@ -52,7 +52,7 @@
     <string name="pref_cat_general">General</string>
     <string name="pref_cat_colors">Colors</string>
     <string name="pref_title_auto_sync">Auto Sync</string>
-    <string name="pref_desc_auto_sync">Automatically synchronizes, when you open a supported activity</string>
+    <string name="pref_desc_auto_sync">Automatically synchronizes, when you open this screen</string>
     <string name="pref_title_theme_mode">Theme Mode</string>
     <string name="pref_desc_theme_mode">Sets, whether and when to use the Dark/Light mode (requires restart)</string>
     <string name="pref_title_close_mensa_active_color">Enable Mensa closing time</string>
@@ -107,5 +107,9 @@
     <string name="browser_not_found_desc">No compatible Browser found!\nTry installing e.g. Google Chrome.</string>
     <string name="beta_title">Beta Feature</string>
     <string name="beta_desc">Warning! This is a beta feature. Some things may not work as expected.</string>
+    <string name="cant_open_file_type">Can\'t open this type of file.\nTry installing a corresponding app!</string>
+    <string name="need_permission">You have to accept the following permission request to do this.</string>
+    <string name="progress">Progress</string>
+    <string name="pref_desc_filelist_subscreen">Customize the Files section</string>
 
 </resources>

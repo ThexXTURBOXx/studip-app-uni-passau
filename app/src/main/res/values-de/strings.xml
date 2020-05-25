@@ -47,7 +47,7 @@
     <string name="pref_cat_colors">Farben</string>
     <string name="pref_cat_data_sync">Synchronisation</string>
     <string name="pref_title_auto_sync">Auto Sync</string>
-    <string name="pref_desc_auto_sync">Synchronisiert automatisch, wenn du den Stundenplan oder den Mensaplan aufrufst</string>
+    <string name="pref_desc_auto_sync">Synchronisiert automatisch, wenn du die besagte Funktion aufrufst</string>
     <string name="pref_title_theme_mode">Thema</string>
     <string name="pref_desc_theme_mode">Speichert, ob und wann der dunkle/helle Modus verwendet werden soll (Benötigt Neustart)</string>
     <string name="pref_title_close_mensa_active_color">Mensa Schließzeit aktivieren</string>
@@ -77,7 +77,7 @@
     <string name="pref_desc_general_subscreen">Allgemeines Verhalten der App</string>
     <string name="pref_title_general_subscreen">Allgemein</string>
     <string name="pref_cat_general">Allgemein</string>
-    <string name="pref_desc_mensa_subscreen">Anpassen des Mensabereichs</string>
+    <string name="pref_desc_mensa_subscreen">Anpassen der Mensaplan-Sektion</string>
     <string name="pref_desc_schedule_subscreen">Anpassen des Studenplans</string>
     <string name="cat_tools">Andere nützliche Tools</string>
     <string name="button_telegram_bot">Telegram Bot</string>
@@ -103,5 +103,9 @@
     <string name="browser_not_found_desc">Kein kompatibler Browser gefunden!\nProbiere beispielsweise Google Chrome zu installieren.</string>
     <string name="beta_title">Beta Feature</string>
     <string name="beta_desc">Achtung! Dieses Feature ist noch in Entwicklung. Einige Sachen könnten eventuell noch nicht ganz funktionieren.</string>
+    <string name="cant_open_file_type">Kann diesen Dateityp nicht öffnen.\nVersuche, eine entsprechende Anwendung zu installieren!</string>
+    <string name="need_permission">Dazu müssen Sie die folgende Genehmigungsanfrage akzeptieren, um das zu tun.</string>
+    <string name="progress">Fortschritt</string>
+    <string name="pref_desc_filelist_subscreen">Anpassen der Dateien-Sektion</string>
 
 </resources>

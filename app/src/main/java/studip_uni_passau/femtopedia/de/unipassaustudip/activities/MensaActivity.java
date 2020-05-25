@@ -171,7 +171,7 @@ public class MensaActivity extends AppCompatActivity
     private void updateDataFirst() {
         StudIPHelper.loadMensaPlan(this.getApplicationContext());
         updateMensaPlan();
-        if (StudIPHelper.isNetworkAvailable(this) && PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("auto_sync", true)) {
+        if (StudIPHelper.isNetworkAvailable(this) && PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("mensa_auto_sync", true)) {
             startUpdateAnimation();
             CacheMensaPlan data = new CacheMensaPlan();
             data.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

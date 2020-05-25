@@ -196,7 +196,7 @@ public class ScheduleActivity extends AppCompatActivity
             return;
         StudIPHelper.loadSchedule(this.getApplicationContext());
         selectDate(CalendarDay.today());
-        if (StudIPHelper.isNetworkAvailable(this) && PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("auto_sync", true)) {
+        if (StudIPHelper.isNetworkAvailable(this) && PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("schedule_auto_sync", true)) {
             startUpdateAnimation();
             CacheSchedule schedule = new CacheSchedule();
             schedule.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

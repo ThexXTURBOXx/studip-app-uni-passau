@@ -23,19 +23,6 @@
 
         </PreferenceCategory>
 
-        <PreferenceCategory
-            app:iconSpaceReserved="false"
-            app:title="@string/pref_cat_data_sync">
-
-            <SwitchPreferenceCompat
-                app:defaultValue="true"
-                app:iconSpaceReserved="false"
-                app:key="auto_sync"
-                app:summary="@string/pref_desc_auto_sync"
-                app:title="@string/pref_title_auto_sync" />
-
-        </PreferenceCategory>
-
     </PreferenceScreen>
 
     <PreferenceScreen
@@ -44,6 +31,19 @@
         app:persistent="false"
         app:summary="@string/pref_desc_schedule_subscreen"
         app:title="@string/pref_title_schedule_subscreen">
+
+        <PreferenceCategory
+            app:iconSpaceReserved="false"
+            app:title="@string/pref_cat_data_sync">
+
+            <SwitchPreferenceCompat
+                app:defaultValue="true"
+                app:iconSpaceReserved="false"
+                app:key="schedule_auto_sync"
+                app:summary="@string/pref_desc_auto_sync"
+                app:title="@string/pref_title_auto_sync" />
+
+        </PreferenceCategory>
 
         <PreferenceCategory
             app:iconSpaceReserved="false"
@@ -84,6 +84,19 @@
         app:persistent="false"
         app:summary="@string/pref_desc_mensa_subscreen"
         app:title="@string/pref_title_mensa_subscreen">
+
+        <PreferenceCategory
+            app:iconSpaceReserved="false"
+            app:title="@string/pref_cat_data_sync">
+
+            <SwitchPreferenceCompat
+                app:defaultValue="true"
+                app:iconSpaceReserved="false"
+                app:key="mensa_auto_sync"
+                app:summary="@string/pref_desc_auto_sync"
+                app:title="@string/pref_title_auto_sync" />
+
+        </PreferenceCategory>
 
         <PreferenceCategory
             app:iconSpaceReserved="false"
@@ -152,6 +165,15 @@
                 app:title="@string/pref_title_dessert_mensa_color" />
 
         </PreferenceCategory>
+
+    </PreferenceScreen>
+
+    <PreferenceScreen
+        app:icon="@drawable/ic_baseline_folder_open"
+        app:key="filelist_subscreen"
+        app:persistent="false"
+        app:summary="@string/pref_desc_filelist_subscreen"
+        app:title="@string/pref_title_filelist_subscreen">
 
     </PreferenceScreen>
 
