@@ -13,5 +13,6 @@
     <color name="colorGradientBottom">#00695C</color>
     <color name="colorAppBarCompl">#FFFFFF</color>
     <color name="colorGrey">#777777</color>
+    <color name="colorNormalGrey">#808080</color>
     <color name="colorBoxTransp">#FFFFFF</color>
 </resources>
