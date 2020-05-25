@@ -39,8 +39,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 
@@ -71,7 +73,19 @@ public class FileListActivity extends AppCompatActivity
     private SwipeRefreshLayout swipeRefresher;
     private AnimatingRefreshButtonManager refreshManager;
     private DrawerLayout drawer;
+    private Deque<SubContent> currentContentCache = new ArrayDeque<>();
+    private Deque<FileListCache> fileListCache = new ArrayDeque<>();
     private SubFile fileParamCache = null;
+
+    private static final class FileListCache {
+
+        private final List<SubContent> content;
+
+        private FileListCache(List<SubContent> content) {
+            this.content = content;
+        }
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +98,7 @@ public class FileListActivity extends AppCompatActivity
         }
 
         mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage("A message");
+        mProgressDialog.setMessage(getString(R.string.progress));
         mProgressDialog.setIndeterminate(true);
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         mProgressDialog.setCancelable(true);
@@ -95,7 +109,7 @@ public class FileListActivity extends AppCompatActivity
         StudIPHelper.target = "filelist";
 
         swipeRefresher = binding.appBar.content.swiperefreshFilelist;
-        //swipeRefresher.setOnRefreshListener(this::updateData);
+        swipeRefresher.setOnRefreshListener(() -> updateData(currentContentCache.peek(), true));
 
         ListView listView = binding.appBar.content.subcontent;
         prepareListData();
@@ -146,16 +160,16 @@ public class FileListActivity extends AppCompatActivity
     private void updateDataFirst() {
         if (StudIPHelper.isNetworkAvailable(this)) {
             startUpdateAnimation();
-            CacheOverviewFolder data = new CacheOverviewFolder();
+            CacheOverviewFolder data = new CacheOverviewFolder(false);
             data.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
-    private void updateData(SubContent content) {
+    private void updateData(SubContent content, boolean refresh) {
         if (StudIPHelper.isNetworkAvailable(this)) {
             if (content == null) {
                 startUpdateAnimation();
-                CacheOverviewFolder data = new CacheOverviewFolder();
+                CacheOverviewFolder data = new CacheOverviewFolder(refresh);
                 data.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else {
                 switch (content.getType()) {
@@ -173,7 +187,7 @@ public class FileListActivity extends AppCompatActivity
                                             Manifest.permission.READ_EXTERNAL_STORAGE)) {
                                 new AlertDialog.Builder(this)
                                         .setTitle(R.string.app_name)
-                                        .setMessage("I NEED IT F F FF  FA")
+                                        .setMessage(R.string.need_permission)
                                         .setPositiveButton(android.R.string.ok, null)
                                         .setOnDismissListener(dialogInterface -> {
                                             fileParamCache = file;
@@ -196,13 +210,13 @@ public class FileListActivity extends AppCompatActivity
                         break;
                     case FOLDER:
                         startUpdateAnimation();
-                        CacheFolder data1 = new CacheFolder();
+                        CacheFolder data1 = new CacheFolder(refresh);
                         data1.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
                                 content.getFolder().getId());
                         break;
                     case COURSE:
                         startUpdateAnimation();
-                        CacheFolder data2 = new CacheFolder();
+                        CacheFolder data2 = new CacheFolder(refresh);
                         data2.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
                                 content.getCourse().getCourse_id(), null);
                         break;
@@ -227,7 +241,7 @@ public class FileListActivity extends AppCompatActivity
             fileIntent.setDataAndType(fileUri, mime);
             startActivity(fileIntent);
         } catch (ActivityNotFoundException e) {
-            Toast.makeText(this, "Can't open this type of file.\nTry installing a corresponding app!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.cant_open_file_type, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -260,6 +274,9 @@ public class FileListActivity extends AppCompatActivity
     public void onBackPressed() {
         if (drawer != null && drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (!fileListCache.isEmpty()) {
+            currentContentCache.pop();
+            setToView(fileListCache.pop());
         } else {
             super.onBackPressed();
         }
@@ -286,7 +303,7 @@ public class FileListActivity extends AppCompatActivity
                 drawer.closeDrawer(GravityCompat.START);
             return true;
         } else if (id == R.id.action_refresh_bar) {
-            this.updateData(null);
+            this.updateData(currentContentCache.peek(), true);
             return true;
         }
 
@@ -299,8 +316,17 @@ public class FileListActivity extends AppCompatActivity
         return true;
     }
 
-    public void setToView(Folder folder) {
+    public void setToView(FileListCache cache) {
+        clearListItems();
+        listDataHeader.addAll(cache.content);
+        listAdapter.notifyDataSetChanged();
+    }
+
+    public void setToView(Folder folder, boolean refresh) {
         stopUpdateAnimation();
+        if (!refresh && !listDataHeader.isEmpty()) {
+            fileListCache.push(new FileListCache(new ArrayList<>(listDataHeader)));
+        }
         clearListItems();
         Iterator<SubFolder> folders = folder.getSubfolders().iterator();
         while (folders.hasNext()) {
@@ -327,8 +353,11 @@ public class FileListActivity extends AppCompatActivity
         listAdapter.notifyDataSetChanged();
     }
 
-    public void setToView(List<Course> courses) {
+    public void setToView(List<Course> courses, boolean refresh) {
         stopUpdateAnimation();
+        if (!refresh && !listDataHeader.isEmpty()) {
+            fileListCache.push(new FileListCache(new ArrayList<>(listDataHeader)));
+        }
         clearListItems();
         Collections.sort(courses, (c1, c2) -> c1.getTitle().compareTo(c2.getTitle()));
         for (Course c : courses) {
@@ -339,7 +368,11 @@ public class FileListActivity extends AppCompatActivity
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        updateData(listDataHeader.get(position));
+        final SubContent sc = listDataHeader.get(position);
+        if (sc.getType() != SubContent.SubType.FILE) {
+            currentContentCache.push(sc);
+        }
+        updateData(sc, false);
     }
 
     @Override
@@ -355,6 +388,12 @@ public class FileListActivity extends AppCompatActivity
 
     @SuppressWarnings("StaticFieldLeak")
     public class CacheOverviewFolder extends AsyncTask<Void, Void, List<Course>> {
+
+        private final boolean refresh;
+
+        private CacheOverviewFolder(boolean refresh) {
+            this.refresh = refresh;
+        }
 
         @Override
         protected List<Course> doInBackground(Void... url) {
@@ -372,13 +411,19 @@ public class FileListActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(List<Course> courses) {
-            setToView(courses);
+            setToView(courses, refresh);
             super.onPostExecute(courses);
         }
     }
 
     @SuppressWarnings("StaticFieldLeak")
     public class CacheFolder extends AsyncTask<String, Void, Folder> {
+
+        private final boolean refresh;
+
+        private CacheFolder(boolean refresh) {
+            this.refresh = refresh;
+        }
 
         @Override
         protected Folder doInBackground(String... params) {
@@ -400,7 +445,7 @@ public class FileListActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Folder folder) {
-            setToView(folder);
+            setToView(folder, refresh);
             super.onPostExecute(folder);
         }
 
