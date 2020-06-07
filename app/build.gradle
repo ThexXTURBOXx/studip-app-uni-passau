@@ -90,9 +90,8 @@ dependencies {
     implementation 'com.rarepebble:colorpicker:3.0.1'
     implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
     implementation 'com.jakewharton.threetenabp:threetenabp:1.2.4'
-    implementation 'io.sentry:sentry-android:2.1.3'
+    implementation 'io.sentry:sentry-android:2.1.6'
     implementation 'liou.rayyuan.chromecustomtabhelper:chrome-custom-tab-helper:1.1.2'
-
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.3'
 }
