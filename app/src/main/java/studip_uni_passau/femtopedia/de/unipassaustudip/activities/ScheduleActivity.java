@@ -411,7 +411,9 @@ public class ScheduleActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            selectDate(calendarView.getSelectedDate());
+            if (calendarView != null) {
+                selectDate(calendarView.getSelectedDate());
+            }
             stopUpdateAnimation();
             enableDays();
             super.onPostExecute(aVoid);
