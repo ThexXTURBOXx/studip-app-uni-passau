@@ -22,16 +22,16 @@ public class StudIPApp extends MultiDexApplication {
     }
 
     public Activity getCurrentActivity() {
-        return this.currentActivity;
+        return currentActivity;
     }
 
     public void setCurrentActivity(Activity currentActivity) {
         if (this.currentActivity != null) {
             this.currentActivity.finish();
         }
-        if (this.currentTopActivity != null) {
-            this.currentTopActivity.finish();
-            this.currentTopActivity = null;
+        if (currentTopActivity != null) {
+            currentTopActivity.finish();
+            currentTopActivity = null;
         }
         this.currentActivity = currentActivity;
         if (this.currentActivity instanceof StudIPHelper.NavigationDrawerActivity) {
@@ -44,8 +44,8 @@ public class StudIPApp extends MultiDexApplication {
             this.currentTopActivity.finish();
         }
         this.currentTopActivity = currentTopActivity;
-        if (this.currentActivity instanceof StudIPHelper.NavigationDrawerActivity) {
-            ((StudIPHelper.NavigationDrawerActivity) this.currentActivity).setActive();
+        if (currentActivity instanceof StudIPHelper.NavigationDrawerActivity) {
+            ((StudIPHelper.NavigationDrawerActivity) currentActivity).setActive();
         }
         if (this.currentTopActivity instanceof StudIPHelper.NavigationDrawerActivity) {
             ((StudIPHelper.NavigationDrawerActivity) this.currentTopActivity).setActive();

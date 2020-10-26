@@ -73,26 +73,16 @@ public class FileListActivity extends AppCompatActivity
     private SwipeRefreshLayout swipeRefresher;
     private AnimatingRefreshButtonManager refreshManager;
     private DrawerLayout drawer;
-    private Deque<SubContent> currentContentCache = new ArrayDeque<>();
-    private Deque<FileListCache> fileListCache = new ArrayDeque<>();
+    private final Deque<SubContent> currentContentCache = new ArrayDeque<>();
+    private final Deque<FileListCache> fileListCache = new ArrayDeque<>();
     private SubFile fileParamCache = null;
-
-    private static final class FileListCache {
-
-        private final List<SubContent> content;
-
-        private FileListCache(List<SubContent> content) {
-            this.content = content;
-        }
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (StudIPHelper.getCurrentUser() == null) {
-            Intent intent = new Intent(FileListActivity.this, LoadActivity.class);
+            Intent intent = new Intent(this, LoadActivity.class);
             startActivity(intent);
             return;
         }
@@ -185,7 +175,7 @@ public class FileListActivity extends AppCompatActivity
                                         .setPositiveButton(android.R.string.ok, null)
                                         .setOnDismissListener(dialogInterface -> {
                                             fileParamCache = file;
-                                            ActivityCompat.requestPermissions(FileListActivity.this,
+                                            ActivityCompat.requestPermissions(this,
                                                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
                                                             Manifest.permission.READ_EXTERNAL_STORAGE},
                                                     EXT_STORAGE_REQUEST_CODE);
@@ -297,7 +287,7 @@ public class FileListActivity extends AppCompatActivity
                 drawer.closeDrawer(GravityCompat.START);
             return true;
         } else if (id == R.id.action_refresh_bar) {
-            this.updateData(currentContentCache.peek(), true);
+            updateData(currentContentCache.peek(), true);
             return true;
         }
 
@@ -380,6 +370,16 @@ public class FileListActivity extends AppCompatActivity
         }
     }
 
+    private static final class FileListCache {
+
+        private final List<SubContent> content;
+
+        private FileListCache(List<SubContent> content) {
+            this.content = content;
+        }
+
+    }
+
     @SuppressWarnings("StaticFieldLeak")
     public class CacheOverviewFolder extends AsyncTask<Void, Void, List<Course>> {
 
@@ -447,16 +447,6 @@ public class FileListActivity extends AppCompatActivity
 
     @SuppressWarnings("StaticFieldLeak")
     public class DownloadTask extends AsyncTask<SubFile, Long, DownloadTask.Output> {
-
-        private class Output {
-            private final File file;
-            private final String mime;
-
-            private Output(File file, String mime) {
-                this.file = file;
-                this.mime = mime;
-            }
-        }
 
         @Override
         protected void onPreExecute() {
@@ -527,6 +517,16 @@ public class FileListActivity extends AppCompatActivity
             mProgressDialog.dismiss();
             openFile(file.file, file.mime);
             super.onPostExecute(file);
+        }
+
+        private class Output {
+            private final File file;
+            private final String mime;
+
+            private Output(File file, String mime) {
+                this.file = file;
+                this.mime = mime;
+            }
         }
 
     }

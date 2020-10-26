@@ -28,12 +28,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import de.femtopedia.studip.StudIPAPI;
-import de.femtopedia.studip.json.Folder;
 import de.femtopedia.studip.json.User;
 import studip_uni_passau.femtopedia.de.unipassaustudip.R;
 import studip_uni_passau.femtopedia.de.unipassaustudip.StudIPApp;
@@ -55,19 +53,15 @@ public class StudIPHelper {
     public static final ZoneId ZONE = ZoneId.of("Europe/Berlin");
     private static final String CONSUMER_KEY = new String(Base64.decode(OAuthValues.getConsumerKey(), Base64.DEFAULT));
     private static final String CONSUMER_SECRET = new String(Base64.decode(OAuthValues.getConsumerSecret(), Base64.DEFAULT));
+    private static final Gson gson = new GsonBuilder().enableComplexMapKeySerialization().disableHtmlEscaping().create();
+    private static final Type scheduleType = new TypeToken<Map<Integer, List<ScheduledEvent>>>() {
+    }.getType();
     public static String target = null;
-
+    public static Map<Integer, List<ScheduledEvent>> schedule = null;
+    public static MensaPlan mensaPlan = new MensaPlan();
     private static StudIPAPI api = null;
     private static User currentUser = null;
     private static Bitmap profilePic = null;
-
-    public static Map<Integer, List<ScheduledEvent>> schedule = null;
-    public static MensaPlan mensaPlan = new MensaPlan();
-    public static Map<String, Folder> folders = new HashMap<>();
-
-    private static Gson gson = new GsonBuilder().enableComplexMapKeySerialization().disableHtmlEscaping().create();
-    private static Type scheduleType = new TypeToken<Map<Integer, List<ScheduledEvent>>>() {
-    }.getType();
 
     public static void constructAPI(boolean online, boolean auth) {
         if (auth || !online) {

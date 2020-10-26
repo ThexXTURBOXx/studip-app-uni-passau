@@ -1,5 +1,6 @@
 package studip_uni_passau.femtopedia.de.unipassaustudip.preference.time;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
@@ -50,12 +51,18 @@ public class TimePreferenceDialogFragmentCompat extends PreferenceDialogFragment
 
         view.findViewById(R.id.button_cancel).setOnClickListener(v -> {
             onClick(null, DialogInterface.BUTTON_NEGATIVE);
-            getDialog().dismiss();
+            Dialog dialog = getDialog();
+            if (dialog != null) {
+                dialog.dismiss();
+            }
         });
 
         view.findViewById(R.id.button_okay).setOnClickListener(v -> {
             onClick(null, DialogInterface.BUTTON_POSITIVE);
-            getDialog().dismiss();
+            Dialog dialog = getDialog();
+            if (dialog != null) {
+                dialog.dismiss();
+            }
         });
     }
 

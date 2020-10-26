@@ -19,25 +19,26 @@ import studip_uni_passau.femtopedia.de.unipassaustudip.R;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
-    private Activity context;
-    private List<Object> listDataHeader;
-    private List<List<Object>> listDataChild;
-    private List<Integer> listDataColorsBg, listDataColorsText;
+    private final Activity context;
+    private final List<Object> listDataHeader;
+    private final List<List<Object>> listDataChild;
+    private final List<Integer> listDataColorsBg;
+    private final List<Integer> listDataColorsText;
 
     public ExpandableListAdapter(Activity context, List<Object> listDataHeader,
-                                 List<List<Object>> listChildData,
+                                 List<List<Object>> listDataChild,
                                  List<Integer> listDataColorsBg,
                                  List<Integer> listDataColorsText) {
         this.context = context;
         this.listDataHeader = listDataHeader;
-        this.listDataChild = listChildData;
+        this.listDataChild = listDataChild;
         this.listDataColorsBg = listDataColorsBg;
         this.listDataColorsText = listDataColorsText;
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosititon) {
-        return this.listDataChild.get(groupPosition).get(childPosititon);
+        return listDataChild.get(groupPosition).get(childPosititon);
     }
 
     @Override
@@ -46,11 +47,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    @SuppressWarnings({"inflateParams", "unchecked"})
+    @SuppressWarnings({"inflateParams", "unchecked", "rawtypes"})
     public View getChildView(int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
         Object data = listDataChild.get(groupPosition).get(childPosition);
-        LayoutInflater infalInflater = (LayoutInflater) this.context
+        LayoutInflater infalInflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (infalInflater != null) {
             if (data instanceof String) {
@@ -85,17 +86,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return this.listDataChild.get(groupPosition).size();
+        return listDataChild.get(groupPosition).size();
     }
 
     @Override
     public Object getGroup(int groupPosition) {
-        return this.listDataHeader.get(groupPosition);
+        return listDataHeader.get(groupPosition);
     }
 
     @Override
     public int getGroupCount() {
-        return this.listDataHeader.size();
+        return listDataHeader.size();
     }
 
     @Override
@@ -107,7 +108,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @SuppressWarnings({"inflateParams"})
     public View getGroupView(int groupPosition, boolean isExpanded,
                              View convertView, ViewGroup parent) {
-        LayoutInflater infalInflater = (LayoutInflater) this.context
+        LayoutInflater infalInflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
             if (infalInflater != null)
@@ -147,9 +148,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     public static class ButtonPreset {
-        private String text;
-        private int textColor, bgColor;
-        private View.OnClickListener onClickListener;
+        private final String text;
+        private final int textColor;
+        private final int bgColor;
+        private final View.OnClickListener onClickListener;
 
         public ButtonPreset(String text, int textColor, int bgColor, View.OnClickListener onClickListener) {
             this.text = text;

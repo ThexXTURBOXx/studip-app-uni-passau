@@ -1,6 +1,7 @@
 package studip_uni_passau.femtopedia.de.unipassaustudip.util;
 
-import io.sentry.core.Sentry;
+
+import io.sentry.Sentry;
 
 public class SentryUtil {
 

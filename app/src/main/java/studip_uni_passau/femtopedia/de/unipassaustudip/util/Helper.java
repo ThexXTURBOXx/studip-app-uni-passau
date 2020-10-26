@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Helper {
 
+    @SafeVarargs
     public static <T> List<T> asNonNullList(T... args) {
         List<T> list = new ArrayList<>();
         for (T arg : args) {

@@ -133,17 +133,17 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
         if (StudIPHelper.target != null) {
             switch (StudIPHelper.target) {
                 case "mensa":
-                    intent = new Intent(LoadActivity.this, MensaActivity.class);
+                    intent = new Intent(this, MensaActivity.class);
                     break;
                 case "filelist":
-                    intent = new Intent(LoadActivity.this, FileListActivity.class);
+                    intent = new Intent(this, FileListActivity.class);
                     break;
                 default:
-                    intent = new Intent(LoadActivity.this, ScheduleActivity.class);
+                    intent = new Intent(this, ScheduleActivity.class);
                     break;
             }
         } else {
-            intent = new Intent(LoadActivity.this, ScheduleActivity.class);
+            intent = new Intent(this, ScheduleActivity.class);
         }
         startActivity(intent);
     }

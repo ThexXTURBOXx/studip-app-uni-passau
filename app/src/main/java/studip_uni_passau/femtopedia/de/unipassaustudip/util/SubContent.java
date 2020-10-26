@@ -6,33 +6,29 @@ import de.femtopedia.studip.json.SubFolder;
 
 public class SubContent {
 
-    public enum SubType {
-        FILE, FOLDER, COURSE
-    }
-
     private final SubType type;
     private final SubFile file;
     private final SubFolder folder;
     private final Course course;
 
     public SubContent(SubFile file) {
-        this.type = SubType.FILE;
+        type = SubType.FILE;
         this.file = file;
-        this.folder = null;
-        this.course = null;
+        folder = null;
+        course = null;
     }
 
     public SubContent(SubFolder folder) {
-        this.type = SubType.FOLDER;
-        this.file = null;
+        type = SubType.FOLDER;
+        file = null;
         this.folder = folder;
-        this.course = null;
+        course = null;
     }
 
     public SubContent(Course course) {
-        this.type = SubType.COURSE;
-        this.file = null;
-        this.folder = null;
+        type = SubType.COURSE;
+        file = null;
+        folder = null;
         this.course = course;
     }
 
@@ -50,5 +46,9 @@ public class SubContent {
 
     public Course getCourse() {
         return course;
+    }
+
+    public enum SubType {
+        FILE, FOLDER, COURSE
     }
 }

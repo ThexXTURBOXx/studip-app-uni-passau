@@ -25,13 +25,13 @@ public class StudIPPrefFragment extends PreferenceFragmentCompat implements
 
     @Override
     public void onCreatePreferences(Bundle bundle, String rootKey) {
-        this.mFragmentContainerId = R.id.fragment_container;
+        mFragmentContainerId = R.id.fragment_container;
         setPreferencesFromResource(R.xml.preferences, rootKey);
     }
 
     private StudIPPrefFragment newInstance() {
         try {
-            return this.getClass().newInstance();
+            return getClass().newInstance();
         } catch (java.lang.InstantiationException | IllegalAccessException ie) {
             throw new RuntimeException(ie);
         }
@@ -54,14 +54,14 @@ public class StudIPPrefFragment extends PreferenceFragmentCompat implements
         if (preference instanceof ColorPreference) {
             ColorPreferenceFragment f = ColorPreferenceFragment.newInstance(preference.getKey());
             f.setTargetFragment(this, 0);
-            if (getFragmentManager() != null) {
-                f.show(getFragmentManager(), TAG);
+            if (isAdded()) {
+                f.show(getParentFragmentManager(), TAG);
             }
         } else if (preference instanceof TimePreference) {
             DialogFragment dialogFragment = TimePreferenceDialogFragmentCompat.newInstance(preference.getKey());
             dialogFragment.setTargetFragment(this, 0);
-            if (this.getFragmentManager() != null) {
-                dialogFragment.show(this.getFragmentManager(), "android.support.v7.preference" +
+            if (isAdded()) {
+                dialogFragment.show(getParentFragmentManager(), "android.support.v7.preference" +
                         ".PreferenceFragment.DIALOG");
             }
         } else {

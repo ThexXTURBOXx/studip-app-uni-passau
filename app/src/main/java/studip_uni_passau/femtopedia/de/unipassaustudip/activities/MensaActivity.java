@@ -77,7 +77,7 @@ public class MensaActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         if (StudIPHelper.getCurrentUser() == null) {
-            Intent intent = new Intent(MensaActivity.this, LoadActivity.class);
+            Intent intent = new Intent(this, LoadActivity.class);
             startActivity(intent);
             return;
         }
@@ -169,7 +169,7 @@ public class MensaActivity extends AppCompatActivity
     }
 
     private void updateDataFirst() {
-        StudIPHelper.loadMensaPlan(this.getApplicationContext());
+        StudIPHelper.loadMensaPlan(getApplicationContext());
         updateMensaPlan();
         if (StudIPHelper.isNetworkAvailable(this) && PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("mensa_auto_sync", true)) {
             startUpdateAnimation();
@@ -267,7 +267,7 @@ public class MensaActivity extends AppCompatActivity
                 drawer.closeDrawer(GravityCompat.START);
             return true;
         } else if (id == R.id.action_refresh_bar) {
-            this.updateData();
+            updateData();
             return true;
         }
 

@@ -17,25 +17,26 @@ import studip_uni_passau.femtopedia.de.unipassaustudip.R;
 
 public class ListScheduleAdapter extends BaseExpandableListAdapter {
 
-    private Activity context;
-    private List<Object> listDataHeader;
-    private List<List<Object>> listDataChild;
-    private List<Integer> listDataColorsBg, listDataColorsText;
+    private final Activity context;
+    private final List<Object> listDataHeader;
+    private final List<List<Object>> listDataChild;
+    private final List<Integer> listDataColorsBg;
+    private final List<Integer> listDataColorsText;
 
     public ListScheduleAdapter(Activity context, List<Object> listDataHeader,
-                               List<List<Object>> listChildData,
+                               List<List<Object>> listDataChild,
                                List<Integer> listDataColorsBg,
                                List<Integer> listDataColorsText) {
         this.context = context;
         this.listDataHeader = listDataHeader;
-        this.listDataChild = listChildData;
+        this.listDataChild = listDataChild;
         this.listDataColorsBg = listDataColorsBg;
         this.listDataColorsText = listDataColorsText;
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosititon) {
-        return this.listDataChild.get(groupPosition).get(childPosititon);
+        return listDataChild.get(groupPosition).get(childPosititon);
     }
 
     @Override
@@ -48,7 +49,7 @@ public class ListScheduleAdapter extends BaseExpandableListAdapter {
     public View getChildView(int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
         Object data = getChild(groupPosition, childPosition);
-        LayoutInflater infalInflater = (LayoutInflater) this.context
+        LayoutInflater infalInflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (infalInflater != null) {
             if (data instanceof String) {
@@ -62,17 +63,17 @@ public class ListScheduleAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return this.listDataChild.get(groupPosition).size();
+        return listDataChild.get(groupPosition).size();
     }
 
     @Override
     public Object getGroup(int groupPosition) {
-        return this.listDataHeader.get(groupPosition);
+        return listDataHeader.get(groupPosition);
     }
 
     @Override
     public int getGroupCount() {
-        return this.listDataHeader.size();
+        return listDataHeader.size();
     }
 
     @Override
@@ -84,7 +85,7 @@ public class ListScheduleAdapter extends BaseExpandableListAdapter {
     @SuppressWarnings({"inflateParams"})
     public View getGroupView(int groupPosition, boolean isExpanded,
                              View convertView, ViewGroup parent) {
-        LayoutInflater infalInflater = (LayoutInflater) this.context
+        LayoutInflater infalInflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null && infalInflater != null) {
             convertView = infalInflater.inflate(R.layout.list_schedule_group, null);
@@ -135,7 +136,9 @@ public class ListScheduleAdapter extends BaseExpandableListAdapter {
 
     public static class ScheduleItem {
 
-        private String clock, room, info;
+        private final String clock;
+        private final String room;
+        private final String info;
 
         public ScheduleItem(String clock, String room, String info) {
             this.clock = clock;

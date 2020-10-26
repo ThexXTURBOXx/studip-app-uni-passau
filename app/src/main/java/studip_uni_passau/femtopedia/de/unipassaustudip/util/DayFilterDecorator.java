@@ -16,11 +16,11 @@ import studip_uni_passau.femtopedia.de.unipassaustudip.R;
 
 public class DayFilterDecorator implements DayViewDecorator {
 
-    private HashSet<CalendarDay> dates;
-    private Context context;
+    private final HashSet<CalendarDay> dates;
+    private final Context context;
 
     public DayFilterDecorator(Context context, Collection<CalendarDay> whitelist) {
-        this.dates = new HashSet<>(whitelist);
+        dates = new HashSet<>(whitelist);
         this.context = context;
     }
 

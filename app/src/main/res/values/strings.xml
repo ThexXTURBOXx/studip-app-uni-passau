@@ -105,8 +105,6 @@
     <string name="format_course_title" translatable="false">%1$s %2$s</string>
     <string name="browser_not_found">No browser found!</string>
     <string name="browser_not_found_desc">No compatible Browser found!\nTry installing e.g. Google Chrome.</string>
-    <string name="beta_title">Beta Feature</string>
-    <string name="beta_desc">Warning! This is a beta feature. Some things may not work as expected.</string>
     <string name="cant_open_file_type">Can\'t open this type of file.\nTry installing a corresponding app!</string>
     <string name="need_permission">You have to accept the following permission request to do this.</string>
     <string name="progress">Progress</string>
