@@ -382,7 +382,7 @@ public class ScheduleActivity extends AppCompatActivity
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (IllegalAccessException | OAuthException e) {
-                    Intent intent = new Intent(ScheduleActivity.this, LoadActivity.class);
+                    Intent intent = new Intent(this, LoadActivity.class);
                     startActivity(intent);
                 }
                 if (se.color == -1)

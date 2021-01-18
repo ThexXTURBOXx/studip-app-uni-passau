@@ -35,21 +35,21 @@ public class FileAdapter extends ArrayAdapter<SubContent> {
         } else {
             switch (content.getType()) {
                 case FILE:
-                    name.setText(content.getFile().getName());
+                    name.setText(content.getFile().getName().trim());
                     icon.setImageResource(R.drawable.ic_insert_drive_file);
                     break;
                 case FOLDER:
-                    name.setText(content.getFolder().getName());
+                    name.setText(content.getFolder().getName().trim());
                     icon.setImageResource(R.drawable.ic_baseline_folder_open);
                     break;
                 case COURSE:
                     String number = content.getCourse().getNumber();
                     String title = content.getCourse().getTitle();
                     if (number == null || number.equals("null")) {
-                        name.setText(title);
+                        name.setText(title.trim());
                     } else {
                         name.setText(getContext().getString(R.string.format_course_title,
-                                number, title));
+                                number.trim(), title.trim()));
                     }
                     icon.setImageResource(R.drawable.ic_baseline_folder_open);
                     break;

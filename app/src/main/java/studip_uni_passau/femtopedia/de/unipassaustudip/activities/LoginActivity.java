@@ -71,10 +71,12 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     CustomTabsIntent intent = new CustomTabsIntent.Builder()
                             .build();
+                    intent.intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                     ChromeCustomTabsHelper.openCustomTab(LoginActivity.this, Browsers.CHROME,
                             intent, Uri.parse(authUrl), (activity, uri) -> {
                                 Intent fallback = new Intent("android.intent.action.VIEW", uri);
                                 try {
+                                    fallback.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                                     activity.startActivity(fallback);
                                 } catch (ActivityNotFoundException e) {
                                     new AlertDialog.Builder(LoginActivity.this)

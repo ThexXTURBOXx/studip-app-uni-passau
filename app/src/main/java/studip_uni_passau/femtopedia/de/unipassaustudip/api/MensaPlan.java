@@ -4,13 +4,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import studip_uni_passau.femtopedia.de.unipassaustudip.R;
 
 public class MensaPlan {
 
-    @SuppressWarnings("useSparseArrays")
     public Map<Long, DayMenu> menu = new HashMap<>();
+
+    @Override
+    public String toString() {
+        return "MensaPlan{" +
+                "menu=" + menu +
+                '}';
+    }
 
     public enum FoodProperty {
 
@@ -49,6 +56,13 @@ public class MensaPlan {
             return UNKNOWN;
         }
 
+        @Override
+        public String toString() {
+            return "FoodProperty{" +
+                    "abbrev='" + abbrev + '\'' +
+                    '}';
+        }
+
     }
 
     public static class DayMenu {
@@ -63,8 +77,19 @@ public class MensaPlan {
     public static class Food {
 
         public String name;
-        public List<FoodProperty> properties;
+        public Set<FoodProperty> properties;
         public double price_stud, price_bed, price_guest;
+
+        @Override
+        public String toString() {
+            return "Food{" +
+                    "name='" + name + '\'' +
+                    ", properties=" + properties +
+                    ", price_stud=" + price_stud +
+                    ", price_bed=" + price_bed +
+                    ", price_guest=" + price_guest +
+                    '}';
+        }
 
     }
 

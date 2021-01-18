@@ -30,13 +30,10 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import org.threeten.bp.DayOfWeek;
-import org.threeten.bp.LocalDate;
 import org.threeten.bp.ZonedDateTime;
-import org.threeten.bp.format.DateTimeFormatter;
 import org.threeten.bp.temporal.WeekFields;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,23 +42,20 @@ import java.util.Locale;
 import java.util.Map;
 
 import de.femtopedia.studip.shib.CustomAccessHttpResponse;
-import de.femtopedia.studip.shib.OAuthClient;
 import de.hdodenhof.circleimageview.CircleImageView;
 import oauth.signpost.exception.OAuthException;
-import okhttp3.ResponseBody;
 import studip_uni_passau.femtopedia.de.unipassaustudip.R;
 import studip_uni_passau.femtopedia.de.unipassaustudip.StudIPApp;
 import studip_uni_passau.femtopedia.de.unipassaustudip.api.MensaPlan;
 import studip_uni_passau.femtopedia.de.unipassaustudip.util.AnimatingRefreshButtonManager;
 import studip_uni_passau.femtopedia.de.unipassaustudip.util.ExpandableListAdapter;
-import studip_uni_passau.femtopedia.de.unipassaustudip.util.SentryUtil;
 import studip_uni_passau.femtopedia.de.unipassaustudip.util.StudIPHelper;
+import studip_uni_passau.femtopedia.de.unipassaustudip.util.mensa.MensaPlanParser;
 
 public class MensaActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, StudIPHelper.ProfilePicHolder,
         StudIPHelper.NavigationDrawerActivity, OnDateSelectedListener {
 
-    private static final DateTimeFormatter DATE_PATTERN = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     private static final String MENSA_URL = "https://www.stwno.de/infomax/daten-extern/csv/UNI-P/";
     private ExpandableListAdapter listAdapter;
     private List<Object> listDataHeader;
@@ -336,96 +330,16 @@ public class MensaActivity extends AppCompatActivity
         addListItem(f.name, info, colorBg, colorText);
     }
 
-    @SuppressWarnings({"useSparseArrays", "StringContatenationInLoop"})
     public Map<Long, MensaPlan.DayMenu> parseMensaPlan(CustomAccessHttpResponse csv) {
         Map<Long, MensaPlan.DayMenu> dayMenus = new HashMap<>();
-        InputStream content = null;
+
         try {
-            ResponseBody body = csv.getResponse().body();
-            if (body == null) {
-                return new HashMap<>();
-            }
-            content = body.byteStream();
-            MensaPlan.Food food = null;
-            MensaPlan.DayMenu menu = new MensaPlan.DayMenu();
-            String time = "";
-            CalendarDay dt;
-            for (String s : OAuthClient.readLines(content, "Cp1252")) {
-                if (food == null) {
-                    food = new MensaPlan.Food();
-                    continue;
-                }
-                try {
-                    food = new MensaPlan.Food();
-                    String[] cols = s.split(";");
-                    food.name = cols[3];
-                    food.properties = new ArrayList<>();
-                    parseProperties(food, cols[4]);
-                    try {
-                        food.price_stud = Double.parseDouble(cols[6].replace(",", "."));
-                        food.price_bed = Double.parseDouble(cols[7].replace(",", "."));
-                        food.price_guest = Double.parseDouble(cols[8].replace(",", "."));
-                    } catch (NumberFormatException e) {
-                        food.name = food.name + "," + cols[4];
-                        food.properties.clear();
-                        parseProperties(food, cols[5]);
-                        try {
-                            food.price_stud = Double.parseDouble(cols[7].replace(",", "."));
-                            food.price_bed = Double.parseDouble(cols[8].replace(",", "."));
-                            food.price_guest = Double.parseDouble(cols[9].replace(",", "."));
-                        } catch (NumberFormatException e1) {
-                            e1.printStackTrace();
-                            SentryUtil.logError(e1);
-                            food.price_stud = 0;
-                            food.price_bed = 0;
-                            food.price_guest = 0;
-                        }
-                    }
-                    if (!cols[0].equals(time)) {
-                        if (!time.equals("")) {
-                            dt = CalendarDay.from(LocalDate.parse(time, DATE_PATTERN));
-                            dayMenus.put(dt.getDate().toEpochDay(), menu);
-                            menu = new MensaPlan.DayMenu();
-                        }
-                        time = cols[0];
-                    }
-                    if (cols[2].startsWith("Suppe"))
-                        menu.soups.add(food);
-                    else if (cols[2].startsWith("HG"))
-                        menu.mains.add(food);
-                    else if (cols[2].startsWith("B"))
-                        menu.garnishes.add(food);
-                    else if (cols[2].startsWith("N"))
-                        menu.desserts.add(food);
-                } catch (Throwable t) {
-                    t.printStackTrace();
-                    SentryUtil.logError(t);
-                }
-            }
-            if (!time.equals("")) {
-                dt = CalendarDay.from(LocalDate.parse(time, DATE_PATTERN));
-                dayMenus.put(dt.getDate().toEpochDay(), menu);
-            }
+            dayMenus = MensaPlanParser.parsePlan(csv.readLines("Cp1252")).menu;
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                csv.close();
-                if (content != null)
-                    content.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
-        return dayMenus;
-    }
 
-    private void parseProperties(MensaPlan.Food food, String col) {
-        for (String c : col.split(",")) {
-            MensaPlan.FoodProperty fp = MensaPlan.FoodProperty.getProperty(c);
-            if (fp != null)
-                food.properties.add(fp);
-        }
+        return dayMenus;
     }
 
     public void updateMensaPlan() {
@@ -447,7 +361,7 @@ public class MensaActivity extends AppCompatActivity
                 if (StudIPHelper.mensaPlan == null)
                     StudIPHelper.mensaPlan = new MensaPlan();
                 StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.getApi().getOAuthClient().get(MENSA_URL + week + ".csv")));
-                StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.getApi().getOAuthClient().get(MENSA_URL + (next_week) + ".csv")));
+                StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.getApi().getOAuthClient().get(MENSA_URL + next_week + ".csv")));
             } catch (IllegalAccessException | OAuthException e) {
                 Intent intent = new Intent(MensaActivity.this, LoadActivity.class);
                 startActivity(intent);
