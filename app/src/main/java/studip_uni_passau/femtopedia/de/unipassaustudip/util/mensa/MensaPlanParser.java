@@ -1,5 +1,6 @@
 package studip_uni_passau.femtopedia.de.unipassaustudip.util.mensa;
 
+import android.os.Build;
 import android.text.TextUtils;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -17,6 +18,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import studip_uni_passau.femtopedia.de.unipassaustudip.api.MensaPlan;
 import studip_uni_passau.femtopedia.de.unipassaustudip.util.MapCompat;
@@ -82,7 +84,11 @@ public final class MensaPlanParser {
         food.price_guest = parsePrice(entries[8]);
 
         if (!set.isEmpty()) {
-            food.name += " (" + TextUtils.join(",", set) + ')';
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                food.name += " (" + set.stream().sorted().collect(Collectors.joining(", ")) + ')';
+            } else {
+                food.name += " (" + TextUtils.join(", ", set) + ')';
+            }
         }
 
         return food;
