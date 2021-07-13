@@ -163,7 +163,7 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
     /**
      * Represents an asynchronous data loading task used to verify API access.
      */
-    @SuppressWarnings({"StaticFieldLeak"})
+    @SuppressWarnings({"StaticFieldLeak", "deprecation"})
     public class VerifyTask extends AsyncTask<Void, Void, LoadingState> {
 
         VerifyTask() {
@@ -245,7 +245,7 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
 
     }
 
-    @SuppressWarnings({"StaticFieldLeak"})
+    @SuppressWarnings({"StaticFieldLeak", "deprecation"})
     public class CacheCurrentUserData extends AsyncTask<Void, Void, User> {
 
         CacheCurrentUserData() {
@@ -287,7 +287,7 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
         }
     }
 
-    @SuppressWarnings({"StaticFieldLeak"})
+    @SuppressWarnings({"StaticFieldLeak", "deprecation"})
     public class CacheCurrentUserPic extends AsyncTask<String, Void, Bitmap> {
 
         CacheCurrentUserPic(boolean innerCall) {

@@ -380,7 +380,7 @@ public class FileListActivity extends AppCompatActivity
 
     }
 
-    @SuppressWarnings("StaticFieldLeak")
+    @SuppressWarnings({"StaticFieldLeak", "deprecation"})
     public class CacheOverviewFolder extends AsyncTask<Void, Void, List<Course>> {
 
         private final boolean refresh;
@@ -410,7 +410,7 @@ public class FileListActivity extends AppCompatActivity
         }
     }
 
-    @SuppressWarnings("StaticFieldLeak")
+    @SuppressWarnings({"StaticFieldLeak", "deprecation"})
     public class CacheFolder extends AsyncTask<String, Void, Folder> {
 
         private final boolean refresh;
@@ -445,7 +445,7 @@ public class FileListActivity extends AppCompatActivity
 
     }
 
-    @SuppressWarnings("StaticFieldLeak")
+    @SuppressWarnings({"StaticFieldLeak", "deprecation"})
     public class DownloadTask extends AsyncTask<SubFile, Long, DownloadTask.Output> {
 
         @Override

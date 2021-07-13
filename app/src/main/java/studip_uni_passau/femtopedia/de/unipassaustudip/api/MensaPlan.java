@@ -1,5 +1,7 @@
 package studip_uni_passau.femtopedia.de.unipassaustudip.api;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +14,7 @@ public class MensaPlan {
 
     public Map<Long, DayMenu> menu = new HashMap<>();
 
+    @NonNull
     @Override
     public String toString() {
         return "MensaPlan{" +
@@ -80,6 +83,7 @@ public class MensaPlan {
         public Set<FoodProperty> properties;
         public double price_stud, price_bed, price_guest;
 
+        @NonNull
         @Override
         public String toString() {
             return "Food{" +

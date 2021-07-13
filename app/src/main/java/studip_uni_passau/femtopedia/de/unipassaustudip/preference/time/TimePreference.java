@@ -61,6 +61,7 @@ public class TimePreference extends DialogPreference {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     protected void onSetInitialValue(boolean restore, Object defaultValue) {
         setTime(restore ? getPersistedInt(mTime) : (int) defaultValue);
     }

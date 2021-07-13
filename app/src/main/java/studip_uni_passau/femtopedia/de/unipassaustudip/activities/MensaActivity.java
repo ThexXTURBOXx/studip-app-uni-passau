@@ -349,7 +349,7 @@ public class MensaActivity extends AppCompatActivity
         setToView(dateView.getSelectedDate());
     }
 
-    @SuppressWarnings("StaticFieldLeak")
+    @SuppressWarnings({"StaticFieldLeak", "deprecation"})
     public class CacheMensaPlan extends AsyncTask<Void, Void, Integer> {
 
         @Override

@@ -393,7 +393,7 @@ public class ScheduleActivity extends AppCompatActivity
         return eventss;
     }
 
-    @SuppressWarnings({"staticFieldLeak"})
+    @SuppressWarnings({"staticFieldLeak", "deprecation"})
     public class CacheSchedule extends AsyncTask<Void, Void, Void> {
 
         @Override

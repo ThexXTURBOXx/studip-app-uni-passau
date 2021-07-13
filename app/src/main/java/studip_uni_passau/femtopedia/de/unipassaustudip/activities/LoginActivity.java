@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         tabHelper.unbindCustomTabsServices(this);
     }
 
-    @SuppressWarnings({"StaticFieldLeak"})
+    @SuppressWarnings({"StaticFieldLeak", "deprecation"})
     public class OAuthTask extends AsyncTask<Void, Void, String> {
 
         @Override
