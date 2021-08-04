@@ -105,5 +105,7 @@
     <string name="need_permission">Dazu müssen Sie die folgende Genehmigungsanfrage akzeptieren, um das zu tun.</string>
     <string name="progress">Fortschritt</string>
     <string name="pref_desc_filelist_subscreen">Anpassen der Dateien-Sektion</string>
+    <string name="dialog_new_app_alert_desc">Diese App wird gerade von Grund auf neu geschrieben.\nWenn Du die neue App (MIT EVENTUELL VIELEN BUGS!) in der Alpha testen möchtest, besuche doch den Google Play Store und registriere dich für die öffentliche Alpha. Es wird aber eventuell noch ein bisschen dauern, bis ich mich traue, die erste Alpha-Version hochzuladen :)</string>
+    <string name="dialog_new_app_alert_title">StudiPassau Reforged</string>
 
 </resources>

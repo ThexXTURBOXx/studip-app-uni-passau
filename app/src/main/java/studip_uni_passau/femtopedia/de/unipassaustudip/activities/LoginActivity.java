@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,12 +26,36 @@ import studip_uni_passau.femtopedia.de.unipassaustudip.util.StudIPHelper;
 public class LoginActivity extends AppCompatActivity {
 
     private final ChromeCustomTabsHelper tabHelper = new ChromeCustomTabsHelper();
+    ActivityResultLauncher<Intent> playStoreLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> finishCreate());
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((StudIPApp) getApplicationContext()).setCurrentActivity(this);
         setContentView(R.layout.content_login);
+
+        boolean notified = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                .getBoolean("new_app_alert", false);
+        if (!notified) {
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setMessage(R.string.dialog_new_app_alert_desc)
+                    .setTitle(R.string.dialog_new_app_alert_title)
+                    .setPositiveButton(R.string.button_okay, (d, id1) -> {
+                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                                .edit().putBoolean("new_app_alert", true).apply();
+                        Intent intent = new Intent("android.intent.action.VIEW", Uri.parse("https://play.google.com/store/apps/details?id=studip_uni_passau.femtopedia.de.unipassaustudip"));
+                        playStoreLauncher.launch(intent);
+                    }).setNegativeButton(R.string.button_cancel, (d, id1) -> finishCreate())
+                    .create();
+            dialog.show();
+        } else {
+            finishCreate();
+        }
+    }
+
+    private void finishCreate() {
         OAuthTask oAuthTask = new OAuthTask();
         oAuthTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

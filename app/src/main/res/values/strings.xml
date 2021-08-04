@@ -109,5 +109,7 @@
     <string name="need_permission">You have to accept the following permission request to do this.</string>
     <string name="progress">Progress</string>
     <string name="pref_desc_filelist_subscreen">Customize the Files section</string>
+    <string name="dialog_new_app_alert_desc">This app is being rewritten from scratch right now.\nIf you want to test the new app (WITH EVENTUALLY MANY BUGS!) in the alpha, why don\'t you visit the Google Play Store and register for the public alpha. However, it might take a little while until I dare to upload the first alpha version :).</string>
+    <string name="dialog_new_app_alert_title">StudiPassau Reforged</string>
 
 </resources>
