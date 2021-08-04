@@ -4,12 +4,12 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.2'
+        classpath 'com.android.tools.build:gradle:7.0.0'
     }
 }
 
 plugins {
-    id "io.sentry.android.gradle" version "2.0.1"
+    id "io.sentry.android.gradle" version "2.1.0"
 }
 
 allprojects {
