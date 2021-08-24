@@ -457,9 +457,6 @@ public class FileListActivity extends AppCompatActivity
         @Override
         protected Output doInBackground(SubFile... params) {
             File file = null;
-            CustomAccessHttpResponse resp = null;
-            InputStream input = null;
-            OutputStream output = null;
             try {
                 File downloads = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
                         "StudiPassau");
@@ -467,39 +464,30 @@ public class FileListActivity extends AppCompatActivity
                     downloads.mkdirs();
                 }
                 file = new File(downloads, params[0].getName());
-                resp = StudIPHelper.getApi().get("file/" + params[0].getId() + "/download");
                 long fileLength = params[0].getSize();
-                input = resp.getResponse().body().byteStream();
-                output = new FileOutputStream(file);
-                byte[] data = new byte[4096];
-                long total = 0;
-                int count;
-                while ((count = input.read(data)) != -1) {
-                    if (isCancelled()) {
-                        input.close();
-                        return null;
+                try (CustomAccessHttpResponse resp = StudIPHelper.getApi()
+                        .get("file/" + params[0].getId() + "/download");
+                     InputStream input = resp.getResponse().body().byteStream();
+                     OutputStream output = new FileOutputStream(file)) {
+                    byte[] data = new byte[4096];
+                    long total = 0;
+                    int count;
+                    while ((count = input.read(data)) != -1) {
+                        if (isCancelled()) {
+                            return null;
+                        }
+                        total += count;
+                        if (fileLength > 0) {
+                            publishProgress(total * 100 / fileLength);
+                        }
+                        output.write(data, 0, count);
                     }
-                    total += count;
-                    if (fileLength > 0) {
-                        publishProgress(total * 100 / fileLength);
-                    }
-                    output.write(data, 0, count);
                 }
             } catch (IllegalAccessException | OAuthException e) {
                 Intent intent = new Intent(FileListActivity.this, LoadActivity.class);
                 startActivity(intent);
             } catch (IOException e) {
                 e.printStackTrace();
-            } finally {
-                try {
-                    if (output != null)
-                        output.close();
-                    if (input != null)
-                        input.close();
-                } catch (IOException ignored) {
-                }
-                if (resp != null)
-                    resp.close();
             }
             return new Output(file, params[0].getMime_type());
         }

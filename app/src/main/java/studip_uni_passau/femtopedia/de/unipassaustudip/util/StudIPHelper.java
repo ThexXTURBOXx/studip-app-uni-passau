@@ -138,12 +138,9 @@ public class StudIPHelper {
     public static <T> void saveToFile(File file, T obj, Type t) {
         initFile(file);
         String ser = gson.toJson(obj, t);
-        try {
-            FileOutputStream fileOut = new FileOutputStream(file);
-            PrintWriter out = new PrintWriter(fileOut);
+        try (FileOutputStream fileOut = new FileOutputStream(file);
+             PrintWriter out = new PrintWriter(fileOut)) {
             out.write(ser);
-            out.close();
-            fileOut.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -152,12 +149,9 @@ public class StudIPHelper {
     public static void saveToFile(File file, Object obj) {
         initFile(file);
         String ser = gson.toJson(obj);
-        try {
-            FileOutputStream fileOut = new FileOutputStream(file);
-            PrintWriter out = new PrintWriter(fileOut);
+        try (FileOutputStream fileOut = new FileOutputStream(file);
+             PrintWriter out = new PrintWriter(fileOut)) {
             out.write(ser);
-            out.close();
-            fileOut.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

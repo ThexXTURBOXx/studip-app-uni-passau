@@ -26,6 +26,7 @@ import java.io.InputStream;
 
 import de.femtopedia.studip.json.User;
 import de.femtopedia.studip.shib.CustomAccessHttpResponse;
+import de.femtopedia.studip.shib.Pair;
 import oauth.signpost.exception.OAuthException;
 import okhttp3.ResponseBody;
 import studip_uni_passau.femtopedia.de.unipassaustudip.R;
@@ -220,8 +221,8 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
 
             switch (success) {
                 case SUCCESS:
-                    String[] token = StudIPHelper.getApi().getOAuthClient().getToken();
-                    StudIPHelper.saveToFile(oAuthDataFile, new OAuthData(token[0], token[1]));
+                    Pair<String, String> token = StudIPHelper.getApi().getOAuthClient().getToken();
+                    StudIPHelper.saveToFile(oAuthDataFile, new OAuthData(token));
                     //No break here
                 case OFFLINE:
                     CacheCurrentUserData data = new CacheCurrentUserData();
@@ -299,14 +300,12 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
         protected Bitmap doInBackground(String... url) {
             if (!StudIPHelper.isNetworkAvailable(LoadActivity.this))
                 return null;
-            CustomAccessHttpResponse response = null;
-            InputStream instream = null;
-            try {
-                response = StudIPHelper.getApi().getOAuthClient().get(url[0]);
+            try (CustomAccessHttpResponse response = StudIPHelper.getApi().getOAuthClient().get(url[0])) {
                 ResponseBody body = response.getResponse().body();
                 if (body != null) {
-                    instream = body.byteStream();
-                    return BitmapFactory.decodeStream(instream);
+                    try (InputStream stream = body.byteStream()) {
+                        return BitmapFactory.decodeStream(stream);
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -316,15 +315,6 @@ public class LoadActivity extends AppCompatActivity implements LoaderCallbacks<C
                 startActivity(intent);
             } catch (IllegalArgumentException e) {
                 System.out.println("Error fetching Profile Picture...");
-            } finally {
-                try {
-                    if (response != null)
-                        response.close();
-                    if (instream != null)
-                        instream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
             return null;
         }
