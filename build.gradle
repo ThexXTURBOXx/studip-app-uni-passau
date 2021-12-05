@@ -4,18 +4,21 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.1'
+        classpath 'com.android.tools.build:gradle:7.0.3'
     }
 }
 
 plugins {
-    id "io.sentry.android.gradle" version "2.1.2"
+    id 'io.sentry.android.gradle' version '2.1.5'
 }
 
 allprojects {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url 'https://femtopedia.de/maven'
+        }
     }
 }
 
