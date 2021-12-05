@@ -356,12 +356,12 @@ public class MensaActivity extends AppCompatActivity
         protected Integer doInBackground(Void... url) {
             try {
                 ZonedDateTime date = ZonedDateTime.now(StudIPHelper.ZONE);
-                int week = date.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
-                int next_week = date.plusDays(7).get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
+                int week = date.get(WeekFields.of(Locale.GERMAN).weekOfWeekBasedYear());
+                int nextWeek = date.plusDays(7).get(WeekFields.of(Locale.GERMAN).weekOfWeekBasedYear());
                 if (StudIPHelper.mensaPlan == null)
                     StudIPHelper.mensaPlan = new MensaPlan();
                 StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.getApi().getOAuthClient().get(MENSA_URL + week + ".csv")));
-                StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.getApi().getOAuthClient().get(MENSA_URL + next_week + ".csv")));
+                StudIPHelper.mensaPlan.menu.putAll(parseMensaPlan(StudIPHelper.getApi().getOAuthClient().get(MENSA_URL + nextWeek + ".csv")));
             } catch (IllegalAccessException | OAuthException e) {
                 Intent intent = new Intent(MensaActivity.this, LoadActivity.class);
                 startActivity(intent);

@@ -75,6 +75,17 @@ public class MensaPlan {
         public List<Food> garnishes = new ArrayList<>();
         public List<Food> desserts = new ArrayList<>();
 
+        @NonNull
+        @Override
+        public String toString() {
+            return "DayMenu{" +
+                    "soups=" + soups +
+                    ", mains=" + mains +
+                    ", garnishes=" + garnishes +
+                    ", desserts=" + desserts +
+                    '}';
+        }
+
     }
 
     public static class Food {
