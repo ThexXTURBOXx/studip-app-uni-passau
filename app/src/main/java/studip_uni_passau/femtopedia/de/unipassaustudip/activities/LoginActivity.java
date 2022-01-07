@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
                     .setPositiveButton(R.string.button_okay, (d, id1) -> {
                         PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
                                 .edit().putBoolean("new_app_alert", true).apply();
-                        Intent intent = new Intent("android.intent.action.VIEW", Uri.parse("https://play.google.com/store/apps/details?id=studip_uni_passau.femtopedia.de.unipassaustudip"));
+                        Intent intent = new Intent("android.intent.action.VIEW", Uri.parse("https://play.google.com/apps/testing/studip_uni_passau.femtopedia.de.unipassaustudip"));
                         playStoreLauncher.launch(intent);
                     }).setNegativeButton(R.string.button_cancel, (d, id1) -> finishCreate())
                     .create();
